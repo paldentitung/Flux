@@ -114,7 +114,7 @@
   --chat-active-conv: rgba(99, 102, 241, 0.08);
 
   /* ── POSTS / FEED ── */
-  --post-card-bg: hsl(240 14% 12%);
+  --post-card-bg: hsl(240 14% 14%);
   --post-card-border: hsl(240 12% 18%);
   --post-action-hover: rgba(99, 102, 241, 0.08);
   --post-like-active: #ef4444;

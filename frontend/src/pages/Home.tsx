@@ -1,4 +1,5 @@
 import PostComposer from "../components/post/PostComposer";
+import PostListing from "../components/post/PostListing";
 
 const Home = () => {
   return (
@@ -14,6 +15,7 @@ const Home = () => {
       </div>
 
       <PostComposer />
+      <PostListing />
     </div>
   );
 };
