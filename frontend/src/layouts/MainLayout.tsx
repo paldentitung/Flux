@@ -8,7 +8,7 @@ const MainLayout = ({ children }: React.PropsWithChildren) => {
       <LeftSidebar />
       <main className="flex-1">
         <Header />
-        {children}
+        <section className="w-full max-w-3xl mx-auto p-4">{children}</section>
       </main>
       <RightSidebar />
       <BottomNav />
