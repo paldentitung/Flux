@@ -1,7 +1,7 @@
 import BottomNav from "../components/layouts/BottomNav";
 import LeftSidebar from "../components/layouts/LeftSidebar";
 import RightSidebar from "../components/layouts/RightSidebar";
-import Header from "../components/pages/Header";
+import Header from "../components/layouts/Header";
 const MainLayout = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="flex bg-(--color-bg) min-h-screen">
