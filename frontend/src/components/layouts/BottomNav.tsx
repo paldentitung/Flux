@@ -11,7 +11,7 @@ const BottomNav = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-(--bottom-nav-bg) border-t border-(--bottom-nav-border) backdrop-blur-md lg:hidden">
+    <div className="fixed bottom-0 left-0 right-0  border-t border-(--bottom-nav-border) backdrop-blur-md lg:hidden">
       <div className="grid grid-cols-5 py-2">
         {items.map((i) => {
           const Icon = i.icon;

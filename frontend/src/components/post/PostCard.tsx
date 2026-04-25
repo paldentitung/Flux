@@ -1,4 +1,4 @@
-import { ArrowBigDown, Heart, MessageCircle, Send, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Send, Share2 } from "lucide-react";
 import type { Post } from "../../types/post";
 import { useState } from "react";
 

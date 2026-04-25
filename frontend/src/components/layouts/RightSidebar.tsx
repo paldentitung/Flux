@@ -24,7 +24,7 @@ const RightSidebar = () => {
   ];
 
   return (
-    <div className="w-72 min-h-screen  flex-col bg-[hsl(var(--background-tertiary))] border-l border-white/5 py-6 px-4 gap-3 hidden lg:flex">
+    <div className="w-72 min-h-screen  flex-col bg-[hsl(var(--background-tertiary))] border-l border-white/5 py-6 px-4 gap-3 hidden lg:flex fixed right-0">
       <div className="rounded-xl border border-white/5 bg-[hsl(var(--surface))] p-5 flex flex-col gap-4">
         <p className="text-[10px] font-medium tracking-widest uppercase text-[hsl(var(--muted-foreground))]">
           Suggested for you
