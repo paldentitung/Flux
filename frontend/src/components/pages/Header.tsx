@@ -2,7 +2,7 @@ import { Bell, User } from "lucide-react";
 
 const Header = () => {
   return (
-    <div className="lg:hidden flex justify-between items-center p-5">
+    <div className="lg:hidden flex justify-between items-center p-5 sticky top-0 backdrop-blur-md">
       {/* Logo */}
       <div className="flex items-center gap-3 text-sm">
         <div className="w-8 h-8 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center">
