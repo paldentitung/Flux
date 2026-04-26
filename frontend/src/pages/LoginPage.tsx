@@ -3,7 +3,6 @@ import { Sparkles } from "lucide-react";
 const LoginPage = () => {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
-      {/* Left — Branding */}
       <div className="relative hidden md:flex flex-col justify-between p-12 overflow-hidden bg-[hsl(var(--surface))] border-r border-[hsl(var(--border))]">
         <div
           className="absolute inset-0 opacity-80"
@@ -13,7 +12,6 @@ const LoginPage = () => {
           }}
         />
 
-        {/* Logo */}
         <div className="relative">
           <div className="flex items-center gap-2.5">
             <span
@@ -28,7 +26,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Hero copy */}
         <div className="relative space-y-6">
           <h1 className="text-5xl leading-[1.05] font-semibold tracking-tight max-w-md text-[hsl(var(--foreground))]">
             A quieter place to{" "}
@@ -63,16 +60,13 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="relative text-xs text-[hsl(var(--muted-foreground))]">
           © {new Date().getFullYear()} Flux
         </div>
       </div>
 
-      {/* Right — Form */}
       <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Header */}
           <div className="space-y-1">
             <h2 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">
               Welcome back
@@ -82,9 +76,8 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Form */}
           <div className="space-y-4">
-            <div className="space-y-1.5">
+            <div className="flex flex-col space-y-2">
               <label
                 htmlFor="email"
                 className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
@@ -130,7 +123,6 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {/* Footer */}
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Don't have an account?{" "}
             <a
