@@ -177,3 +177,19 @@ body {
     );
   background-attachment: fixed;
 }
+.input-auth {
+  @apply w-full rounded-lg px-3 py-2.5 text-sm lg:text-base transition-colors focus:outline-none focus:ring-2;
+
+  background: var(--auth-input-bg);
+  border: 1px solid var(--auth-input-border);
+  color: hsl(var(--foreground));
+}
+
+.input-auth::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.input-auth:focus {
+  border-color: var(--auth-input-focus);
+  --tw-ring-color: var(--auth-input-focus);
+}
