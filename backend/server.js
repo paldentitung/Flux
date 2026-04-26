@@ -18,7 +18,8 @@ app.use("/api/auth", authRoute);
 
 // error handler
 app.use(errorMiddleware);
-
+console.log(process.env.EMAIL_USER); // should print your email
+console.log(process.env.EMAIL_PASS); // should print app password
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
