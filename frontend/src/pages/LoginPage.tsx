@@ -1,23 +1,93 @@
+import { Sparkles } from "lucide-react";
+
 const LoginPage = () => {
   return (
-    <div className="h-screen w-full grid grid-cols-1 lg:grid-cols-2">
-      <div className="flex items-center justify-center px-8 lg:px-16">
-        <div className="flex flex-col gap-7 w-full max-w-sm">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-[22px] lg:text-[28px] font-bold text-[hsl(var(--foreground))] tracking-tight leading-none">
+    <div className="min-h-screen grid md:grid-cols-2">
+      {/* Left — Branding */}
+      <div className="relative hidden md:flex flex-col justify-between p-12 overflow-hidden bg-[hsl(var(--surface))] border-r border-[hsl(var(--border))]">
+        <div
+          className="absolute inset-0 opacity-80"
+          style={{
+            background:
+              "radial-gradient(60% 60% at 30% 20%, hsl(239 84% 35% / 0.5), transparent 70%), radial-gradient(50% 50% at 80% 80%, hsl(266 84% 45% / 0.4), transparent 70%)",
+          }}
+        />
+
+        {/* Logo */}
+        <div className="relative">
+          <div className="flex items-center gap-2.5">
+            <span
+              className="grid place-items-center h-9 w-9 rounded-xl shadow-(--shadow-glow)"
+              style={{ background: "var(--gradient-primary)" }}
+            >
+              <Sparkles className="h-4 w-4 text-[hsl(var(--primary-foreground))]" />
+            </span>
+            <span className="text-xl font-semibold text-[hsl(var(--foreground))]">
+              Flux
+            </span>
+          </div>
+        </div>
+
+        {/* Hero copy */}
+        <div className="relative space-y-6">
+          <h1 className="text-5xl leading-[1.05] font-semibold tracking-tight max-w-md text-[hsl(var(--foreground))]">
+            A quieter place to{" "}
+            <span
+              style={{
+                background: "var(--gradient-primary)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              share what matters
+            </span>
+            .
+          </h1>
+          <p className="text-[hsl(var(--muted-foreground))] max-w-sm leading-relaxed">
+            Built for writers, designers, and slow thinkers who still believe
+            the feed can be beautiful.
+          </p>
+          <div className="flex items-center gap-4 pt-4">
+            {[12, 32, 47, 8].map((i, idx) => (
+              <img
+                key={i}
+                src={`https://i.pravatar.cc/80?img=${i}`}
+                alt=""
+                className="h-9 w-9 rounded-full ring-2 ring-[hsl(var(--background))] object-cover"
+                style={{ marginLeft: idx ? -14 : 0 }}
+              />
+            ))}
+            <span className="text-xs text-[hsl(var(--muted-foreground))]">
+              Joined this week · 2,340 people
+            </span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="relative text-xs text-[hsl(var(--muted-foreground))]">
+          © {new Date().getFullYear()} Flux
+        </div>
+      </div>
+
+      {/* Right — Form */}
+      <div className="flex items-center justify-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          {/* Header */}
+          <div className="space-y-1">
+            <h2 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">
               Welcome back
             </h2>
-            <p className="text-[13px] lg:text-[15px] text-[hsl(var(--muted-foreground))] leading-relaxed">
+            <p className="text-sm text-[hsl(var(--muted-foreground))]">
               Sign in to pick up where you left off.
             </p>
           </div>
 
           {/* Form */}
-          <div className="flex flex-col gap-3.5">
-            <div className="flex flex-col gap-1.5">
+          <div className="space-y-4">
+            <div className="space-y-1.5">
               <label
                 htmlFor="email"
-                className="text-[11px] lg:text-[12px] font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
+                className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
               >
                 Email
               </label>
@@ -29,17 +99,17 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="text-[11px] lg:text-[12px] font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
+                  className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
                 >
                   Password
                 </label>
                 <a
                   href="/forgot-password"
-                  className="text-[12px] lg:text-[13px] text-(--auth-link) hover:text-[hsl(var(--accent))] transition-colors"
+                  className="text-xs text-(--auth-link) hover:text-[hsl(var(--accent))] transition-colors"
                 >
                   Forgot password?
                 </a>
@@ -52,69 +122,24 @@ const LoginPage = () => {
               />
             </div>
 
-            <button className="w-full mt-1 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary)/0.85)] text-white text-sm lg:text-base font-semibold rounded-lg py-2.5 transition-colors">
+            <button
+              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity"
+              style={{ background: "var(--gradient-primary)" }}
+            >
               Sign in
             </button>
           </div>
 
           {/* Footer */}
-          <p className="text-center text-[13px] lg:text-[14px] text-[hsl(var(--muted-foreground))]">
+          <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Don't have an account?{" "}
             <a
               href="/register"
-              className="text-(--auth-link) font-bold hover:text-[hsl(var(--accent))] transition-colors"
+              className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors"
             >
               Create one
             </a>
           </p>
-        </div>
-      </div>
-      <div
-        style={{ background: "var(--gradient-surface)" }}
-        className="relative overflow-hidden items-center justify-center hidden lg:flex"
-      >
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[hsl(var(--primary))]/30 blur-3xl"></div>
-        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[hsl(var(--primary))]/30 blur-3xl"></div>
-        <div
-          className="absolute inset-0 opacity-60"
-          style={{ background: "var(--gradient-glow)" }}
-        ></div>
-
-        <div className="relative z-10 max-w-md flex flex-col space-y-7">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center shrink-0">
-              <span className="text-white font-bold text-sm">F</span>
-            </div>
-            <span className="text-[hsl(var(--sidebar-foreground))] font-semibold text-base tracking-tight">
-              Flux
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-px bg-[hsl(var(--primary))] shrink-0" />
-              <span className="text-[hsl(var(--accent))] text-[11px] font-medium tracking-widest uppercase">
-                Social, reimagined
-              </span>
-            </div>
-            <h1 className="text-[2rem] lg:text-[2.5rem] font-bold leading-[1.15] tracking-[-0.035em] text-[hsl(var(--foreground))]">
-              Where moments
-              <br />
-              meet meaning.
-            </h1>
-          </div>
-
-          <p className="text-sm lg:text-base leading-[1.75] text-[hsl(var(--muted-foreground))] max-w-85">
-            A quieter, more editorial place to share what you're making,
-            reading, and thinking. No infinite scroll. No engagement traps.
-          </p>
-
-          <div className="flex items-center gap-3 pt-1">
-            <span className="w-1 h-1 rounded-full bg-[hsl(var(--primary))]" />
-            <span className="text-xs text-[hsl(var(--muted-foreground)/0.5)] tracking-wide">
-              Flux · 2026
-            </span>
-          </div>
         </div>
       </div>
     </div>
