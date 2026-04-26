@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react";
 
-const VerifyOtp = () => {
+const VerifyOtpPage = () => {
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
@@ -103,4 +103,4 @@ const VerifyOtp = () => {
   );
 };
 
-export default VerifyOtp;
+export default VerifyOtpPage;
