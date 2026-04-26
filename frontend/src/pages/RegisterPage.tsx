@@ -1,6 +1,8 @@
-import { Sparkles } from "lucide-react";
-
+import { Sparkles, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 const RegisterPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="flex items-center justify-center p-6 sm:p-12">
@@ -52,12 +54,21 @@ const RegisterPage = () => {
               >
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="input-auth"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="input-auth"
+                />
+
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className=" absolute right-3 top-3"
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col gap-2.5">
@@ -67,12 +78,21 @@ const RegisterPage = () => {
               >
                 Confirm password
               </label>
-              <input
-                id="confirm-password"
-                type="password"
-                placeholder="••••••••"
-                className="input-auth"
-              />
+              <div className="relative">
+                <input
+                  id="confirm-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="input-auth"
+                />
+
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className=" absolute right-3 top-3"
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
             </div>
 
             <button

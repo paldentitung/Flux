@@ -1,6 +1,8 @@
-import { Sparkles } from "lucide-react";
+import { Eye, EyeOff, Sparkles } from "lucide-react";
+import { useState } from "react";
 
 const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="relative hidden md:flex flex-col justify-between p-12 overflow-hidden bg-[hsl(var(--surface))] border-r border-[hsl(var(--border))]">
@@ -107,12 +109,21 @@ const LoginPage = () => {
                   Forgot password?
                 </a>
               </div>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="input-auth"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className="input-auth"
+                />
+
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className=" absolute right-3 top-3"
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
             </div>
 
             <button
