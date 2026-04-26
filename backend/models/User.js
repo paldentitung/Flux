@@ -4,7 +4,6 @@ const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
       trim: true,
     },
 
@@ -69,6 +68,8 @@ const UserSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    otp: String,
+    otpExpiry: Date,
   },
   { timestamps: true },
 );
