@@ -1,7 +1,9 @@
 import {
+  forgotPasswordService,
   loginService,
   RegisterService,
   verifyOtpService,
+  resetPasswordService,
 } from "../services/auth.service.js";
 import { sendTokenCookie } from "../utils/sendTokenCookie.js";
 
@@ -75,5 +77,32 @@ export const getMe = async (req, res) => {
     res
       .status(error.statusCode || 500)
       .json({ success: false, message: error.message });
+  }
+};
+
+export const forgotPasswordController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    await forgotPasswordService({ email });
+    res.status(200).json({
+      success: true,
+      message: "Reset OTP sent to email",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const resetPasswordController = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    await resetPasswordService({ email, otp, newPassword });
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

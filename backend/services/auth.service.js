@@ -71,3 +71,48 @@ export const loginService = async ({ email, password }) => {
 
   return { user: safeUser, token };
 };
+
+export const forgotPasswordService = async ({ email }) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+  const resetOtp = generateOtp();
+
+  user.resetOtp = resetOtp;
+  user.resetOtpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+  await user.save();
+
+  await sendEmail({
+    to: email,
+    subject: "Verify Your Account",
+    html: `<h1>Your OTP is
+    <br> <strong>${resetOtp}</strong></h1>`,
+  });
+};
+
+export const resetPasswordService = async ({ email, otp, newPassword }) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (user.resetOtp !== String(otp)) {
+    throw new Error("Invalid OTP");
+  }
+
+  if (user.resetOtpExpires < Date.now()) {
+    throw new Error("OTP expired");
+  }
+
+  //hased password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  user.password = hashedPassword;
+
+  // clear OTP
+  user.resetOtp = undefined;
+  user.resetOtpExpires = undefined;
+
+  await user.save();
+};
