@@ -52,3 +52,22 @@ export const verifyOtpService = async ({ email, otp }) => {
   await user.save();
   return user;
 };
+
+export const loginService = async ({ email, password }) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    throw new AppError("Wrong password");
+  }
+
+  const token = generateOtp(user._id);
+  const { password: _, ...safeUser } = user.toObject();
+
+  return { user: safeUser, token };
+};

@@ -1,4 +1,8 @@
-import { RegisterService, verifyOtpService } from "../services/auth.service.js";
+import {
+  loginService,
+  RegisterService,
+  verifyOtpService,
+} from "../services/auth.service.js";
 import { sendTokenCookie } from "../utils/sendTokenCookie.js";
 
 export const RegisterController = async (req, res) => {
@@ -30,6 +34,24 @@ export const verifyOtpcontroller = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Account verified",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const loginController = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const { user, token } = await loginService({ email, password });
+
+    sendTokenCookie(res, token);
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
       data: user,
     });
   } catch (error) {
