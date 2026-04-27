@@ -29,7 +29,7 @@ const VerifyOtpPage = () => {
 
         <div className="relative space-y-6">
           <h1 className="text-5xl leading-[1.05] font-semibold tracking-tight max-w-md text-[hsl(var(--foreground))]">
-            One last step to{" "}
+            Back in a{" "}
             <span
               style={{
                 background: "var(--gradient-primary)",
@@ -37,12 +37,11 @@ const VerifyOtpPage = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              join the quiet
+              moment
             </span>
-            .
           </h1>
           <p className="text-[hsl(var(--muted-foreground))] max-w-sm leading-relaxed">
-            Check your inbox. We sent a code to confirm it's really you.
+            Enter the code we sent to reset your password.
           </p>
         </div>
 
@@ -56,10 +55,14 @@ const VerifyOtpPage = () => {
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-1">
             <h2 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">
-              Verify your email
+              Enter the code
             </h2>
-            <p className="text-sm text-[hsl(var(--muted-foreground))]">
-              Enter the 6-digit code we sent to your inbox.
+            <p>
+              We sent a 6-digit OTP to{" "}
+              <span className="text-[hsl(var(--foreground))] font-medium">
+                / email/
+              </span>
+              . It expires in 10 minutes.
             </p>
           </div>
 
@@ -87,7 +90,7 @@ const VerifyOtpPage = () => {
               className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity"
               style={{ background: "var(--gradient-primary)" }}
             >
-              Verify email
+              Verify OTP
             </button>
           </div>
 
