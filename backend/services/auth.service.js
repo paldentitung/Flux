@@ -10,6 +10,7 @@ export const RegisterService = async ({ username, email, password }) => {
   const hasedPassword = await bcrypt.hash(password, 10);
 
   const otp = generateOtp(0);
+
   const user = await User.create({
     username,
     email,
@@ -41,8 +42,9 @@ export const verifyOtpService = async ({ email, otp }) => {
   if (user.otp !== String(otp)) throw new AppError("Invalid OTP", 400);
 
   if (user.otpExpiry < Date.now()) {
-    throw new AppError("otp expired", 400);
+    throw new AppError("Otp expired", 400);
   }
+
   user.isVerified = true;
   user.otp = undefined;
   user.otpExpiry = undefined;

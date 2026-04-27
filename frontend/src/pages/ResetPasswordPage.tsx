@@ -1,10 +1,13 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { useState } from "react";
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
   return (
     <div className="min-h-screen grid md:grid-cols-2">
+      {/* Left panel */}
       <div className="relative hidden md:flex flex-col justify-between p-12 overflow-hidden bg-[hsl(var(--surface))] border-r border-[hsl(var(--border))]">
         <div
           className="absolute inset-0 opacity-80"
@@ -30,7 +33,7 @@ const LoginPage = () => {
 
         <div className="relative space-y-6">
           <h1 className="text-5xl leading-[1.05] font-semibold tracking-tight max-w-md text-[hsl(var(--foreground))]">
-            A quieter place to{" "}
+            Almost{" "}
             <span
               style={{
                 background: "var(--gradient-primary)",
@@ -38,28 +41,14 @@ const LoginPage = () => {
                 WebkitTextFillColor: "transparent",
               }}
             >
-              share what matters
+              there
             </span>
             .
           </h1>
           <p className="text-[hsl(var(--muted-foreground))] max-w-sm leading-relaxed">
-            Built for writers, designers, and slow thinkers who still believe
-            the feed can be beautiful.
+            Create a new password. Make it strong — you won't have to do this
+            again.
           </p>
-          <div className="flex items-center gap-4 pt-4">
-            {[12, 32, 47, 8].map((i, idx) => (
-              <img
-                key={i}
-                src={`https://i.pravatar.cc/80?img=${i}`}
-                alt=""
-                className="h-9 w-9 rounded-full ring-2 ring-[hsl(var(--background))] object-cover"
-                style={{ marginLeft: idx ? -14 : 0 }}
-              />
-            ))}
-            <span className="text-xs text-[hsl(var(--muted-foreground))]">
-              Joined this week · 2,340 people
-            </span>
-          </div>
         </div>
 
         <div className="relative text-xs text-[hsl(var(--muted-foreground))]">
@@ -67,61 +56,63 @@ const LoginPage = () => {
         </div>
       </div>
 
+      {/* Right panel */}
       <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-1">
             <h2 className="text-3xl font-semibold tracking-tight text-[hsl(var(--foreground))]">
-              Welcome back
+              Reset password
             </h2>
             <p className="text-sm text-[hsl(var(--muted-foreground))]">
-              Sign in to pick up where you left off.
+              Choose a new password for your account.
             </p>
           </div>
 
           <div className="space-y-4">
-            <div className="flex flex-col space-y-2">
+            {/* New password */}
+            <div className="space-y-1.5">
               <label
-                htmlFor="email"
+                htmlFor="password"
                 className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
               >
-                Email
+                New password
               </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                className="input-auth"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
-                >
-                  Password
-                </label>
-                <a
-                  href="/forgot-password"
-                  className="text-xs text-(--auth-link) hover:text-[hsl(var(--accent))] transition-colors"
-                >
-                  Forgot password?
-                </a>
-              </div>
               <div className="relative">
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  placeholder="Min. 8 characters"
                   className="input-auth"
                 />
-
                 <button
                   onClick={() => setShowPassword(!showPassword)}
-                  className=" absolute right-3 top-3"
+                  className="absolute right-3 top-3"
                 >
                   {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Confirm password */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="confirm-password"
+                className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest"
+              >
+                Confirm password
+              </label>
+              <div className="relative">
+                <input
+                  id="confirm-password"
+                  type={showConfirm ? "text" : "password"}
+                  placeholder="Repeat your password"
+                  className="input-auth"
+                />
+                <button
+                  onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-3 top-3"
+                >
+                  {showConfirm ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
             </div>
@@ -130,17 +121,17 @@ const LoginPage = () => {
               className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
               style={{ background: "var(--gradient-primary)" }}
             >
-              Sign in
+              Reset password
             </button>
           </div>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
-            Don't have an account?{" "}
+            Back to{" "}
             <a
-              href="/register"
+              href="/login"
               className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors"
             >
-              Create one
+              Sign in
             </a>
           </p>
         </div>
@@ -149,4 +140,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;
