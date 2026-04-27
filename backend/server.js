@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import authRoute from "./routes/auth.route.js";
+import cookieParser from "cookie-parser";
 dotenv.config({ path: ".env.local" });
 
 const app = express();
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 7777;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 connectDB();
 

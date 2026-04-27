@@ -63,10 +63,10 @@ export const loginService = async ({ email, password }) => {
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new AppError("Wrong password");
+    throw new AppError("Wrong password", 400);
   }
 
-  const token = generateOtp(user._id);
+  const token = generateToken(user._id);
   const { password: _, ...safeUser } = user.toObject();
 
   return { user: safeUser, token };

@@ -1,22 +1,20 @@
-import User from "../models/User";
-import AppError from "../utils/AppError";
+import User from "../models/User.js";
+import AppError from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
 export const protect = async (req, res, next) => {
   const token = req.cookies.token;
 
-  if (!token) {
-    throw new AppError("Not authorized", 401);
-  }
+  if (!token) return next(new AppError("Not authorized", 401));
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
     const user = await User.findById(decoded.id).select("-password");
-    if (!user) throw new AppError("User no longer exists", 401);
+
+    if (!user) return next(new AppError("User no longer exists", 401));
 
     req.user = user;
     next();
   } catch (error) {
-    throw new AppError("Invalid token", 401);
+    return next(new AppError("Invalid token", 401));
   }
 };
