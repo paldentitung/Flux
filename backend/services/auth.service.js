@@ -65,7 +65,9 @@ export const loginService = async ({ email, password }) => {
   if (!isMatch) {
     throw new AppError("Wrong password", 400);
   }
-
+  if (!user.isVerified) {
+    throw new AppError("Please verify your account", 401);
+  }
   const token = generateToken(user._id);
   const { password: _, ...safeUser } = user.toObject();
 
@@ -99,11 +101,11 @@ export const resetPasswordService = async ({ email, otp, newPassword }) => {
   }
 
   if (user.resetOtp !== String(otp)) {
-    throw new Error("Invalid OTP");
+    throw new Error("Invalid OTP", 400);
   }
 
   if (user.resetOtpExpires < Date.now()) {
-    throw new Error("OTP expired");
+    throw new Error("OTP expired", 400);
   }
 
   //hased password
