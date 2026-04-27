@@ -1,8 +1,34 @@
 import { Sparkles, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 const RegisterPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const { handleRegister, loading } = useAuth();
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (formData.password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    await handleRegister(formData);
+  };
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="flex items-center justify-center p-6 sm:p-12">
@@ -16,7 +42,7 @@ const RegisterPage = () => {
             </p>
           </div>
 
-          <div className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex flex-col gap-2.5">
               <label
                 htmlFor="name"
@@ -25,9 +51,11 @@ const RegisterPage = () => {
                 Full name
               </label>
               <input
-                id="name"
-                type="text"
-                placeholder="Alex Rivera"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
                 className="input-auth"
               />
             </div>
@@ -41,8 +69,10 @@ const RegisterPage = () => {
               </label>
               <input
                 id="email"
-                type="email"
-                placeholder="you@example.com"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 className="input-auth"
               />
             </div>
@@ -57,12 +87,16 @@ const RegisterPage = () => {
               <div className="relative">
                 <input
                   id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
                   className="input-auth"
                 />
 
                 <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className=" absolute right-3 top-3"
                 >
@@ -81,27 +115,36 @@ const RegisterPage = () => {
               <div className="relative">
                 <input
                   id="confirm-password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
+                  value={confirmPassword}
+                  required
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  type={showConfirmPassword ? "text" : "password"}
                   className="input-auth"
                 />
 
                 <button
-                  onClick={() => setShowPassword(!showPassword)}
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className=" absolute right-3 top-3"
                 >
-                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                  {showConfirmPassword ? (
+                    <Eye size={18} />
+                  ) : (
+                    <EyeOff size={18} />
+                  )}
                 </button>
               </div>
             </div>
 
             <button
+              type="submit"
+              disabled={loading}
               className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
               style={{ background: "var(--gradient-primary)" }}
             >
-              Create account
+              {loading ? "Creating..." : "Create account"}
             </button>
-          </div>
+          </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Already have an account?{" "}
