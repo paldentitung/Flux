@@ -18,7 +18,6 @@ export const RegisterService = async ({ username, email, password }) => {
     otp,
     otpExpiry: Date.now() + 10 * 60 * 1000, // 10 min
   });
-  const token = generateToken(user._id);
 
   await sendEmail({
     to: email,
@@ -29,7 +28,7 @@ export const RegisterService = async ({ username, email, password }) => {
 
   const { password: _, ...safeUser } = user.toObject();
 
-  return { user: safeUser, token };
+  return { user: safeUser };
 };
 
 export const verifyOtpService = async ({ email, otp }) => {
@@ -50,6 +49,8 @@ export const verifyOtpService = async ({ email, otp }) => {
   user.otpExpiry = undefined;
 
   await user.save();
+  const { password: _, ...safeUser } = user.toObject();
+
   return user;
 };
 
@@ -101,11 +102,11 @@ export const resetPasswordService = async ({ email, otp, newPassword }) => {
   }
 
   if (user.resetOtp !== String(otp)) {
-    throw new Error("Invalid OTP", 400);
+    throw new AppError("Invalid OTP", 400);
   }
 
   if (user.resetOtpExpires < Date.now()) {
-    throw new Error("OTP expired", 400);
+    throw new AppError("OTP expired", 400);
   }
 
   //hased password

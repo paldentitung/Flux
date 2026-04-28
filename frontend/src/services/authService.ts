@@ -34,6 +34,7 @@ export const verifyOtp = async ({
   try {
     const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, otp }),
     });
@@ -42,5 +43,20 @@ export const verifyOtp = async ({
     return data;
   } catch (error: any) {
     toast.error(error.message);
+  }
+};
+
+export const getMe = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/get-me`, {
+      method: "GET",
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Something went wrong");
+    return data;
+  } catch (error: any) {
+    toast.error(error.message);
+    return null;
   }
 };

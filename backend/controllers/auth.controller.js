@@ -6,16 +6,11 @@ import {
   resetPasswordService,
 } from "../services/auth.service.js";
 import { sendTokenCookie } from "../utils/sendTokenCookie.js";
-
+import { generateToken } from "../utils/generateToken.js";
 export const RegisterController = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    const user = await RegisterService({
-      username,
-      email,
-      password,
-    });
+    const { user } = await RegisterService({ username, email, password });
 
     res.status(201).json({
       success: true,
@@ -30,9 +25,12 @@ export const verifyOtpcontroller = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    const { user, token } = await verifyOtpService({ email, otp });
+    const user = await verifyOtpService({ email, otp });
+
+    const token = generateToken(user._id); // ✅ generate here
 
     sendTokenCookie(res, token);
+
     res.status(200).json({
       success: true,
       message: "Account verified",
