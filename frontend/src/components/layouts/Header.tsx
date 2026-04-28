@@ -1,8 +1,14 @@
 import { Bell, User } from "lucide-react";
+import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 
 const Header = () => {
+  const showNav = useHideOnScroll();
   return (
-    <div className="lg:hidden flex justify-between items-center p-5 sticky top-0 backdrop-blur-md">
+    <div
+      className={`lg:hidden flex justify-between items-center p-5 sticky top-0 backdrop-blur-md transition-transform duration-300 ${
+        showNav ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       {/* Logo */}
       <div className="flex items-center gap-3 text-sm">
         <div className="w-8 h-8 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center">

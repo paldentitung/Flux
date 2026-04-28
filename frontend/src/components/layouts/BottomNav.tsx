@@ -1,6 +1,6 @@
 import { Home, Compass, MessageCircle, Bell, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 
 const BottomNav = () => {
   const items = [
@@ -11,28 +11,7 @@ const BottomNav = () => {
     { to: "/profile", icon: User, label: "Profile" },
   ];
 
-  const [showNav, setShowNav] = useState(true);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      const diff = currentScrollY - lastScrollY.current;
-
-      if (diff > 10) {
-        setShowNav(false); // scrolling down
-      } else if (diff < -10) {
-        setShowNav(true); // scrolling up
-      }
-
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const showNav = useHideOnScroll();
 
   return (
     <div
