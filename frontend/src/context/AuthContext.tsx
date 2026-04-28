@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     fetchUser();
   }, []);
+
   useEffect(() => {
     console.log("user data", user);
   }, [user]);

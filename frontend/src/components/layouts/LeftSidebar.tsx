@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 const LeftSidebar = () => {
   const links = [
@@ -18,6 +19,8 @@ const LeftSidebar = () => {
     { name: "Profile", path: "/profile", Icon: User },
     { name: "Settings", path: "/settings", Icon: Settings },
   ];
+
+  const { user, useCleanUsername } = useAuth();
 
   return (
     <div className="w-64 min-h-screen  flex-col bg-[hsl(--sidebar-primary)] border-r border-white/6 hidden lg:flex fixed ">
@@ -51,16 +54,18 @@ const LeftSidebar = () => {
         <div className="flex items-center gap-3 p-2 rounded-lg bg-[hsl(var(--sidebar-user-bg))]">
           <div className="relative">
             <div className="w-8 h-8 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center text-white text-sm font-bold">
-              U
+              {user?.username?.charAt(0).toUpperCase() || "U"}
             </div>
             <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-(--sidebar-online) border-2 border-[hsl(var(--sidebar-background))]" />
           </div>
 
           <div className="flex-1">
             <p className="text-[hsl(var(--sidebar-foreground))] text-sm font-medium">
-              Username
+              {user?.name || user?.username}
             </p>
-            <p className="text-(--sidebar-icon) text-xs">@handle</p>
+            <p className="text-(--sidebar-icon) text-xs">
+              @{useCleanUsername(user?.username)}
+            </p>
           </div>
 
           <button className="p-2 rounded-md text-(--sidebar-icon) hover:bg-[hsl(var(--sidebar-item-hover))] hover:text-[hsl(var(--sidebar-foreground))] transition-colors">

@@ -12,14 +12,15 @@ type RegisterFormData = {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const email = location.state?.email;
 
   if (!context) {
     throw new Error("useAuth must be used inside provider");
   }
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email;
 
   const handleRegister = async (formData: RegisterFormData): Promise<any> => {
     try {
@@ -44,6 +45,14 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
+  const useCleanUsername = (username?: string) =>
+    username?.replace(/\s/g, "") ?? "";
 
-  return { handleRegister, handleVerifyOtp, loading };
+  return {
+    handleRegister,
+    handleVerifyOtp,
+    loading,
+    user: context.user,
+    useCleanUsername,
+  };
 };
