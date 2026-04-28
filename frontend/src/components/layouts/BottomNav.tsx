@@ -1,4 +1,5 @@
 import { Home, Compass, MessageCircle, Bell, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const BottomNav = () => {
@@ -10,8 +11,35 @@ const BottomNav = () => {
     { to: "/profile", icon: User, label: "Profile" },
   ];
 
+  const [showNav, setShowNav] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      const diff = currentScrollY - lastScrollY.current;
+
+      if (diff > 10) {
+        setShowNav(false); // scrolling down
+      } else if (diff < -10) {
+        setShowNav(true); // scrolling up
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="fixed bottom-0 left-0 right-0  border-t border-(--bottom-nav-border) backdrop-blur-md lg:hidden">
+    <div
+      className={`fixed bottom-0 left-0 right-0 border-t border-(--bottom-nav-border) backdrop-blur-md lg:hidden transition-transform duration-300 ${
+        showNav ? "translate-y-0" : "translate-y-full"
+      }`}
+    >
       <div className="grid grid-cols-5 py-2">
         {items.map((i) => {
           const Icon = i.icon;
