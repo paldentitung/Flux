@@ -1,35 +1,49 @@
 import { useContext, useState } from "react";
-import { Register } from "../services/authService";
+import { register, verifyOtp } from "../services/authService";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/createContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 type RegisterFormData = {
   username: string;
   email: string;
   password: string;
 };
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email;
+
   if (!context) {
     throw new Error("useAuth must be used inside provider");
   }
+
   const handleRegister = async (formData: RegisterFormData): Promise<any> => {
     try {
       setLoading(true);
-
-      const data = await Register(formData);
-
+      const data = await register(formData);
       toast.success("Registered successfully");
-      navigate("/verify-otp", {
-        state: { email: formData.email },
-      });
+      navigate("/verify-otp", { state: { email: formData.email } });
       return data;
     } finally {
       setLoading(false);
     }
   };
 
-  return { handleRegister, loading };
+  const handleVerifyOtp = async (otp: string) => {
+    try {
+      setLoading(true);
+      const data = await verifyOtp({ email, otp });
+      toast.success("OTP verified successfully");
+      navigate("/");
+      return data;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { handleRegister, handleVerifyOtp, loading };
 };
