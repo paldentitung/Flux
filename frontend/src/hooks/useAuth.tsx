@@ -49,6 +49,7 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const data = await verifyOtp({ email, otp });
+      if (!data) return;
       toast.success("OTP verified successfully");
       navigate("/");
       return data;
