@@ -1,23 +1,46 @@
-import type { ButtonHTMLAttributes } from "react";
+import { type ButtonHTMLAttributes } from "react";
+
+type Variant = "primary" | "ghost";
 
 interface LoadingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   loadingText?: string;
+  variant?: Variant;
 }
+
+const variants: Record<
+  Variant,
+  { className: string; style?: React.CSSProperties }
+> = {
+  primary: {
+    className:
+      "text-[hsl(var(--primary-foreground))] shadow-(--shadow-glow) hover:opacity-90 disabled:opacity-70",
+    style: { background: "var(--gradient-primary)" },
+  },
+  ghost: {
+    className:
+      "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface))]",
+  },
+};
 
 const LoadingButton = ({
   loading = false,
   loadingText = "Loading…",
+  variant = "primary",
   children,
   disabled,
   className = "",
+  style,
   ...props
 }: LoadingButtonProps) => {
+  const v = variants[variant];
+
   return (
     <button
       disabled={loading || disabled}
       className={`flex items-center justify-center gap-2 transition-all
-        disabled:opacity-70 disabled:cursor-not-allowed ${className}`}
+        disabled:cursor-not-allowed ${v.className} ${className}`}
+      style={{ ...v.style, ...style }}
       {...props}
     >
       {loading ? (
