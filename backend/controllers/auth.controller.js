@@ -4,6 +4,7 @@ import {
   RegisterService,
   verifyOtpService,
   resetPasswordService,
+  resendOTPService,
 } from "../services/auth.service.js";
 import { sendTokenCookie } from "../utils/sendTokenCookie.js";
 import { generateToken } from "../utils/generateToken.js";
@@ -27,7 +28,7 @@ export const verifyOtpcontroller = async (req, res) => {
 
     const user = await verifyOtpService({ email, otp });
 
-    const token = generateToken(user._id); // ✅ generate here
+    const token = generateToken(user._id);
 
     sendTokenCookie(res, token);
 
@@ -99,6 +100,18 @@ export const resetPasswordController = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Password reset successful",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+export const resentOTPController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const data = await resendOTPService({ email });
+    res.status(200).json({
+      success: true,
+      message: "OTP resend successful",
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

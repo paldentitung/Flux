@@ -119,3 +119,23 @@ export const resetPasswordService = async ({ email, otp, newPassword }) => {
 
   await user.save();
 };
+
+export const resendOTPService = async ({ email }) => {
+  const user = await User.findOne({ email });
+
+  if (!user) throw new AppError("User not found", 404);
+  if (user.isVerified) throw new AppError("User already verified", 400);
+
+  const otp = generateOtp();
+  user.otp = otp;
+  user.otpExpiry = Date.now() + 10 * 60 * 1000;
+  await user.save();
+
+  await sendEmail({
+    to: email,
+    subject: "Verify Your Account",
+    html: `<h1>Your OTP is<br><strong>${otp}</strong></h1>`,
+  });
+
+  return { message: "OTP resent successfully" };
+};
