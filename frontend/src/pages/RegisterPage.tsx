@@ -2,6 +2,7 @@ import { Sparkles, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
+import LoadingButton from "../components/ui/LoadingButton";
 const RegisterPage = () => {
   const { handleRegister, loading } = useAuth();
 
@@ -136,14 +137,15 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            <button
+            <LoadingButton
               type="submit"
-              disabled={loading}
-              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
+              loading={loading}
+              loadingText="Creating..."
+              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 hover:cursor-pointer"
               style={{ background: "var(--gradient-primary)" }}
             >
-              {loading ? "Creating..." : "Create account"}
-            </button>
+              Register
+            </LoadingButton>
           </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">

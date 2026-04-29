@@ -2,6 +2,7 @@ import { Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import LoadingButton from "../components/ui/LoadingButton";
 const VerifyOtpPage = () => {
   const { handleVerifyOtp, loading } = useAuth();
 
@@ -24,12 +25,12 @@ const VerifyOtpPage = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const otp = digits.join("");
     if (otp.length < 6) return;
     await handleVerifyOtp(otp);
   };
-
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
@@ -92,7 +93,7 @@ const VerifyOtpPage = () => {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-xs font-medium text-[hsl(var(--muted-foreground))] uppercase tracking-widest mb-2 block">
                 One-time code
@@ -116,15 +117,16 @@ const VerifyOtpPage = () => {
               </div>
             </div>
 
-            <button
-              onClick={handleSubmit}
-              disabled={loading || digits.join("").length < 6}
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              loadingText="Verifying.."
               className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ background: "var(--gradient-primary)" }}
             >
-              {loading ? "Verifying..." : "Verify OTP"}
-            </button>
-          </div>
+              Verify OTP
+            </LoadingButton>
+          </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Didn't receive it?{" "}
