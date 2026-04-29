@@ -39,7 +39,7 @@ const LoadingButton = ({
     <button
       disabled={loading || disabled}
       className={`flex items-center justify-center gap-2 transition-all
-        disabled:cursor-not-allowed ${v.className} ${className}`}
+        disabled:cursor-not-allowed hover:cursor-pointer ${v.className} ${className}`}
       style={{ ...v.style, ...style }}
       {...props}
     >

@@ -1,6 +1,11 @@
 import { Sparkles } from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
+import LoadingButton from "../components/ui/LoadingButton";
 
 const ForgotPasswordPage = () => {
+  const { handleForgotPassword, loading } = useAuth();
+  const [email, setEmail] = useState("");
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
@@ -63,7 +68,13 @@ const ForgotPasswordPage = () => {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleForgotPassword({ email });
+            }}
+            className="space-y-4"
+          >
             <div className="flex flex-col space-y-2">
               <label
                 htmlFor="email"
@@ -74,18 +85,23 @@ const ForgotPasswordPage = () => {
               <input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="input-auth"
               />
             </div>
 
-            <button
-              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
-              style={{ background: "var(--gradient-primary)" }}
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              loadingText="Sending…"
+              variant="primary"
+              className="w-full h-11 rounded-xl text-sm font-semibold"
             >
               Send OTP
-            </button>
-          </div>
+            </LoadingButton>
+          </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Remembered it?{" "}

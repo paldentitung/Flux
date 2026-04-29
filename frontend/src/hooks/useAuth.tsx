@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import {
+  forgotPassword,
   login,
   logout,
   register,
@@ -84,6 +85,16 @@ export const useAuth = () => {
     }
   };
 
+  const handleForgotPassword = async ({ email }: { email: string }) => {
+    try {
+      setLoading(true);
+      const data = await forgotPassword({ email });
+      if (!data) return;
+      toast.success(data.message || "OTP is Send to email");
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleLogout = async () => {
     try {
       setLoading(true);
@@ -105,5 +116,6 @@ export const useAuth = () => {
     handleLogout,
     handleResendOTP,
     resendLoading,
+    handleForgotPassword,
   };
 };

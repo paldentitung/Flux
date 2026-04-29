@@ -119,3 +119,21 @@ export const resendOTP = async ({ email }: { email: string }) => {
     return null;
   }
 };
+
+export const forgotPassword = async ({ email }: { email: string }) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Something went wrong");
+    return data;
+  } catch (error: any) {
+    toast.error(error.message);
+    return null;
+  }
+};

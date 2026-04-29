@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import LoadingButton from "../components/ui/LoadingButton";
-
+import { Link } from "react-router-dom";
 const LoginPage = () => {
   const { handleLogin, loading } = useAuth();
 
@@ -133,12 +133,12 @@ const LoginPage = () => {
                 >
                   Password
                 </label>
-                <a
-                  href="/forgot-password"
+                <Link
+                  to="/forgot-password"
                   className="text-xs text-(--auth-link) hover:text-[hsl(var(--accent))] transition-colors"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <input
