@@ -1,8 +1,36 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
+import LoadingButton from "../components/ui/LoadingButton";
 
 const LoginPage = () => {
+  const { handleLogin, loading } = useAuth();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      return toast.error("Fill up all the fields");
+    }
+
+    await handleLogin(formData);
+  };
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       <div className="relative hidden md:flex flex-col justify-between p-12 overflow-hidden bg-[hsl(var(--surface))] border-r border-[hsl(var(--border))]">
@@ -78,7 +106,7 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col space-y-2">
               <label
                 htmlFor="email"
@@ -89,6 +117,9 @@ const LoginPage = () => {
               <input
                 id="email"
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="you@example.com"
                 className="input-auth"
               />
@@ -113,11 +144,15 @@ const LoginPage = () => {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="••••••••"
                   className="input-auth"
                 />
 
                 <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className=" absolute right-3 top-3"
                 >
@@ -126,13 +161,16 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button
-              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              loadingText="Signing up…"
+              className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 hover:cursor-pointer"
               style={{ background: "var(--gradient-primary)" }}
             >
-              Sign in
-            </button>
-          </div>
+              Sign up
+            </LoadingButton>
+          </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Don't have an account?{" "}

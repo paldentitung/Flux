@@ -1,11 +1,16 @@
 import { useContext, useState } from "react";
-import { register, verifyOtp } from "../services/authService";
+import { login, register, verifyOtp } from "../services/authService";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/createContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 type RegisterFormData = {
   username: string;
+  email: string;
+  password: string;
+};
+
+type LoginFormData = {
   email: string;
   password: string;
 };
@@ -48,11 +53,24 @@ export const useAuth = () => {
   const useCleanUsername = (username?: string) =>
     username?.replace(/\s/g, "") ?? "";
 
+  const handleLogin = async (formData: LoginFormData): Promise<any> => {
+    try {
+      setLoading(true);
+      const data = await login(formData);
+      if (!data) return;
+      toast.success("Login successfull");
+      navigate("/");
+      return data;
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     handleRegister,
     handleVerifyOtp,
     loading,
     user: context.user,
     useCleanUsername,
+    handleLogin,
   };
 };

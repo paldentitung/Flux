@@ -60,3 +60,29 @@ export const getMe = async () => {
     return null;
   }
 };
+
+export const login = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || "Something went wrong");
+    return data;
+  } catch (error: any) {
+    toast.error(error.message);
+    return null;
+  }
+};
