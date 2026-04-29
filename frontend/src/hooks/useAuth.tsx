@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { login, register, verifyOtp } from "../services/authService";
+import { login, logout, register, verifyOtp } from "../services/authService";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/createContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -65,6 +65,18 @@ export const useAuth = () => {
       setLoading(false);
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      const data = await logout();
+      toast.success("Logout successfully");
+      navigate("/login");
+      return data;
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     handleRegister,
     handleVerifyOtp,
@@ -72,5 +84,6 @@ export const useAuth = () => {
     user: context.user,
     useCleanUsername,
     handleLogin,
+    handleLogout,
   };
 };

@@ -20,7 +20,7 @@ const LeftSidebar = () => {
     { name: "Settings", path: "/settings", Icon: Settings },
   ];
 
-  const { user, useCleanUsername } = useAuth();
+  const { user, useCleanUsername, handleLogout } = useAuth();
 
   return (
     <div className="w-64 min-h-screen  flex-col bg-[hsl(--sidebar-primary)] border-r border-white/6 hidden lg:flex fixed ">
@@ -68,7 +68,10 @@ const LeftSidebar = () => {
             </p>
           </div>
 
-          <button className="p-2 rounded-md text-(--sidebar-icon) hover:bg-[hsl(var(--sidebar-item-hover))] hover:text-[hsl(var(--sidebar-foreground))] transition-colors">
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-md text-(--sidebar-icon) hover:bg-[hsl(var(--sidebar-item-hover))] hover:text-[hsl(var(--sidebar-foreground))] transition-colors"
+          >
             <LogOut size={18} />
           </button>
         </div>
