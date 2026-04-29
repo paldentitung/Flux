@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingButton from "../components/ui/LoadingButton";
 const VerifyOtpPage = () => {
-  const { handleVerifyOtp, loading } = useAuth();
+  const { handleVerifyOtp, loading, handleResendOTP, resendLoading } =
+    useAuth();
 
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -130,8 +131,12 @@ const VerifyOtpPage = () => {
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Didn't receive it?{" "}
-            <button className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors">
-              Resend code
+            <button
+              onClick={handleResendOTP}
+              disabled={resendLoading}
+              className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              {resendLoading ? "Sending…" : "Resend code"}
             </button>
           </p>
         </div>

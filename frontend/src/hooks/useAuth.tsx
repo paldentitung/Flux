@@ -1,5 +1,11 @@
 import { useContext, useState } from "react";
-import { login, logout, register, verifyOtp } from "../services/authService";
+import {
+  login,
+  logout,
+  register,
+  resendOTP,
+  verifyOtp,
+} from "../services/authService";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/createContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,7 +32,7 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
-
+  const [resendLoading, setResendLoading] = useState(false);
   const handleRegister = async (formData: RegisterFormData): Promise<any> => {
     try {
       setLoading(true);
@@ -66,6 +72,17 @@ export const useAuth = () => {
     }
   };
 
+  const handleResendOTP = async () => {
+    try {
+      setResendLoading(true);
+      const data = await resendOTP({ email });
+      if (!data) return;
+      toast.success("Resent OTP successfull");
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       setLoading(true);
@@ -85,5 +102,7 @@ export const useAuth = () => {
     useCleanUsername,
     handleLogin,
     handleLogout,
+    handleResendOTP,
+    resendLoading,
   };
 };

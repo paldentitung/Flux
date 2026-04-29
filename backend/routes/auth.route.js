@@ -20,5 +20,5 @@ router.post("/logout", logout);
 router.get("/get-me", protect, getMe);
 router.post("/forgot-password", forgotPasswordController);
 router.post("/reset-password", resetPasswordController);
-router.post("/resent-otp", resentOTPController);
+router.post("/resend-otp", resentOTPController);
 export default router;
