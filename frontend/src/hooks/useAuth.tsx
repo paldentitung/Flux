@@ -5,11 +5,12 @@ import {
   logout,
   register,
   resendOTP,
+  resetPassword,
   verifyOtp,
 } from "../services/authService";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/createContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type RegisterFormData = {
   username: string;
@@ -22,6 +23,11 @@ type LoginFormData = {
   password: string;
 };
 
+type resetPasswordData = {
+  email: string;
+  otp: string;
+  newPassword: string;
+};
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
@@ -31,8 +37,8 @@ export const useAuth = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const email = location.state?.email;
+  // const location = useLocation();
+  // const email = location.state?.email;
   const [resendLoading, setResendLoading] = useState(false);
   const handleRegister = async (formData: RegisterFormData): Promise<any> => {
     try {
@@ -46,13 +52,23 @@ export const useAuth = () => {
     }
   };
 
-  const handleVerifyOtp = async (otp: string) => {
+  const handleVerifyOtp = async (
+    otp: string,
+    email: string,
+    isReset?: boolean,
+  ) => {
     try {
       setLoading(true);
-      const data = await verifyOtp({ email, otp });
+      const data = await verifyOtp({ email, otp, isReset });
       if (!data) return;
       toast.success("OTP verified successfully");
-      navigate("/");
+
+      if (isReset) {
+        navigate("/reset-password", { state: { email, otp } });
+      } else {
+        navigate("/");
+      }
+
       return data;
     } finally {
       setLoading(false);
@@ -74,7 +90,7 @@ export const useAuth = () => {
     }
   };
 
-  const handleResendOTP = async () => {
+  const handleResendOTP = async (email: string) => {
     try {
       setResendLoading(true);
       const data = await resendOTP({ email });
@@ -91,6 +107,26 @@ export const useAuth = () => {
       const data = await forgotPassword({ email });
       if (!data) return;
       toast.success(data.message || "OTP is Send to email");
+      navigate("/verify-otp", { state: { email, isReset: true } });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (formData: resetPasswordData) => {
+    try {
+      setLoading(true);
+
+      const data = await resetPassword(formData);
+
+      if (!data) return;
+
+      toast.success("Reset password successfully");
+      navigate("/login");
+
+      return data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -117,5 +153,6 @@ export const useAuth = () => {
     handleResendOTP,
     resendLoading,
     handleForgotPassword,
+    handleResetPassword,
   };
 };

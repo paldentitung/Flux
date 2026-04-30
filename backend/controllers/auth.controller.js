@@ -24,9 +24,9 @@ export const RegisterController = async (req, res) => {
 };
 export const verifyOtpcontroller = async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { email, otp, isReset } = req.body;
 
-    const user = await verifyOtpService({ email, otp });
+    const user = await verifyOtpService({ email, otp, isReset });
 
     const token = generateToken(user._id);
 

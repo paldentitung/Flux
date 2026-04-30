@@ -3,14 +3,22 @@ import { useAuth } from "../hooks/useAuth";
 import { useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import LoadingButton from "../components/ui/LoadingButton";
+
+type VerifyOtpLocationState = {
+  email: string;
+  isReset?: boolean;
+};
 const VerifyOtpPage = () => {
   const { handleVerifyOtp, loading, handleResendOTP, resendLoading } =
     useAuth();
 
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const location = useLocation();
+  const location = useLocation() as {
+    state: VerifyOtpLocationState;
+  };
   const email = location.state?.email;
+  const isReset = !!location.state?.isReset;
 
   const handleChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return; // numbers only
@@ -30,8 +38,9 @@ const VerifyOtpPage = () => {
     e.preventDefault();
     const otp = digits.join("");
     if (otp.length < 6) return;
-    await handleVerifyOtp(otp);
+    await handleVerifyOtp(otp, email, isReset);
   };
+
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
@@ -132,7 +141,7 @@ const VerifyOtpPage = () => {
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Didn't receive it?{" "}
             <button
-              onClick={handleResendOTP}
+              onClick={() => handleResendOTP(email)}
               disabled={resendLoading}
               className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors disabled:opacity-50 cursor-pointer"
             >

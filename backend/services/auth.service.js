@@ -31,29 +31,30 @@ export const RegisterService = async ({ username, email, password }) => {
   return { user: safeUser };
 };
 
-export const verifyOtpService = async ({ email, otp }) => {
+export const verifyOtpService = async ({ email, otp, isReset }) => {
   const user = await User.findOne({ email });
 
-  if (!user) {
-    throw new AppError("User not found", 404);
+  if (!user) throw new AppError("User not found", 404);
+
+  if (isReset) {
+    // reset password flow
+    if (user.resetOtp !== String(otp)) throw new AppError("Invalid OTP", 400);
+    if (user.resetOtpExpires < Date.now())
+      throw new AppError("OTP expired", 400);
+  } else {
+    // register flow
+    if (user.otp !== String(otp)) throw new AppError("Invalid OTP", 400);
+    if (user.otpExpiry < Date.now()) throw new AppError("OTP expired", 400);
+
+    user.isVerified = true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
   }
 
-  if (user.otp !== String(otp)) throw new AppError("Invalid OTP", 400);
-
-  if (user.otpExpiry < Date.now()) {
-    throw new AppError("Otp expired", 400);
-  }
-
-  user.isVerified = true;
-  user.otp = undefined;
-  user.otpExpiry = undefined;
-
-  await user.save();
   const { password: _, ...safeUser } = user.toObject();
-
-  return user;
+  return { user: safeUser };
 };
-
 export const loginService = async ({ email, password }) => {
   const user = await User.findOne({ email });
 
@@ -93,6 +94,7 @@ export const forgotPasswordService = async ({ email }) => {
     html: `<h1>Your OTP is
     <br> <strong>${resetOtp}</strong></h1>`,
   });
+  return { message: "OTP sent successfully" };
 };
 
 export const resetPasswordService = async ({ email, otp, newPassword }) => {
@@ -118,6 +120,7 @@ export const resetPasswordService = async ({ email, otp, newPassword }) => {
   user.resetOtpExpires = undefined;
 
   await user.save();
+  return { message: "Password reset successfully" };
 };
 
 export const resendOTPService = async ({ email }) => {

@@ -27,16 +27,18 @@ export const register = async ({
 export const verifyOtp = async ({
   email,
   otp,
+  isReset,
 }: {
   email: string;
   otp: string;
+  isReset?: boolean;
 }) => {
   try {
     const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp }),
+      body: JSON.stringify({ email, otp, isReset }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || "Something went wrong");
@@ -135,5 +137,33 @@ export const forgotPassword = async ({ email }: { email: string }) => {
   } catch (error: any) {
     toast.error(error.message);
     return null;
+  }
+};
+
+export const resetPassword = async ({
+  email,
+  otp,
+  newPassword,
+}: {
+  email: string;
+  otp: string;
+  newPassword: string;
+}) => {
+  try {
+    console.log("RESET PASSWORD:", { email, otp, newPassword });
+
+    const res = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp, newPassword }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || "Something went wrong");
+
+    return data;
+  } catch (error: any) {
+    toast.error(error.message);
   }
 };

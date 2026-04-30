@@ -1,10 +1,40 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { useState } from "react";
-
+import { useLocation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import toast from "react-hot-toast";
+import LoadingButton from "../components/ui/LoadingButton";
 const ResetPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [passwords, setPasswords] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const location = useLocation();
+  const email = location.state?.email;
+  const otp = location.state?.otp;
 
+  const { handleResetPassword, loading } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passwords.newPassword || !passwords.confirmPassword) {
+      toast.error("Fill all fields");
+      return;
+    }
+
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    await handleResetPassword({
+      email,
+      otp,
+      newPassword: passwords.newPassword,
+    });
+  };
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
@@ -68,7 +98,7 @@ const ResetPasswordPage = () => {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* New password */}
             <div className="space-y-1.5">
               <label
@@ -81,10 +111,18 @@ const ResetPasswordPage = () => {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
+                  required
+                  onChange={(e) =>
+                    setPasswords((prev) => ({
+                      ...prev,
+                      newPassword: e.target.value,
+                    }))
+                  }
                   placeholder="Min. 8 characters"
                   className="input-auth"
                 />
                 <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3"
                 >
@@ -105,10 +143,18 @@ const ResetPasswordPage = () => {
                 <input
                   id="confirm-password"
                   type={showConfirm ? "text" : "password"}
+                  required
+                  onChange={(e) =>
+                    setPasswords((prev) => ({
+                      ...prev,
+                      confirmPassword: e.target.value,
+                    }))
+                  }
                   placeholder="Repeat your password"
                   className="input-auth"
                 />
                 <button
+                  type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
                   className="absolute right-3 top-3"
                 >
@@ -117,13 +163,15 @@ const ResetPasswordPage = () => {
               </div>
             </div>
 
-            <button
+            <LoadingButton
+              type="submit"
+              loading={loading}
+              loadingText="Reseting..."
               className="w-full h-11 rounded-xl text-[hsl(var(--primary-foreground))] text-sm font-semibold shadow-(--shadow-glow) hover:opacity-90 transition-opacity hover:cursor-pointer"
-              style={{ background: "var(--gradient-primary)" }}
             >
               Reset password
-            </button>
-          </div>
+            </LoadingButton>
+          </form>
 
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Back to{" "}
