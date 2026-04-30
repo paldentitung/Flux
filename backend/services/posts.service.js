@@ -1,0 +1,29 @@
+import Post from "../models/Post.js";
+import User from "../models/User.js";
+import AppError from "../utils/AppError.js";
+
+export const getPostService = async () => {
+  const posts = await Post.find()
+    .populate("userId", "-password")
+    .sort({ createdAt: -1 });
+  return posts;
+};
+export const createPostService = async (
+  userId,
+  content,
+  images = [],
+  likes = [],
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("user not found", 404);
+  }
+  const newPost = await Post.create({
+    userId,
+    content,
+    images,
+    likes: [],
+  });
+  return newPost;
+};

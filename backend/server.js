@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import errorMiddleware from "./middleware/error.middleware.js";
 import authRoute from "./routes/auth.route.js";
+import postsRoute from "./routes/posts.route.js";
 import cookieParser from "cookie-parser";
 dotenv.config({ path: ".env.local" });
 
@@ -16,12 +17,12 @@ app.use(
     credentials: true, // ⭐ allow cookies
   }),
 );
-app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 connectDB();
 
 app.use("/api/auth", authRoute);
+app.use("/api/posts", postsRoute);
 
 // error handler
 app.use(errorMiddleware);
