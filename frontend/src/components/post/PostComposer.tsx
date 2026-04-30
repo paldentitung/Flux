@@ -2,20 +2,46 @@ import { useState, useRef } from "react";
 import Modal from "../ui/Modal";
 import { FaTimes } from "react-icons/fa";
 import { Image } from "lucide-react";
+import { usePosts } from "../../hooks/usePosts";
 
 const PostComposer = () => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
-  const [image, setImage] = useState<string | undefined>();
-
+  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement | null>(null);
   console.log(fileRef);
+
   const reset = () => {
     setText("");
-    setImage(undefined);
+    setFiles([]);
+    setImages([]);
     setOpen(false);
   };
 
+  const { handleCreatePost, loading } = usePosts();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+
+    setFiles((prev) => [...prev, ...selectedFiles]);
+
+    const previews = selectedFiles.map((file) => URL.createObjectURL(file));
+
+    setImages((prev) => [...prev, ...previews]);
+  };
+  const handleSubmit = async () => {
+    const formData = new FormData();
+
+    formData.append("content", text);
+
+    files.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    await handleCreatePost(formData);
+
+    reset();
+  };
   return (
     <div>
       {/* Trigger */}
@@ -54,10 +80,17 @@ const PostComposer = () => {
             />
           </div>
 
-          {image && (
-            <img src={image} className="rounded-lg max-h-60 object-cover" />
+          {images.length > 0 && (
+            <div className="grid grid-cols-2 gap-2">
+              {images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  className="rounded-lg max-h-60 object-cover"
+                />
+              ))}
+            </div>
           )}
-
           <div className="flex justify-between items-center">
             <div
               onClick={() => fileRef.current?.click()}
@@ -68,12 +101,8 @@ const PostComposer = () => {
                 ref={fileRef}
                 type="file"
                 className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    setImage(URL.createObjectURL(file));
-                  }
-                }}
+                multiple
+                onChange={handleFileChange}
               />
             </div>
 
@@ -86,7 +115,8 @@ const PostComposer = () => {
               </button>
 
               <button
-                disabled={!text}
+                onClick={handleSubmit}
+                disabled={!text || loading}
                 className="px-4 py-2 rounded-full bg-[hsl(var(--primary))] text-white disabled:opacity-40 hover:opacity-90 transition"
               >
                 Post

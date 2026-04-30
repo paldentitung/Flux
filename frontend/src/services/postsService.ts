@@ -14,3 +14,22 @@ export const getPosts = async () => {
     toast.error(error);
   }
 };
+export const createPost = async (formData: FormData): Promise<any> => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/posts`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "something went wrong");
+    }
+
+    return data;
+  } catch (error: any) {
+    toast.error(error.message);
+  }
+};

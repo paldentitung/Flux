@@ -9,5 +9,5 @@ import { upload } from "../middleware/upload.middleware.js";
 const router = express.Router();
 
 router.get("/", getPostsController);
-router.post("/create", protect, upload.array("images"), createPostController);
+router.post("/", protect, upload.array("images"), createPostController);
 export default router;
