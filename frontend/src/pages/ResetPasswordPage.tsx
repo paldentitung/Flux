@@ -1,6 +1,6 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import LoadingButton from "../components/ui/LoadingButton";
@@ -35,6 +35,14 @@ const ResetPasswordPage = () => {
       newPassword: passwords.newPassword,
     });
   };
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!email || !otp) {
+      toast.error("Session expired, please try again");
+      navigate("/forgot-password");
+    }
+  }, []);
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}

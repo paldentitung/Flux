@@ -1,9 +1,9 @@
 import { Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoadingButton from "../components/ui/LoadingButton";
-
+import toast from "react-hot-toast";
 type VerifyOtpLocationState = {
   email: string;
   isReset?: boolean;
@@ -19,6 +19,7 @@ const VerifyOtpPage = () => {
   };
   const email = location.state?.email;
   const isReset = !!location.state?.isReset;
+  const navigate = useNavigate();
 
   const handleChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return; // numbers only
@@ -41,6 +42,12 @@ const VerifyOtpPage = () => {
     await handleVerifyOtp(otp, email, isReset);
   };
 
+  useEffect(() => {
+    if (!email) {
+      toast.error("Session expired, please try again");
+      navigate("/forgot-password");
+    }
+  }, []);
   return (
     <div className="min-h-screen grid md:grid-cols-2">
       {/* Left panel */}
