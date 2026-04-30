@@ -19,25 +19,46 @@ import {
   verifyOtpValidator,
 } from "../validators/authValidator.js";
 import { validate } from "../middleware/validate.middleware.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = express.Router();
 
-router.post("/register", registerValidator, validate, RegisterController);
-router.post("/verify-otp", verifyOtpValidator, validate, verifyOtpcontroller);
-router.post("/login", loginValidator, validate, loginController);
-router.post("/logout", logout);
-router.get("/get-me", protect, getMe);
+router.post(
+  "/register",
+  registerValidator,
+  validate,
+  asyncHandler(RegisterController),
+);
+
+router.post(
+  "/verify-otp",
+  verifyOtpValidator,
+  validate,
+  asyncHandler(verifyOtpcontroller),
+);
+
+router.post("/login", loginValidator, validate, asyncHandler(loginController));
+
+router.get("/get-me", protect, asyncHandler(getMe));
+
 router.post(
   "/forgot-password",
   forgotPasswordValidator,
   validate,
-  forgotPasswordController,
+  asyncHandler(forgotPasswordController),
 );
+
 router.post(
   "/reset-password",
   resetPasswordValidator,
   validate,
-  resetPasswordController,
+  asyncHandler(resetPasswordController),
 );
-router.post("/resend-otp", resendOtpValidator, validate, resentOTPController);
+
+router.post(
+  "/resend-otp",
+  resendOtpValidator,
+  validate,
+  asyncHandler(resentOTPController),
+);
 export default router;
