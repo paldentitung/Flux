@@ -8,12 +8,7 @@ export const getPostService = async () => {
     .sort({ createdAt: -1 });
   return posts;
 };
-export const createPostService = async (
-  userId,
-  content,
-  images = [],
-  likes = [],
-) => {
+export const createPostService = async (userId, content, images = []) => {
   const user = await User.findById(userId);
 
   if (!user) {

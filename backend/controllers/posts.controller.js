@@ -11,10 +11,18 @@ export const getPostsController = async (req, res) => {
 };
 export const createPostController = async (req, res) => {
   const userId = req.user._id;
-  const { content, images } = req.body;
+  const { content } = req.body;
+
+  const images =
+    req.files?.map(
+      (file) => `http://localhost:3000/uploads/${file.filename}`,
+    ) || [];
+
   const result = await createPostService(userId, content, images);
 
-  res
-    .status(201)
-    .json({ success: true, message: "Post created", data: result });
+  res.status(201).json({
+    success: true,
+    message: "Post created",
+    data: result,
+  });
 };

@@ -1,5 +1,5 @@
 import { Heart, MessageCircle, Send, Share2 } from "lucide-react";
-import type { Post } from "../../types/post";
+import type { Post } from "../../types/post.types";
 import { useState } from "react";
 
 type Props = {
@@ -14,16 +14,16 @@ const PostCard = ({ post }: Props) => {
       {/* Header */}
       <div className="flex items-center gap-3">
         <img
-          src={post.user.avatar ?? "/placeholder.jpg"}
+          src={post.userId.avatar ?? "/placeholder.jpg"}
           className="w-10 h-10 rounded-full object-cover"
         />
 
         <div className="flex flex-col mr-auto">
           <h2 className="text-(--foreground) font-medium text-sm">
-            {post.user.name}
+            {post.userId.name}
           </h2>
           <span className="text-xs text-(--muted-foreground)">
-            @{post.user.username} • {post.createdAt}
+            @{post.userId.username} • {post.createdAt}
           </span>
         </div>
 
@@ -36,11 +36,30 @@ const PostCard = ({ post }: Props) => {
       </p>
 
       {/* Image (only render if exists) */}
-      {post.image && (
+      {post.images?.length === 1 && (
         <img
-          src={post.image}
+          src={post.images[0]}
           className="w-full rounded-lg object-cover max-h-100"
         />
+      )}
+
+      {post.images?.length > 1 && (
+        <div className="grid grid-cols-2 gap-2 relative">
+          {post.images.slice(0, 4).map((img, i) => (
+            <div key={i} className="relative">
+              <img src={img} className="w-full h-48 object-cover rounded-lg" />
+
+              {/* Overlay for 4th image if more exist */}
+              {i === 3 && post.images.length > 4 && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                  <span className="text-white text-lg font-semibold">
+                    +{post.images.length - 4}
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       )}
       <div className="flex items-center justify-between text-(--muted-foreground) pt-2">
         <div className="flex gap-2">
@@ -54,7 +73,7 @@ const PostCard = ({ post }: Props) => {
             className="flex items-center gap-1 hover:text-(--primary) transition "
           >
             <MessageCircle size={17} />
-            <span className="text-xs">{post.comments?.length ?? 0}</span>
+            {/* <span className="text-xs">{post.comments.length ?? 0}</span> */}
           </button>
         </div>
 
@@ -63,16 +82,17 @@ const PostCard = ({ post }: Props) => {
         </button>
       </div>
 
-      {showComments && (
+      {/* {showComments && (
         <div className="mt-2 space-y-3 border-t border-(--post-card-border) pt-3">
           {post.comments?.length > 0 ? (
-            post.comments.map((c) => (
+            post.comments?.map((c) => (
               <div key={c.id} className="flex gap-2">
-                <img src={c.user.avatar} className="w-6 h-6 rounded-full" />
+                <img src={c.userId.avatar} className="w-6 h-6 rounded-full" />
 
                 <div>
                   <p className="text-xs text-(--foreground)">
-                    <span className="font-medium">{c.user.name}</span> {c.text}
+                    <span className="font-medium">{c.userId.name}</span>{" "}
+                    {c.text}
                   </p>
 
                   <span className="text-[10px] text-(--muted-foreground)">
@@ -100,7 +120,7 @@ const PostCard = ({ post }: Props) => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
