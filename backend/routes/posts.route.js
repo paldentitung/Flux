@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.get("/", protect, getPostsController);
 router.post("/", protect, upload.array("images"), createPostController);
-router.put("/:postId", protect, upload.array("images"), updatePostController);
+router.patch("/:postId", protect, upload.array("images"), updatePostController);
 router.delete("/:postId", protect, deletePostController);
 export default router;
