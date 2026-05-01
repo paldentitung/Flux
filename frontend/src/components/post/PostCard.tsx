@@ -9,6 +9,7 @@ type Props = {
 
 const PostCard = ({ post }: Props) => {
   const [showComments, setShowComments] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const formatPostDate = (date: string) => {
     const d = new Date(date);
     const hoursAgo = differenceInHours(new Date(), d);
@@ -42,7 +43,28 @@ const PostCard = ({ post }: Props) => {
           </span>
         </div>
 
-        <button className="text-(--muted-foreground)">•••</button>
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="text-(--muted-foreground)"
+          >
+            •••
+          </button>
+
+          {menuOpen && (
+            <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
+              <button className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] hover:cursor-pointer">
+                Edit post
+              </button>
+              <button className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] hover:cursor-pointer">
+                Delete post
+              </button>
+              <button className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] hover:cursor-pointer">
+                Report
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Content */}
