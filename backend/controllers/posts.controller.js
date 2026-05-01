@@ -1,5 +1,6 @@
 import {
   createPostService,
+  deletePostService,
   getPostService,
 } from "../services/posts.service.js";
 
@@ -23,6 +24,16 @@ export const createPostController = async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Post created",
+    data: result,
+  });
+};
+
+export const deletePostController = async (req, res) => {
+  const { postId } = req.params;
+  const result = await deletePostService(postId);
+  res.status(200).json({
+    success: true,
+    message: "Post deleted",
     data: result,
   });
 };

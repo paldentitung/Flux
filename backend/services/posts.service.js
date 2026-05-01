@@ -22,3 +22,14 @@ export const createPostService = async (userId, content, images = []) => {
   });
   return newPost;
 };
+
+export const deletePostService = async (postId) => {
+  console.log("id", postId);
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    throw new AppError("Post not found", 400);
+  }
+  const deletePost = await Post.findByIdAndDelete(postId);
+  return deletePost;
+};
