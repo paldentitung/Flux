@@ -4,14 +4,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getPosts = async () => {
   try {
-    const res = await fetch(`${API_BASE_URL}/posts`);
+    const res = await fetch(`${API_BASE_URL}/posts`, {
+      method: "GET",
+      credentials: "include",
+    });
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.message || "somethink went wrong");
     }
     return data;
   } catch (error: any) {
-    toast.error(error);
+    toast.error(error.message);
   }
 };
 export const createPost = async (formData: FormData): Promise<any> => {

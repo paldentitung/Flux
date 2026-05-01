@@ -21,3 +21,9 @@ export type Post = {
   updatedAt: string;
   __v: number;
 };
+
+export interface PostsContextValue {
+  posts: Post[];
+  loading: boolean;
+  handleCreatePost: (formData: FormData) => Promise<any>;
+}

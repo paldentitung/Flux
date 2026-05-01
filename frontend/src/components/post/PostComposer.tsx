@@ -1,18 +1,23 @@
 import { useState, useRef } from "react";
 import Modal from "../ui/Modal";
 
-import { usePosts } from "../../hooks/usePosts";
 import ComposerForm from "./ComposerForm";
 import toast from "react-hot-toast";
-const PostComposer = () => {
+const PostComposer = ({
+  onSubmit,
+  loading,
+}: {
+  onSubmit: (f: FormData) => Promise<any>;
+  loading: boolean;
+}) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { handleCreatePost, loading } = usePosts();
 
   const reset = () => {
+    images.forEach(URL.revokeObjectURL);
     setText("");
     setFiles([]);
     setImages([]);
@@ -29,8 +34,8 @@ const PostComposer = () => {
     const formData = new FormData();
     formData.append("content", text);
     files.forEach((f) => formData.append("images", f));
-    await handleCreatePost(formData);
-    toast.success("Posted!");
+    const res = await onSubmit(formData);
+    if (res?.data) toast.success("Posted!");
     reset();
   };
 

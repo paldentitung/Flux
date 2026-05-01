@@ -1,5 +1,5 @@
 import { getMe } from "../services/authService";
-import type { User } from "../types/auth.types";
+import type { User } from "../types/user.types";
 import { AuthContext } from "./createContext";
 import { useEffect, useState, type ReactNode } from "react";
 

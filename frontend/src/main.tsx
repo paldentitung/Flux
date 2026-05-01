@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { PostProvider } from "./context/PostsContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <PostProvider>
+          <App />
+        </PostProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
