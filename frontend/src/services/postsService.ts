@@ -36,3 +36,25 @@ export const createPost = async (formData: FormData): Promise<any> => {
     toast.error(error.message);
   }
 };
+
+export const deletePost = async (postId: string) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message);
+      throw error;
+    }
+  }
+};
