@@ -2,6 +2,7 @@ import {
   createPostService,
   deletePostService,
   getPostService,
+  updatePostService,
 } from "../services/posts.service.js";
 
 export const getPostsController = async (req, res) => {
@@ -28,9 +29,30 @@ export const createPostController = async (req, res) => {
   });
 };
 
+export const updatePostController = async (req, res) => {
+  const { postId } = req.params;
+  const updates = {
+    ...req.body,
+  };
+
+  if (req.files?.length) {
+    updates.images = req.files.map(
+      (file) => `http://localhost:3000/uploads/${file.filename}`,
+    );
+  }
+  const result = await updatePostService(postId, updates);
+
+  res.status(200).json({
+    success: true,
+    message: "Post updated",
+    data: result,
+  });
+};
+
 export const deletePostController = async (req, res) => {
   const { postId } = req.params;
   const result = await deletePostService(postId);
+
   res.status(200).json({
     success: true,
     message: "Post deleted",

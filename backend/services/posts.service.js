@@ -23,6 +23,19 @@ export const createPostService = async (userId, content, images = []) => {
   return newPost;
 };
 
+export const updatePostService = async (postId, updates) => {
+  const updatedPost = await Post.findByIdAndUpdate(postId, updates, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedPost) {
+    throw new AppError("Post not found", 404);
+  }
+
+  return updatedPost;
+};
+
 export const deletePostService = async (postId) => {
   console.log("id", postId);
   const post = await Post.findById(postId);
