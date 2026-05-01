@@ -1,6 +1,7 @@
 import { Heart, MessageCircle, Send, Share2 } from "lucide-react";
 import type { Post } from "../../types/post.types";
 import { useState } from "react";
+import { formatDistanceToNow, differenceInHours } from "date-fns";
 
 type Props = {
   post: Post;
@@ -8,13 +9,27 @@ type Props = {
 
 const PostCard = ({ post }: Props) => {
   const [showComments, setShowComments] = useState(false);
+  const formatPostDate = (date: string) => {
+    const d = new Date(date);
+    const hoursAgo = differenceInHours(new Date(), d);
 
+    if (hoursAgo < 24) {
+      return formatDistanceToNow(d, { addSuffix: true }); // "2 hours ago"
+    }
+
+    return d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }); // "May 1, 2026"
+  };
   return (
     <div className="bg-(--post-card-bg) border border-(--post-card-border) p-5 rounded-xl flex flex-col gap-4 shadow-sm">
       {/* Header */}
       <div className="flex items-center gap-3">
         <img
           src={post.userId.avatar ?? "/placeholder.jpg"}
+          alt={post.userId.name}
           className="w-10 h-10 rounded-full object-cover"
         />
 
@@ -23,7 +38,7 @@ const PostCard = ({ post }: Props) => {
             {post.userId.name}
           </h2>
           <span className="text-xs text-(--muted-foreground)">
-            @{post.userId.username} • {post.createdAt}
+            @{post.userId.username} • {formatPostDate(post.createdAt)}
           </span>
         </div>
 
@@ -65,7 +80,7 @@ const PostCard = ({ post }: Props) => {
         <div className="flex gap-2">
           <button className="flex items-center gap-1 hover:text-red-500 transition">
             <Heart size={18} />
-            <span className="text-xs">{post.likes}</span>
+            <span className="text-xs">{post.likes.length}</span>
           </button>
 
           <button
