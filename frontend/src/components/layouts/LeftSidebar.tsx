@@ -56,29 +56,41 @@ const LeftSidebar = () => {
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/6">
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-[hsl(var(--sidebar-user-bg))]">
-            <div className="relative">
-              <div className="w-8 h-8 rounded-full bg-[hsl(var(--primary))] flex items-center justify-center text-white text-sm font-bold">
-                {user?.username?.charAt(0).toUpperCase() || "U"}
+        <div className="p-3 border-t border-white/6">
+          <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-[10px] bg-white/5 border border-white/6 hover:bg-white/8 transition-colors">
+            {/* Avatar */}
+            <div className="relative shrink-0">
+              <div className="w-8.5 h-8.5 rounded-full  flex items-center justify-center text-white text-[13px] font-semibold border border-white/10 overflow-hidden">
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    className="w-full h-full object-cover"
+                    alt={user.name ?? ""}
+                  />
+                ) : (
+                  (user?.name?.[0] ?? user?.username?.[0] ?? "?").toUpperCase()
+                )}
               </div>
-              <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-(--sidebar-online) border-2 border-[hsl(var(--sidebar-background))]" />
+              <span className="absolute bottom-0 right-0 w-2.25 h-2.25 rounded-full bg-green-500 border-2 border-[hsl(var(--sidebar-background))]" />
             </div>
 
-            <div className="flex-1">
-              <p className="text-[hsl(var(--sidebar-foreground))] text-sm font-medium">
+            {/* Meta */}
+            <div className="flex-1 min-w-0">
+              <p className="text-[13px] font-medium text-white/90 truncate leading-tight">
                 {user?.name || user?.username}
               </p>
-              <p className="text-(--sidebar-icon) text-xs">
+              <p className="text-[11px] text-white/40 truncate mt-0.5">
                 @{useCleanUsername(user?.username)}
               </p>
             </div>
 
+            {/* Logout */}
             <button
               onClick={() => setShowModal(true)}
-              className="p-2 rounded-md text-(--sidebar-icon) hover:bg-[hsl(var(--sidebar-item-hover))] hover:text-[hsl(var(--sidebar-foreground))] transition-colors"
+              title="Sign out"
+              className="flex items-center justify-center w-7.5 h-7.5 rounded-[7px] text-white/35 hover:bg-red-500/15 hover:text-red-400 transition-colors shrink-0"
             >
-              <LogOut size={18} />
+              <LogOut size={15} />
             </button>
           </div>
         </div>

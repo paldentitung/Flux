@@ -2,6 +2,7 @@ import { Heart, MessageCircle, Send, Share2 } from "lucide-react";
 import type { Post } from "../../types/post.types";
 import { useState } from "react";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
   post: Post;
@@ -10,6 +11,7 @@ type Props = {
 const PostCard = ({ post }: Props) => {
   const [showComments, setShowComments] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { useCleanUsername } = useAuth();
   const formatPostDate = (date: string) => {
     const d = new Date(date);
     const hoursAgo = differenceInHours(new Date(), d);
@@ -39,7 +41,8 @@ const PostCard = ({ post }: Props) => {
             {post.userId.name}
           </h2>
           <span className="text-xs text-(--muted-foreground)">
-            @{post.userId.username} • {formatPostDate(post.createdAt)}
+            @{useCleanUsername(post.userId.username)}•{" "}
+            {formatPostDate(post.createdAt)}
           </span>
         </div>
 
