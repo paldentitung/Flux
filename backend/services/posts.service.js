@@ -37,12 +37,11 @@ export const updatePostService = async (postId, updates) => {
 };
 
 export const deletePostService = async (postId) => {
-  console.log("id", postId);
-  const post = await Post.findById(postId);
+  const deletedPost = await Post.findByIdAndDelete(postId);
 
-  if (!post) {
-    throw new AppError("Post not found", 400);
+  if (!deletedPost) {
+    throw new AppError("Post not found", 404);
   }
-  const deletePost = await Post.findByIdAndDelete(postId);
-  return deletePost;
+
+  return deletedPost;
 };
