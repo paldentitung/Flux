@@ -61,4 +61,5 @@ router.post(
   validate,
   asyncHandler(resentOTPController),
 );
+router.post("/logout", protect, asyncHandler(logout));
 export default router;

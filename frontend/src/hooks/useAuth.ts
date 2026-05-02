@@ -40,13 +40,15 @@ export const useAuth = () => {
   // const location = useLocation();
   // const email = location.state?.email;
   const [resendLoading, setResendLoading] = useState(false);
-  const handleRegister = async (formData: RegisterFormData): Promise<any> => {
+  const handleRegister = async (formData: RegisterFormData) => {
     try {
       setLoading(true);
       const data = await register(formData);
       toast.success("Registered successfully");
       navigate("/verify-otp", { state: { email: formData.email } });
       return data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -60,16 +62,15 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const data = await verifyOtp({ email, otp, isReset });
-      if (!data) return;
       toast.success("OTP verified successfully");
-
       if (isReset) {
         navigate("/reset-password", { state: { email, otp } });
       } else {
         navigate("/");
       }
-
       return data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -77,14 +78,15 @@ export const useAuth = () => {
   const useCleanUsername = (username?: string) =>
     username?.replace(/\s/g, "") ?? "";
 
-  const handleLogin = async (formData: LoginFormData): Promise<any> => {
+  const handleLogin = async (formData: LoginFormData) => {
     try {
       setLoading(true);
       const data = await login(formData);
-      if (!data) return;
-      toast.success("Login successfull");
+      toast.success("Login successful");
       navigate("/");
       return data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -93,21 +95,22 @@ export const useAuth = () => {
   const handleResendOTP = async (email: string) => {
     try {
       setResendLoading(true);
-      const data = await resendOTP({ email });
-      if (!data) return;
-      toast.success("Resent OTP successfull");
+      await resendOTP({ email });
+      toast.success("OTP resent successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setResendLoading(false);
     }
   };
-
   const handleForgotPassword = async ({ email }: { email: string }) => {
     try {
       setLoading(true);
       const data = await forgotPassword({ email });
-      if (!data) return;
-      toast.success(data.message || "OTP is Send to email");
+      toast.success(data.message || "OTP sent to email");
       navigate("/verify-otp", { state: { email, isReset: true } });
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -118,8 +121,6 @@ export const useAuth = () => {
       setLoading(true);
 
       const data = await resetPassword(formData);
-
-      if (!data) return;
 
       toast.success("Reset password successfully");
       navigate("/login");
@@ -134,10 +135,11 @@ export const useAuth = () => {
   const handleLogout = async () => {
     try {
       setLoading(true);
-      const data = await logout();
-      toast.success("Logout successfully");
+      await logout();
+      toast.success("Logged out successfully");
       navigate("/login");
-      return data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
