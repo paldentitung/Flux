@@ -1,6 +1,6 @@
 import PostComposer from "../components/post/PostComposer";
 import PostListing from "../components/post/PostListing";
-import { usePosts } from "../hooks/usePosts";
+import { usePosts } from "../hooks/usePosts.ts";
 
 const Home = () => {
   const { posts, handleCreatePost, loading } = usePosts();

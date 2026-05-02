@@ -8,7 +8,7 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth.ts";
 import { useState } from "react";
 import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";

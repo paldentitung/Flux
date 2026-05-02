@@ -1,6 +1,6 @@
 import { Sparkles, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.ts";
 import toast from "react-hot-toast";
 import LoadingButton from "../components/ui/LoadingButton";
 const RegisterPage = () => {

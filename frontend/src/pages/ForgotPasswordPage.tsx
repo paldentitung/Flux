@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.ts";
 import { useState } from "react";
 import LoadingButton from "../components/ui/LoadingButton";
 

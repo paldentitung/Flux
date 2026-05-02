@@ -2,7 +2,7 @@ import { Plus, User } from "lucide-react";
 import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 import Modal from "../ui/Modal";
 import { useState, useRef } from "react";
-import { usePosts } from "../../hooks/usePosts";
+import { usePosts } from "../../hooks/usePosts.ts";
 import ComposerForm from "../post/ComposerForm";
 import toast from "react-hot-toast";
 const Header = () => {

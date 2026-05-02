@@ -1,7 +1,7 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.ts";
 import toast from "react-hot-toast";
 import LoadingButton from "../components/ui/LoadingButton";
 const ResetPasswordPage = () => {

@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Send, Share2, Trash2 } from "lucide-react";
+import { Heart, MessageCircle, Share2 } from "lucide-react";
 import type { Post } from "../../types/post.types";
 import { useState, useRef } from "react";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
