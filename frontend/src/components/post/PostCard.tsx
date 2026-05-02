@@ -34,7 +34,7 @@ const PostCard = ({ post }: { post: Post }) => {
             </button>
             <LoadingButton
               onClick={p.confirmDelete}
-              loading={p.loading}
+              loading={p.loading.delete}
               loadingText="Deleting..."
               className="flex-1 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors cursor-pointer"
             >
@@ -146,7 +146,7 @@ const PostCard = ({ post }: { post: Post }) => {
 
             <LoadingButton
               onClick={p.confirmUpdate}
-              loading={p.loading}
+              loading={p.loading.update}
               loadingText="Saving..."
               variant="primary"
               className="flex-1 px-4 py-2 rounded-lg bg-[hsl(var(--primary))] text-white text-sm font-medium hover:opacity-90"

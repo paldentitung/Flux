@@ -69,7 +69,7 @@ const Header = () => {
         <ComposerForm
           text={text}
           images={images}
-          loading={loading}
+          loading={loading.create}
           fileRef={fileRef}
           onText={setText}
           onFile={handleFileChange}

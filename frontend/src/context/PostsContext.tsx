@@ -9,61 +9,61 @@ import {
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
 
-type PostProviderProps = {
-  children: ReactNode;
-};
+type PostProviderProps = { children: ReactNode };
+
 export const PostProvider = ({ children }: PostProviderProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    create: false,
+    delete: false,
+    update: false,
+  });
+
+  const setL = (key: keyof typeof loading, val: boolean) =>
+    setLoading((prev) => ({ ...prev, [key]: val }));
 
   useEffect(() => {
-    getPosts().then((result) => setPosts(result.data));
+    getPosts()
+      .then((res) => setPosts(res.data))
+      .catch(() => toast.error("Failed to load posts"));
   }, []);
 
   const handleCreatePost = async (formData: FormData) => {
     try {
-      setLoading(true);
+      setL("create", true);
       const res = await createPost(formData);
       if (res?.data) setPosts((prev) => [res.data, ...prev]);
       return res;
     } finally {
-      setLoading(false);
+      setL("create", false);
     }
   };
 
   const handleDeletePost = async (postId: string) => {
     try {
-      setLoading(true);
+      setL("delete", true);
       const res = await deletePost(postId);
       if (res?.data) {
         setPosts((prev) => prev.filter((p) => p._id !== postId));
-        toast.success(res.message || "Post delete");
+        toast.success(res.message || "Post deleted");
       }
       return res;
     } finally {
-      setLoading(false);
+      setL("delete", false);
     }
   };
 
   const handleUpdatePost = async (postId: string, formData: FormData) => {
     try {
-      setLoading(true);
-
+      setL("update", true);
       const res = await updatePost(postId, formData);
-
-      const updatedPost = res?.data;
-
-      if (updatedPost) {
-        setPosts((prev) =>
-          prev.map((p) => (p._id === postId ? updatedPost : p)),
-        );
-
-        toast.success(res?.data?.message || "Post updated");
+      if (res?.data) {
+        setPosts((prev) => prev.map((p) => (p._id === postId ? res.data : p)));
+        toast.success(res.message || "Post updated");
       }
-
-      return updatedPost;
+      return res?.data;
     } finally {
-      setLoading(false);
+      setL("update", false);
     }
   };
 

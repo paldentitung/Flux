@@ -15,7 +15,7 @@ const Home = () => {
           A slow scroll through your circle. Ava Mercer
         </span>
       </div>
-      <PostComposer onSubmit={handleCreatePost} loading={loading} />
+      <PostComposer onSubmit={handleCreatePost} loading={loading.create} />
       <PostListing posts={posts} />
     </div>
   );
