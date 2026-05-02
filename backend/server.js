@@ -17,6 +17,9 @@ app.use(
     credentials: true, // ⭐ allow cookies
   }),
 );
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 connectDB();
