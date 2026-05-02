@@ -8,6 +8,7 @@ import {
 } from "../services/postsService";
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
+import { useAuth } from "../hooks/useAuth";
 
 type PostProviderProps = { children: ReactNode };
 
@@ -22,11 +23,13 @@ export const PostProvider = ({ children }: PostProviderProps) => {
   const setL = (key: keyof typeof loading, val: boolean) =>
     setLoading((prev) => ({ ...prev, [key]: val }));
 
+  const { user } = useAuth();
   useEffect(() => {
+    if (!user) return;
     getPosts()
       .then((res) => setPosts(res.data))
       .catch(() => toast.error("Failed to load posts"));
-  }, []);
+  }, [user]);
 
   const handleCreatePost = async (formData: FormData) => {
     try {
