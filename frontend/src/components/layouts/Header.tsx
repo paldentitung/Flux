@@ -5,6 +5,7 @@ import { useState, useRef } from "react";
 import { usePosts } from "../../hooks/usePosts.ts";
 import ComposerForm from "../post/ComposerForm";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 const Header = () => {
   const showNav = useHideOnScroll();
   const [open, setOpen] = useState(false);
@@ -58,10 +59,12 @@ const Header = () => {
             onClick={() => setOpen(true)}
             className="cursor-pointer hover:text-white transition-colors"
           />
-          <User
-            size={20}
-            className="cursor-pointer hover:text-white transition-colors"
-          />
+          <Link to="/profile">
+            <User
+              size={20}
+              className="cursor-pointer hover:text-white transition-colors"
+            />
+          </Link>
         </div>
       </div>
 

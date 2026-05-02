@@ -12,10 +12,11 @@ const formatCount = (n: number) =>
 const ProfilePage = () => {
   const { user } = useAuth();
   const { posts } = usePosts();
+
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isFollowing, setIsFollowing] = useState(false);
-  if (!user) return null;
 
+  if (!user) return null;
   const userPosts = posts.filter((p) => p.userId._id === user._id);
   const isOwnProfile = true;
 
@@ -24,11 +25,6 @@ const ProfilePage = () => {
       style={{ fontFamily: "'DM Sans', sans-serif" }}
       className="min-h-screen bg-(--background)"
     >
-      <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap"
-        rel="stylesheet"
-      />
-
       {/* Cover */}
       <div className="relative h-52 w-full overflow-hidden">
         <div
@@ -48,7 +44,7 @@ const ProfilePage = () => {
       </div>
 
       {/* Profile section */}
-      <div className="max-w-3xl mx-auto px-6 mt-2">
+      <div className="max-w-3xl mx-auto  md:px-6 mt-2">
         <div className="relative -mt-16 mb-6 flex items-end justify-between">
           {/* Avatar */}
           <div
