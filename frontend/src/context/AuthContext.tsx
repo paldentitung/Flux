@@ -9,10 +9,15 @@ type AuthProviderProps = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const fetchUser = async () => {
-    const res = await getMe();
-    if (res) setUser(res.data);
+    try {
+      const res = await getMe();
+      if (res) setUser(res.data);
+    } finally {
+      setIsAuthLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log("user data", user);
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

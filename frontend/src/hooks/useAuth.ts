@@ -82,6 +82,7 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const data = await login(formData);
+      await context.fetchUser();
       toast.success("Login successful");
       navigate("/");
       return data;
