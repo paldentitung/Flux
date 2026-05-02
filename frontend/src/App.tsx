@@ -8,7 +8,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import ProfilePage from "./pages/ProfilePage";
 const App = () => {
   return (
     <>
@@ -50,6 +50,14 @@ const App = () => {
             element={
               <MainLayout>
                 <Home />
+              </MainLayout>
+            }
+          />{" "}
+          <Route
+            path="/profile"
+            element={
+              <MainLayout>
+                <ProfilePage />
               </MainLayout>
             }
           />
