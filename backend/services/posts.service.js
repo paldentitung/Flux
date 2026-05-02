@@ -23,24 +23,31 @@ export const createPostService = async (userId, content, images = []) => {
   return newPost;
 };
 
-export const updatePostService = async (postId, updates) => {
-  const updatedPost = await Post.findByIdAndUpdate(postId, updates, {
-    returnDocument: "after",
-    runValidators: true,
-  });
+export const updatePostService = async (postId, userId, updates) => {
+  const updatedPost = await Post.findOneAndUpdate(
+    { _id: postId, userId },
+    updates,
+    {
+      returnDocument: "after",
+      runValidators: true,
+    },
+  );
 
   if (!updatedPost) {
-    throw new AppError("Post not found", 404);
+    throw new AppError("Post not found or unauthorized", 404);
   }
 
   return updatedPost;
 };
 
-export const deletePostService = async (postId) => {
-  const deletedPost = await Post.findByIdAndDelete(postId);
+export const deletePostService = async (userId, postId) => {
+  const deletedPost = await Post.findOneAndDelete({
+    _id: postId,
+    userId,
+  });
 
   if (!deletedPost) {
-    throw new AppError("Post not found", 404);
+    throw new AppError("Post not found or unauthorized", 404);
   }
 
   return deletedPost;

@@ -31,7 +31,7 @@ export const createPostController = async (req, res) => {
 
 export const updatePostController = async (req, res) => {
   const { postId } = req.params;
-
+  const userId = req.user._id;
   const updates = {
     ...req.body,
   };
@@ -53,7 +53,7 @@ export const updatePostController = async (req, res) => {
     updates.images = [...existingImages, ...newImages];
   }
 
-  const result = await updatePostService(postId, updates);
+  const result = await updatePostService(userId, postId, updates);
 
   res.status(200).json({
     success: true,
@@ -64,7 +64,8 @@ export const updatePostController = async (req, res) => {
 
 export const deletePostController = async (req, res) => {
   const { postId } = req.params;
-  const result = await deletePostService(postId);
+  const userId = req.user._id;
+  const result = await deletePostService(userId, postId);
 
   res.status(200).json({
     success: true,
