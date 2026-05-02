@@ -31,15 +31,28 @@ export const createPostController = async (req, res) => {
 
 export const updatePostController = async (req, res) => {
   const { postId } = req.params;
+
   const updates = {
     ...req.body,
   };
 
+  let existingImages = [];
+
+  if (req.body.existingImages) {
+    existingImages = JSON.parse(req.body.existingImages);
+  }
+
+  let newImages = [];
   if (req.files?.length) {
-    updates.images = req.files.map(
+    newImages = req.files.map(
       (file) => `http://localhost:3000/uploads/${file.filename}`,
     );
   }
+
+  if (req.files || req.body.existingImages) {
+    updates.images = [...existingImages, ...newImages];
+  }
+
   const result = await updatePostService(postId, updates);
 
   res.status(200).json({

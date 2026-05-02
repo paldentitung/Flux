@@ -58,3 +58,26 @@ export const deletePost = async (postId: string) => {
     }
   }
 };
+
+export const updatePost = async (postId: string, formData: FormData) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: "PATCH",
+      credentials: "include",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message);
+      throw error;
+    }
+  }
+};

@@ -25,7 +25,7 @@ export const createPostService = async (userId, content, images = []) => {
 
 export const updatePostService = async (postId, updates) => {
   const updatedPost = await Post.findByIdAndUpdate(postId, updates, {
-    new: true,
+    returnDocument: "after",
     runValidators: true,
   });
 

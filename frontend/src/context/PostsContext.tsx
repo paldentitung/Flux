@@ -1,6 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { PostsContext } from "./createContext";
-import { getPosts, createPost, deletePost } from "../services/postsService";
+import {
+  getPosts,
+  createPost,
+  deletePost,
+  updatePost,
+} from "../services/postsService";
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
 
@@ -40,9 +45,37 @@ export const PostProvider = ({ children }: PostProviderProps) => {
     }
   };
 
+  const handleUpdatePost = async (postId: string, formData: FormData) => {
+    try {
+      setLoading(true);
+
+      const res = await updatePost(postId, formData);
+
+      const updatedPost = res?.data;
+
+      if (updatedPost) {
+        setPosts((prev) =>
+          prev.map((p) => (p._id === postId ? updatedPost : p)),
+        );
+
+        toast.success(res?.data?.message || "Post updated");
+      }
+
+      return updatedPost;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <PostsContext.Provider
-      value={{ posts, loading, handleCreatePost, handleDeletePost }}
+      value={{
+        posts,
+        loading,
+        handleCreatePost,
+        handleDeletePost,
+        handleUpdatePost,
+      }}
     >
       {children}
     </PostsContext.Provider>
