@@ -6,7 +6,7 @@ import { generateOtp } from "../utils/generateOtp.js";
 import sendEmail from "../utils/sendEmail.js";
 import AppError from "../utils/AppError.js";
 
-export const RegisterService = async ({ username, email, password }) => {
+export const registerService = async ({ username, email, password }) => {
   const hasedPassword = await bcrypt.hash(password, 10);
 
   const otp = generateOtp(0);

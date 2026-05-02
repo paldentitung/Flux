@@ -4,9 +4,9 @@ import {
   getMe,
   loginController,
   logout,
-  RegisterController,
+  registerController,
   resetPasswordController,
-  verifyOtpcontroller,
+  verifyOtpController,
   resentOTPController,
 } from "../controllers/auth.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
@@ -27,14 +27,14 @@ router.post(
   "/register",
   registerValidator,
   validate,
-  asyncHandler(RegisterController),
+  asyncHandler(registerController),
 );
 
 router.post(
   "/verify-otp",
   verifyOtpValidator,
   validate,
-  asyncHandler(verifyOtpcontroller),
+  asyncHandler(verifyOtpController),
 );
 
 router.post("/login", loginValidator, validate, asyncHandler(loginController));

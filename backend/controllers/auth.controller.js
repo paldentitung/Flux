@@ -1,16 +1,16 @@
 import {
   forgotPasswordService,
   loginService,
-  RegisterService,
+  registerService,
   verifyOtpService,
   resetPasswordService,
   resendOTPService,
 } from "../services/auth.service.js";
 import { sendTokenCookie } from "../utils/sendTokenCookie.js";
 import { generateToken } from "../utils/generateToken.js";
-export const RegisterController = async (req, res) => {
+export const registerController = async (req, res) => {
   const { username, email, password } = req.body;
-  const { user } = await RegisterService({ username, email, password });
+  const { user } = await registerService({ username, email, password });
 
   res.status(201).json({
     success: true,
@@ -18,7 +18,7 @@ export const RegisterController = async (req, res) => {
     data: user,
   });
 };
-export const verifyOtpcontroller = async (req, res) => {
+export const verifyOtpController = async (req, res) => {
   const { email, otp, isReset } = req.body;
 
   const user = await verifyOtpService({ email, otp, isReset });
