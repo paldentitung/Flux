@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log("user data", user);
   }, [user]);
   return (
-    <AuthContext.Provider value={{ user, setUser, fetchUser }}>
+    <AuthContext.Provider value={{ user, setUser, fetchUser, isAuthLoading }}>
       {children}
     </AuthContext.Provider>
   );

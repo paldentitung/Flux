@@ -157,5 +157,6 @@ export const useAuth = () => {
     resendLoading,
     handleForgotPassword,
     handleResetPassword,
+    isAuthLoading: context.isAuthLoading,
   };
 };
