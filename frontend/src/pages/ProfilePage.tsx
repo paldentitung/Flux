@@ -1,48 +1,23 @@
 import { useState } from "react";
-import { Grid3X3, List } from "lucide-react";
-import type { User } from "../types/user.types";
-import type { Post } from "../types/post.types";
+import { Grid3X3, List, BadgeCheck, Heart, MessageCircle } from "lucide-react";
+
 import LoadingButton from "../components/ui/LoadingButton";
-
-const mockUser: User = {
-  _id: "1",
-  name: "Ava Mercer",
-  username: "avamercer",
-  email: "ava@example.com",
-  avatar: null,
-  bio: "Designing quiet interfaces. Lover of typography, late-night coffee, and slow internet.",
-  followers: Array(12480).fill("x"),
-  following: Array(312).fill("x"),
-  isOnline: true,
-  lastSeen: new Date(),
-  isVerified: true,
-  blockedUsers: [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const mockPosts: Post[] = Array.from({ length: 5 }, (_, i) => ({
-  _id: String(i),
-  userId: mockUser,
-  content:
-    "Some post content here that might be a bit longer to fill the space nicely.",
-  images: [],
-  likes: [],
-  comments: [],
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  __v: 0,
-}));
+import { useAuth } from "../hooks/useAuth";
+import { usePosts } from "../hooks/usePosts";
+import PostCard from "../components/post/PostCard";
 
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
 const ProfilePage = () => {
-  const user = mockUser;
-  const posts = mockPosts;
-  const isOwnProfile = true;
-  const isFollowing = false;
+  const { user } = useAuth();
+  const { posts } = usePosts();
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [isFollowing, setIsFollowing] = useState(false);
+  if (!user) return null;
+
+  const userPosts = posts.filter((p) => p.userId._id === user._id);
+  const isOwnProfile = true;
 
   return (
     <div
@@ -122,9 +97,7 @@ const ProfilePage = () => {
               {user.name ?? user.username}
             </h1>
             {user.isVerified && (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#8b5cf6">
-                <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-              </svg>
+              <BadgeCheck size={18} className="text-purple-500" />
             )}
           </div>
           <p className="text-sm text-(--muted-foreground) mb-3">
@@ -158,13 +131,13 @@ const ProfilePage = () => {
           <div className="flex gap-1">
             <button
               onClick={() => setView("grid")}
-              className={`p-2 rounded-lg transition ${view === "grid" ? "bg-(--post-card-bg) text-(--foreground)" : "text-(--muted-foreground) hover:text-(--foreground)"}`}
+              className={`p-2 rounded-lg transition hover:cursor-pointer ${view === "grid" ? "bg-(--post-card-bg) text-(--foreground)" : "text-(--muted-foreground) hover:text-(--foreground)"}`}
             >
               <Grid3X3 size={17} />
             </button>
             <button
               onClick={() => setView("list")}
-              className={`p-2 rounded-lg transition ${view === "list" ? "bg-(--post-card-bg) text-(--foreground)" : "text-(--muted-foreground) hover:text-(--foreground)"}`}
+              className={`p-2 rounded-lg transition hover:cursor-pointer ${view === "list" ? "bg-(--post-card-bg) text-(--foreground)" : "text-(--muted-foreground) hover:text-(--foreground)"}`}
             >
               <List size={17} />
             </button>
@@ -181,15 +154,15 @@ const ProfilePage = () => {
           </p>
         ) : view === "grid" ? (
           <div className="grid grid-cols-3 gap-1 pb-10">
-            {posts.map((post) => (
+            {userPosts.map((post) => (
               <div
                 key={post._id}
-                className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:opacity-90 transition bg-(--post-card-bg)"
+                className="relative aspect-square overflow-hidden rounded-lg cursor-pointer bg-(--post-card-bg) group"
               >
                 {post.images?.[0] ? (
                   <img
                     src={post.images[0]}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition group-hover:scale-105"
                   />
                 ) : (
                   <div
@@ -203,26 +176,29 @@ const ProfilePage = () => {
                     </p>
                   </div>
                 )}
+
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-5">
+                  <div className="flex items-center gap-1.5 text-white">
+                    <Heart size={18} fill="white" />
+                    <span className="text-sm font-medium">
+                      {post.likes.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-white">
+                    <MessageCircle size={18} fill="white" />
+                    <span className="text-sm font-medium">
+                      {/* {post.comments.length} */}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         ) : (
           <div className="flex flex-col gap-3 pb-10">
-            {posts.map((post) => (
-              <div
-                key={post._id}
-                className="bg-(--post-card-bg) border border-(--post-card-border) rounded-xl p-4 cursor-pointer hover:border-(--foreground)/20 transition"
-              >
-                <p className="text-sm text-(--foreground) leading-relaxed">
-                  {post.content}
-                </p>
-                {post.images?.[0] && (
-                  <img
-                    src={post.images[0]}
-                    className="mt-3 w-full rounded-lg object-cover max-h-64"
-                  />
-                )}
-              </div>
+            {userPosts.map((post) => (
+              <PostCard key={post._id} post={post} />
             ))}
           </div>
         )}
