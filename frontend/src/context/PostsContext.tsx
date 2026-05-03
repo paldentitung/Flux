@@ -30,7 +30,9 @@ export const PostProvider = ({ children }: PostProviderProps) => {
       .then((res) => setPosts(res.data))
       .catch(() => toast.error("Failed to load posts"));
   }, [user]);
-
+  useEffect(() => {
+    console.log("posts updated", posts);
+  }, [posts]);
   const handleCreatePost = async (formData: FormData) => {
     try {
       setL("create", true);

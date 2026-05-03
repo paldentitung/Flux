@@ -109,7 +109,7 @@ const ProfilePage = () => {
         {/* Stats */}
         <div className="flex gap-6 mb-8 border-b border-(--post-card-border) pb-5">
           {[
-            { label: "Posts", value: posts.length },
+            { label: "Posts", value: userPosts.length },
             { label: "Followers", value: user.followers.length },
             { label: "Following", value: user.following.length },
           ].map(({ label, value }) => (

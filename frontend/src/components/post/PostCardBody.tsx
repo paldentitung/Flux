@@ -100,6 +100,7 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
           </button>
           <button className="flex items-center gap-1 hover:text-(--primary) transition">
             <MessageCircle size={17} />
+            <span className="text-xs">{post?.comments?.length}</span>
           </button>
         </div>
         <button className="flex items-center gap-1 hover:text-(--primary) transition">
