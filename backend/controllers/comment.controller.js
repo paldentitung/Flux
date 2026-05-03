@@ -20,7 +20,6 @@ export const addComment = async (req, res) => {
   });
 };
 
-//create get comment by post
 export const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
 
@@ -30,5 +29,30 @@ export const getCommentsByPost = async (req, res) => {
     success: true,
     message: "Comment fetch successfully",
     comments,
+  });
+};
+
+export const deleteComment = async (req, res) => {
+  const { commentId } = req.params;
+
+  const deleted = await Comment.findByIdAndDelete(commentId);
+
+  if (!deleted) {
+    return res.status(404).json({
+      success: false,
+      message: "Comment not found",
+    });
+  }
+
+  if (comment.userId.toString() !== req.user.id) {
+    return res.status(403).json({
+      success: false,
+      message: "Not allowed",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Comment deleted successfully",
   });
 };
