@@ -1,7 +1,10 @@
-import { Heart, MessageCircle, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { useEffect, useState } from "react";
 import type { Post } from "../../types/post.types";
 import { useAuth } from "../../hooks/useAuth";
 import { usePostCard } from "../../hooks/usePostCard";
+import { useComments } from "../../hooks/useComments";
+import CommentItem from "./CommentItem";
 
 type Props = {
   post: Post;
@@ -10,12 +13,25 @@ type Props = {
 };
 
 const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
-  const { useCleanUsername } = useAuth();
+  const { useCleanUsername, user } = useAuth();
   const { menuOpen, setMenuOpen, formatDate } = usePostCard(post);
+  const { comments, loading, fetchComments } = useComments();
+  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
+
+  useEffect(() => {
+    fetchComments(post._id);
+  }, [post._id]);
+
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+    // TODO: wire up addComment service
+    setNewComment("");
+  };
 
   return (
     <div className="bg-(--post-card-bg) border border-(--post-card-border) p-5 rounded-xl flex flex-col gap-4 shadow-sm">
-      {/* Header */}
+      {/* ── Header ── */}
       <div className="flex items-center gap-3">
         <img
           src={post.userId.avatar ?? "/placeholder.jpg"}
@@ -32,46 +48,44 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
           </span>
         </div>
 
-        {/* Menu */}
+        {/* Overflow menu */}
         <div className="relative">
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="text-(--muted-foreground)"
+            className="text-(--muted-foreground) px-1"
           >
             •••
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
-              <button
-                onClick={onEditClick}
-                className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] cursor-pointer"
-              >
-                Edit post
-              </button>
-              <button
-                onClick={onDeleteClick}
-                className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] cursor-pointer"
-              >
-                Delete post
-              </button>
-              <button className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] cursor-pointer">
-                Report
-              </button>
+              {[
+                { label: "Edit post", action: onEditClick },
+                { label: "Delete post", action: onDeleteClick },
+                { label: "Report", action: () => {} },
+              ].map(({ label, action }) => (
+                <button
+                  key={label}
+                  onClick={action}
+                  className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Content */}
+      {/* ── Content ── */}
       <p className="text-(--foreground) text-sm leading-relaxed">
         {post.content}
       </p>
 
-      {/* Images */}
+      {/* ── Images ── */}
       {post.images?.length === 1 && (
         <img
           src={post.images[0]}
-          className="w-full rounded-lg object-cover max-h-100"
+          className="w-full rounded-lg object-cover max-h-96"
         />
       )}
       {post.images?.length > 1 && (
@@ -91,22 +105,73 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
         </div>
       )}
 
-      {/* Actions */}
-      <div className="flex items-center justify-between text-(--muted-foreground) pt-2">
-        <div className="flex gap-2">
-          <button className="flex items-center gap-1 hover:text-red-500 transition">
-            <Heart size={18} />
+      {/* ── Action bar ── */}
+      <div className="flex items-center justify-between text-(--muted-foreground) pt-1 border-t border-(--post-card-border)">
+        <div className="flex gap-1">
+          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-red-500 transition text-sm">
+            <Heart size={16} />
             <span className="text-xs">{post.likes.length}</span>
           </button>
-          <button className="flex items-center gap-1 hover:text-(--primary) transition">
-            <MessageCircle size={17} />
-            <span className="text-xs">{post?.comments?.length}</span>
+          <button
+            onClick={() => setShowComments((prev) => !prev)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition text-sm ${
+              showComments
+                ? "text-(--primary) bg-[hsl(var(--surface-hover))]"
+                : "hover:bg-[hsl(var(--surface-hover))] hover:text-(--primary)"
+            }`}
+          >
+            <MessageCircle size={16} />
+            <span className="text-xs">{comments?.length ?? 0}</span>
           </button>
         </div>
-        <button className="flex items-center gap-1 hover:text-(--primary) transition">
-          <Share2 size={18} />
+        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-(--primary) transition text-sm">
+          <Share2 size={16} />
         </button>
       </div>
+
+      {/* ── Comments section ── */}
+      {showComments && (
+        <div className="flex flex-col gap-1">
+          {loading ? (
+            <p className="text-xs text-(--muted-foreground) text-center py-4">
+              Loading comments...
+            </p>
+          ) : comments.length === 0 ? (
+            <p className="text-xs text-(--muted-foreground) text-center py-4">
+              No comments yet. Be the first!
+            </p>
+          ) : (
+            comments.map((comment) => (
+              <CommentItem key={comment._id} comment={comment} />
+            ))
+          )}
+
+          {/* New comment input */}
+          <div className="flex items-center gap-2 pt-2 border-t border-(--post-card-border) mt-1">
+            <img
+              src={user?.avatar ?? "/placeholder.jpg"}
+              alt="You"
+              className="w-8 h-8 rounded-full object-cover shrink-0"
+            />
+            <div className="flex flex-1 items-center bg-(--surface-hover) rounded-full px-4 py-2 gap-2 border border-(--post-card-border)">
+              <input
+                type="text"
+                placeholder="Write a comment…"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
+                className="flex-1 bg-transparent outline-none text-sm text-(--foreground) placeholder:text-(--muted-foreground)"
+              />
+              <button
+                onClick={handleAddComment}
+                className="text-(--muted-foreground) hover:text-(--primary) transition"
+              >
+                <Send size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

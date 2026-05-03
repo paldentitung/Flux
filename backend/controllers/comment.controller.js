@@ -28,7 +28,7 @@ export const getCommentsByPost = async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Comment fetch successfully",
-    comments,
+    data: comments,
   });
 };
 
