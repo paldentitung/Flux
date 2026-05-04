@@ -6,6 +6,7 @@ import { usePostCard } from "../../hooks/usePostCard";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
 import { usePosts } from "../../hooks/usePosts";
+import Avatar from "../ui/Avatar";
 
 type Props = {
   post: Post;
@@ -48,10 +49,10 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
     <div className="bg-(--post-card-bg) border border-(--post-card-border) p-5 rounded-xl flex flex-col gap-4 shadow-sm">
       {/* ── Header ── */}
       <div className="flex items-center gap-3">
-        <img
-          src={post.userId.avatar ?? "/placeholder.jpg"}
-          alt={post.userId.name}
-          className="w-10 h-10 rounded-full object-cover"
+        <Avatar
+          src={post.userId.avatar}
+          name={post.userId.name || post.userId.username}
+          size={40}
         />
         <div className="flex flex-col mr-auto">
           <h2 className="text-(--foreground) font-medium text-sm">
@@ -184,10 +185,10 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
 
           {/* New comment input */}
           <div className="flex items-center gap-2 pt-2 border-t border-(--post-card-border) mt-1">
-            <img
-              src={user?.avatar ?? "/placeholder.jpg"}
-              alt="You"
-              className="w-8 h-8 rounded-full object-cover shrink-0"
+            <Avatar
+              src={user?.avatar}
+              name={user?.name || user?.username}
+              size={32}
             />
             <div className="flex flex-1 items-center bg-(--surface-hover) rounded-full px-4 py-2 gap-2 border border-(--post-card-border)">
               <input

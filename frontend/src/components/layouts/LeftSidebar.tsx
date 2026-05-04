@@ -12,6 +12,7 @@ import { useAuth } from "../../hooks/useAuth.ts";
 import { useState } from "react";
 import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";
+import Avatar from "../ui/Avatar";
 const LeftSidebar = () => {
   const links = [
     { name: "Home", path: "/", Icon: Home },
@@ -60,18 +61,14 @@ const LeftSidebar = () => {
           <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-[10px] bg-white/5 border border-white/6 hover:bg-white/8 transition-colors">
             {/* Avatar */}
             <div className="relative shrink-0">
-              <div className="w-8.5 h-8.5 rounded-full  flex items-center justify-center text-white text-[13px] font-semibold border border-white/10 overflow-hidden">
-                {user?.avatar ? (
-                  <img
-                    src={user.avatar}
-                    className="w-full h-full object-cover"
-                    alt={user.name ?? ""}
-                  />
-                ) : (
-                  (user?.name?.[0] ?? user?.username?.[0] ?? "?").toUpperCase()
-                )}
-              </div>
-              <span className="absolute bottom-0 right-0 w-2.25 h-2.25 rounded-full bg-green-500 border-2 border-[hsl(var(--sidebar-background))]" />
+              <Avatar
+                src={user?.avatar}
+                name={user?.name || user?.username}
+                size={34}
+              />
+              <span
+                className={`absolute bottom-0 right-0 w-2.25 h-2.25 rounded-full border-2 border-[hsl(var(--sidebar-background))] ${user?.isOnline ? "bg-green-500" : "bg-zinc-500"}`}
+              />
             </div>
 
             {/* Meta */}

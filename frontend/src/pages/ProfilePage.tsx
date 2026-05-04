@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Grid3X3, List, BadgeCheck, Heart, MessageCircle } from "lucide-react";
 
 import LoadingButton from "../components/ui/LoadingButton";
+import Avatar from "../components/ui/Avatar";
 import { useAuth } from "../hooks/useAuth";
 import { usePosts } from "../hooks/usePosts";
 import PostCard from "../components/post/PostCard";
@@ -47,12 +48,12 @@ const ProfilePage = () => {
       <div className="max-w-3xl mx-auto  md:px-6 mt-2">
         <div className="relative -mt-16 mb-6 flex items-end justify-between">
           {/* Avatar */}
-          <div
-            className="w-28 h-28 rounded-full shrink-0 flex items-center justify-center text-3xl font-semibold border-4 border-(--background)"
-            style={{ background: "#533483", color: "#e9d5ff" }}
-          >
-            {user.name?.[0] ?? user.username[0].toUpperCase()}
-          </div>
+          <Avatar
+            src={user.avatar}
+            name={user.name || user.username}
+            size={112}
+            className="border-4 border-(--background) rounded-full"
+          />
 
           {/* Action buttons */}
           <div className="flex gap-2 pb-2">

@@ -2,6 +2,7 @@ import { Send } from "lucide-react";
 import { useState } from "react";
 import type { Comment } from "../../types/comment.types";
 import { formatDate } from "../../utils/formatDate";
+import Avatar from "../ui/Avatar";
 type Props = {
   comment: Comment;
   isReply?: boolean;
@@ -31,10 +32,11 @@ const CommentItem = ({ comment, isReply = false, onAddReply }: Props) => {
 
   return (
     <div className={`flex gap-2 ${isReply ? "pl-10 pt-1" : "py-2"}`}>
-      <img
-        src={comment.userId.avatar ?? "/placeholder.jpg"}
-        alt={comment.userId.name}
-        className={`${isReply ? "w-7 h-7" : "w-8 h-8"} rounded-full object-cover shrink-0 mt-0.5`}
+      <Avatar
+        src={comment.userId.avatar}
+        name={comment.userId.name || comment.userId.username}
+        size={isReply ? 28 : 32}
+        className="mt-0.5"
       />
 
       <div className="flex flex-col flex-1 min-w-0 gap-1">
