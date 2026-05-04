@@ -5,6 +5,7 @@ import {
   createPost,
   deletePost,
   updatePost,
+  likePost,
 } from "../services/postsService";
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
@@ -72,6 +73,18 @@ export const PostProvider = ({ children }: PostProviderProps) => {
     }
   };
 
+  const handleLikePost = async (postId: string) => {
+    try {
+      const res = await likePost(postId);
+
+      setPosts((prev) =>
+        prev.map((p) => (p._id === postId ? { ...p, likes: res.likes } : p)),
+      );
+    } catch (error) {
+      console.error("Failed to like post", error);
+    }
+  };
+
   return (
     <PostsContext.Provider
       value={{
@@ -80,6 +93,7 @@ export const PostProvider = ({ children }: PostProviderProps) => {
         handleCreatePost,
         handleDeletePost,
         handleUpdatePost,
+        handleLikePost,
       }}
     >
       {children}

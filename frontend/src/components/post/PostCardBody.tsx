@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { usePostCard } from "../../hooks/usePostCard";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
-import { addComment } from "../../services/commentService";
+import { usePosts } from "../../hooks/usePosts";
 
 type Props = {
   post: Post;
@@ -22,11 +22,12 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
     fetchComments,
     handleAddComment,
     handleAddReplyComment,
-    fetchReplyComments,
   } = useComments();
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
-
+  const [isLiked, setIsliked] = useState<boolean | null>(
+    post.likes.includes(user?._id || ""),
+  );
   useEffect(() => {
     fetchComments(post._id);
   }, [post._id]);
@@ -35,6 +36,12 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
     if (!newComment.trim()) return;
     handleAddComment(post._id, newComment);
     setNewComment("");
+  };
+
+  const { handleLikePost } = usePosts();
+  const toggleLike = () => {
+    setIsliked((prev) => !prev);
+    handleLikePost(post._id);
   };
 
   return (
@@ -116,13 +123,20 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
       {/* ── Action bar ── */}
       <div className="flex items-center justify-between text-(--muted-foreground) pt-1 border-t border-(--post-card-border)">
         <div className="flex gap-1">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-red-500 transition text-sm">
-            <Heart size={16} />
+          <button
+            onClick={toggleLike}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-red-500 transition text-sm cursor-pointer"
+          >
+            {isLiked ? (
+              <Heart size={16} className="fill-red-500 text-red-500" />
+            ) : (
+              <Heart size={16} />
+            )}
             <span className="text-xs">{post.likes.length}</span>
           </button>
           <button
             onClick={() => setShowComments((prev) => !prev)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition text-sm ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer text-sm ${
               showComments
                 ? "text-(--primary) bg-[hsl(var(--surface-hover))]"
                 : "hover:bg-[hsl(var(--surface-hover))] hover:text-(--primary)"
