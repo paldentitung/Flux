@@ -55,7 +55,7 @@ export const updatePostController = async (req, res) => {
     updates.images = [...existingImages, ...newImages];
   }
 
-  const result = await updatePostService(userId, postId, updates);
+  const result = await updatePostService(postId, userId, updates);
 
   res.status(200).json({
     success: true,
