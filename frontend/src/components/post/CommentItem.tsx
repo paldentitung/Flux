@@ -5,17 +5,16 @@ import { formatDate } from "../../utils/formatDate";
 type Props = {
   comment: Comment;
   isReply?: boolean;
+  onAddReply: (commentId: string, text: string) => void;
 };
 
-const CommentItem = ({ comment, isReply = false }: Props) => {
+const CommentItem = ({ comment, isReply = false, onAddReply }: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(comment.likes.length);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
-  const [localReplies, setLocalReplies] = useState<Comment[]>(
-    comment.replies ?? [],
-  );
+  const localReplies = comment.replies ?? [];
 
   const handleLike = () => {
     setLiked((prev) => !prev);
@@ -24,17 +23,7 @@ const CommentItem = ({ comment, isReply = false }: Props) => {
 
   const handleReply = () => {
     if (!replyText.trim()) return;
-    const newReply: Comment = {
-      _id: Date.now().toString(),
-      postId: comment.postId,
-      userId: { _id: "me", name: "You", avatar: null },
-      text: replyText,
-      likes: [],
-      replies: [],
-      createdAt: "now",
-      updatedAt: "now",
-    };
-    setLocalReplies((prev) => [...prev, newReply]);
+    onAddReply(comment._id, replyText); // 👈 use prop
     setReplyText("");
     setShowReplies(true);
     setShowReplyInput(false);
@@ -102,7 +91,12 @@ const CommentItem = ({ comment, isReply = false }: Props) => {
         {showReplies && (
           <div className="flex flex-col gap-1">
             {localReplies.map((reply) => (
-              <CommentItem key={reply._id} comment={reply} isReply />
+              <CommentItem
+                key={reply._id}
+                comment={reply}
+                isReply
+                onAddReply={onAddReply}
+              />
             ))}
           </div>
         )}

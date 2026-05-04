@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { usePostCard } from "../../hooks/usePostCard";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
+import { addComment } from "../../services/commentService";
 
 type Props = {
   post: Post;
@@ -15,7 +16,14 @@ type Props = {
 const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
   const { useCleanUsername, user } = useAuth();
   const { menuOpen, setMenuOpen, formatDate } = usePostCard(post);
-  const { comments, loading, fetchComments } = useComments();
+  const {
+    comments,
+    loading,
+    fetchComments,
+    handleAddComment,
+    handleAddReplyComment,
+    fetchReplyComments,
+  } = useComments();
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
 
@@ -23,9 +31,9 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
     fetchComments(post._id);
   }, [post._id]);
 
-  const handleAddComment = () => {
+  const submitComment = () => {
     if (!newComment.trim()) return;
-    // TODO: wire up addComment service
+    handleAddComment(post._id, newComment);
     setNewComment("");
   };
 
@@ -142,7 +150,11 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
             </p>
           ) : (
             comments.map((comment) => (
-              <CommentItem key={comment._id} comment={comment} />
+              <CommentItem
+                key={comment._id}
+                comment={comment}
+                onAddReply={handleAddReplyComment}
+              />
             ))
           )}
 
@@ -159,11 +171,11 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
                 placeholder="Write a comment…"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
+                onKeyDown={(e) => e.key === "Enter" && submitComment()}
                 className="flex-1 bg-transparent outline-none text-sm text-(--foreground) placeholder:text-(--muted-foreground)"
               />
               <button
-                onClick={handleAddComment}
+                onClick={() => submitComment()}
                 className="text-(--muted-foreground) hover:text-(--primary) transition"
               >
                 <Send size={14} />

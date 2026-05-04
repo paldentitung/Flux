@@ -1,8 +1,10 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
+//create or use postid from params
 
 export const addComment = async (req, res) => {
-  const { postId, text } = req.body;
+  const { text } = req.body;
+  const { postId } = req.params;
   const userId = req.user.id;
 
   const comment = await Comment.create({ postId, userId, text });
@@ -22,8 +24,15 @@ export const addComment = async (req, res) => {
 export const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
 
-  const comments = await Comment.find({ postId })
+  const comments = await Comment.find({
+    postId,
+    _id: { $nin: await Comment.distinct("replies") },
+  })
     .populate("userId", "_id name username avatar")
+    .populate({
+      path: "replies",
+      populate: { path: "userId", select: "_id name username avatar" },
+    })
     .sort({ createdAt: -1 });
 
   res.status(200).json({
