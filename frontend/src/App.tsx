@@ -9,6 +9,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./pages/ProfilePage";
+import ExplorePage from "./pages/ExplorePage";
 const App = () => {
   return (
     <>
@@ -52,7 +53,15 @@ const App = () => {
                 <Home />
               </MainLayout>
             }
-          />{" "}
+          />
+          <Route
+            path="/explore"
+            element={
+              <MainLayout contentMax="wide">
+                <ExplorePage />
+              </MainLayout>
+            }
+          />
           <Route
             path="/profile"
             element={
