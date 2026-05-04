@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   Home,
   Compass,
@@ -45,14 +45,21 @@ const LeftSidebar = () => {
             const Icon = l.Icon;
 
             return (
-              <Link
+              <NavLink
                 key={l.path}
                 to={l.path}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-(--sidebar-icon) hover:bg-(--sidebar-item-hover) hover:text-(--sidebar-foreground) transition-colors"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
+        ${
+          isActive
+            ? "bg-(--sidebar-item-hover) text-(--sidebar-foreground)"
+            : "text-(--sidebar-icon) hover:bg-(--sidebar-item-hover) hover:text-(--sidebar-foreground)"
+        }`
+                }
               >
                 <Icon size={18} />
                 <span>{l.name}</span>
-              </Link>
+              </NavLink>
             );
           })}
         </nav>
