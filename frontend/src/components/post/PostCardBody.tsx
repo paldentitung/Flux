@@ -73,19 +73,29 @@ const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
-              {[
-                { label: "Edit post", action: onEditClick },
-                { label: "Delete post", action: onDeleteClick },
-                { label: "Report", action: () => {} },
-              ].map(({ label, action }) => (
+              {post.userId._id === user?._id ? (
+                <>
+                  <button
+                    onClick={onEditClick}
+                    className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
+                  >
+                    Edit post
+                  </button>
+                  <button
+                    onClick={onDeleteClick}
+                    className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
+                  >
+                    Delete post
+                  </button>
+                </>
+              ) : (
                 <button
-                  key={label}
-                  onClick={action}
+                  onClick={() => {}}
                   className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
                 >
-                  {label}
+                  Report
                 </button>
-              ))}
+              )}
             </div>
           )}
         </div>
