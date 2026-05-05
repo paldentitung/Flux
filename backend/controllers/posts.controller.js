@@ -76,8 +76,7 @@ export const deletePostController = async (req, res) => {
   });
 };
 export const likePostController = async (req, res) => {
-  const userId = req.user._id;
-  console.log("User ID:", userId);
+  const userId = req.user.id;
   const { postId } = req.params;
 
   const post = await Post.findById(postId);
@@ -104,7 +103,7 @@ export const likePostController = async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Post Liked",
+    message: alreadyLiked ? "Post Unliked" : "Post Liked",
     likes: post.likes,
     likesCount: post.likes.length,
   });
