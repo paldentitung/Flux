@@ -5,7 +5,7 @@ import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 const navItems = [
   { to: "/", icon: Home, label: "Home", end: true },
   { to: "/explore", icon: Compass, label: "Explore" },
-  { to: "/messages", icon: Bell, label: "Notifications" },
+  { to: "/notifications", icon: Bell, label: "Notifications" },
   { to: "/profile", icon: User, label: "Profile" },
 ];
 
@@ -20,7 +20,7 @@ const BottomNav = () => {
     >
       <div className="flex justify-center">
         <NavLink
-          to="/create"
+          to="/messages"
           aria-label="Create post"
           className="relative -mb-8 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-(--chat-bubble-sent)  transition-transform active:scale-95 hover:opacity-90"
         >
