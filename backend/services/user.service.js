@@ -1,5 +1,6 @@
 import AppError from "../utils/AppError.js";
 import User from "../models/User.js";
+
 export const followUserService = async (currentUserId, targetUserId) => {
   if (currentUserId === targetUserId) {
     throw new AppError("You cannot follow yourself", 400);
@@ -33,6 +34,33 @@ export const followUserService = async (currentUserId, targetUserId) => {
     }),
     User.findByIdAndUpdate(targetUserId, {
       $addToSet: { followers: currentUserId },
+    }),
+  ]);
+
+  return { success: true };
+};
+
+export const unfollowUserService = async (currentUserId, targetUserId) => {
+  if (currentUserId === targetUserId) {
+    throw new Error("You cannot unfollow yourself");
+  }
+
+  const currentUser = await User.findById(currentUserId);
+
+  if (!currentUser) {
+    throw new Error("User not found");
+  }
+
+  if (!currentUser.following.includes(targetUserId)) {
+    throw new Error("You are not following this user");
+  }
+
+  await Promise.all([
+    User.findByIdAndUpdate(currentUserId, {
+      $pull: { following: targetUserId },
+    }),
+    User.findByIdAndUpdate(targetUserId, {
+      $pull: { followers: currentUserId },
     }),
   ]);
 
