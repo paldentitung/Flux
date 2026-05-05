@@ -21,11 +21,12 @@ export const registerController = async (req, res) => {
 export const verifyOtpController = async (req, res) => {
   const { email, otp, isReset } = req.body;
 
-  const user = await verifyOtpService({ email, otp, isReset });
+  const { user } = await verifyOtpService({ email, otp, isReset });
 
-  const token = generateToken(user._id);
-
-  sendTokenCookie(res, token);
+  if (!isReset) {
+    const token = generateToken(user._id);
+    sendTokenCookie(res, token);
+  }
 
   res.status(200).json({
     success: true,

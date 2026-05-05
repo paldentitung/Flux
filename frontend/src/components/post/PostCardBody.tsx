@@ -2,7 +2,6 @@ import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Post } from "../../types/post.types";
 import { useAuth } from "../../hooks/useAuth";
-import { usePostCard } from "../../hooks/usePostCard";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
 import { usePosts } from "../../hooks/usePosts";
@@ -12,11 +11,20 @@ type Props = {
   post: Post;
   onEditClick: () => void;
   onDeleteClick: () => void;
+  menuOpen: boolean;
+  setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  formatDate: (date: string) => string;
 };
 
-const PostCardBody = ({ post, onEditClick, onDeleteClick }: Props) => {
+const PostCardBody = ({
+  post,
+  onEditClick,
+  onDeleteClick,
+  menuOpen,
+  setMenuOpen,
+  formatDate,
+}: Props) => {
   const { useCleanUsername, user } = useAuth();
-  const { menuOpen, setMenuOpen, formatDate } = usePostCard(post);
   const {
     comments,
     loading,

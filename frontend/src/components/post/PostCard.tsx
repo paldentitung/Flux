@@ -12,6 +12,9 @@ const PostCard = ({ post }: { post: Post }) => {
         post={post}
         onEditClick={p.openEdit}
         onDeleteClick={() => p.setDeleteOpen(true)}
+        menuOpen={p.menuOpen}
+        setMenuOpen={p.setMenuOpen}
+        formatDate={p.formatDate}
       />
 
       {/* Delete Modal */}

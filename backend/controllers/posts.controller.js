@@ -76,7 +76,8 @@ export const deletePostController = async (req, res) => {
   });
 };
 export const likePostController = async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
+  console.log("User ID:", userId);
   const { postId } = req.params;
 
   const post = await Post.findById(postId);
@@ -84,7 +85,7 @@ export const likePostController = async (req, res) => {
     throw new AppError("Post not found", 404);
   }
 
-  const alreadyLiked = post.likes.includes(userId);
+  const alreadyLiked = post.likes.some((id) => id.equals(userId));
 
   if (alreadyLiked) {
     post.likes.pull(userId);
@@ -103,7 +104,7 @@ export const likePostController = async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: alreadyLiked ? "Post Unliked" : "Post Liked",
+    message: "Post Liked",
     likes: post.likes,
     likesCount: post.likes.length,
   });
