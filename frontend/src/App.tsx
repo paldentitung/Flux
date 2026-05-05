@@ -10,6 +10,9 @@ import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./pages/ProfilePage";
 import ExplorePage from "./pages/ExplorePage";
+import NotificationPage from "./pages/NotificationPage";
+import SettingPage from "./pages/SettingPage";
+import MessagePage from "./pages/MessagePage";
 const App = () => {
   return (
     <>
@@ -59,6 +62,30 @@ const App = () => {
             element={
               <MainLayout contentMax="wide">
                 <ExplorePage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <MainLayout contentMax="wide">
+                <NotificationPage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <MainLayout contentMax="wide">
+                <SettingPage />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <MainLayout contentMax="wide">
+                <MessagePage />
               </MainLayout>
             }
           />
