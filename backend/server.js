@@ -6,6 +6,7 @@ import errorMiddleware from "./middleware/error.middleware.js";
 import authRoute from "./routes/auth.route.js";
 import postsRoute from "./routes/posts.route.js";
 import commentRoute from "./routes/comment.route.js";
+import userRoute from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
 dotenv.config({ path: ".env.local" });
 
@@ -28,7 +29,7 @@ connectDB();
 app.use("/api/auth", authRoute);
 app.use("/api/posts", postsRoute);
 app.use("/api/comment", commentRoute);
-
+app.use("/api/user", userRoute);
 // error handler
 app.use(errorMiddleware);
 console.log(process.env.EMAIL_USER); // should print your email

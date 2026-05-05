@@ -57,7 +57,7 @@ const EditProfileModal = ({
             {preview ? (
               <img
                 src={preview}
-                className="w-[72px] h-[72px] rounded-full object-cover border-2 border-(--post-card-border)"
+                className="w-18 h-18 rounded-full object-cover border-2 border-(--post-card-border)"
               />
             ) : (
               <Avatar
