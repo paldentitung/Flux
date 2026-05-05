@@ -159,26 +159,19 @@ const ExplorePage = () => {
 
       {/* Grid */}
       <div
-        className="grid gap-3"
-        style={{
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gridTemplateRows: "240px 240px",
-        }}
+        className="grid gap-3 
+        grid-cols-1 
+        sm:grid-cols-2 
+        md:grid-cols-3 
+        auto-rows-[240px]"
       >
-        {/* Col 1 Row 1 */}
-        <PostCard post={posts[0]} className="col-start-1 row-start-1" />
-        {/* Col 2 spans 2 rows */}
-        <PostCard
-          post={posts[1]}
-          className="col-start-2 row-start-1 row-span-2"
-        />
-        {/* Col 3 spans 2 rows */}
-        <PostCard
-          post={posts[2]}
-          className="col-start-3 row-start-1 row-span-2"
-        />
-        {/* Col 1 Row 2 */}
-        <PostCard post={posts[3]} className="col-start-1 row-start-2" />
+        <PostCard post={posts[0]} />
+
+        <PostCard post={posts[1]} className="md:row-span-2" />
+
+        <PostCard post={posts[2]} className="md:row-span-2" />
+
+        <PostCard post={posts[3]} />
       </div>
     </div>
   );
