@@ -1,4 +1,4 @@
-import { Plus, User } from "lucide-react";
+import { Plus, Settings } from "lucide-react";
 import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 import Modal from "../ui/Modal";
 import { useState, useRef } from "react";
@@ -59,8 +59,9 @@ const Header = () => {
             onClick={() => setOpen(true)}
             className="cursor-pointer hover:text-white transition-colors"
           />
-          <Link to="/profile">
-            <User
+
+          <Link to="/settings">
+            <Settings
               size={20}
               className="cursor-pointer hover:text-white transition-colors"
             />

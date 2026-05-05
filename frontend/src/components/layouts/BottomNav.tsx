@@ -1,11 +1,11 @@
-import { Home, Compass, MessageCircle, User, Settings } from "lucide-react";
+import { Home, Compass, MessageCircle, User, Bell } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home", end: true },
   { to: "/explore", icon: Compass, label: "Explore" },
-  { to: "/messages", icon: Settings, label: "Settings" },
+  { to: "/messages", icon: Bell, label: "Notifications" },
   { to: "/profile", icon: User, label: "Profile" },
 ];
 
