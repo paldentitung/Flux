@@ -8,7 +8,10 @@ export const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.id)
+      .select("-password")
+      .populate("followers", "_id username name avatar")
+      .populate("following", "_id username name avatar");
 
     if (!user) return next(new AppError("User no longer exists", 401));
 

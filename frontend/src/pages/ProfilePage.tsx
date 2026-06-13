@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { usePosts } from "../hooks/usePosts";
 import PostCard from "../components/post/PostCard";
 import EditProfileModal from "../components/EditProfileModal";
+import FollowModal from "../components/FollowModal";
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
@@ -119,7 +120,11 @@ const ProfilePage = () => {
               { label: "Followers", value: user.followers.length },
               { label: "Following", value: user.following.length },
             ].map(({ label, value }) => (
-              <div key={label} className="flex items-baseline gap-1.5">
+              <div
+                key={label}
+                onClick={() => label !== "Posts" && setIsOpen(true)}
+                className={`flex items-baseline gap-1.5 ${label !== "Posts" ? "cursor-pointer hover:opacity-70 transition" : ""}`}
+              >
                 <span className="text-base font-semibold text-(--foreground)">
                   {formatCount(value)}
                 </span>
@@ -209,6 +214,11 @@ const ProfilePage = () => {
         </div>
       </div>
       <EditProfileModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        user={user}
+      />
+      <FollowModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         user={user}
