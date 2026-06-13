@@ -26,10 +26,11 @@ const FollowModal = ({
   const followingIds = user.following ?? [];
 
   const activeList = tab === "followers" ? followerIds : followingIds;
-  const filtered = activeList.filter((id) =>
-    id.toLowerCase().includes(search.toLowerCase()),
+  const filtered = activeList.filter(
+    (u) =>
+      u.username?.toLowerCase().includes(search.toLowerCase()) ||
+      u.name?.toLowerCase().includes(search.toLowerCase()),
   );
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col w-full gap-3 ">
@@ -96,18 +97,18 @@ const FollowModal = ({
                   : "Not following anyone yet"}
             </p>
           ) : (
-            filtered.map((id) => (
+            filtered.map((u) => (
               <div
-                key={id}
+                key={u._id}
                 className="flex items-center gap-3 px-5 py-3 border-b border-(--post-card-border) last:border-b-0"
               >
-                <Avatar src={null} name={id} size={40} />
+                <Avatar src={u.avatar} name={u.name || u.username} size={40} />
                 <div className="flex flex-col flex-1 min-w-0">
                   <span className="text-sm font-medium text-(--foreground) truncate">
-                    {id}
+                    {u.name || u.username}
                   </span>
                   <span className="text-xs text-(--muted-foreground)">
-                    @{id}
+                    @{u.username}
                   </span>
                 </div>
                 {tab === "followers" ? (

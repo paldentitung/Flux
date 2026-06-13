@@ -5,8 +5,18 @@ export type User = {
   email: string;
   avatar: string | null;
   bio: string;
-  followers: string[];
-  following: string[];
+  followers: {
+    _id: string;
+    username: string;
+    name?: string;
+    avatar: string | null;
+  }[];
+  following: {
+    _id: string;
+    username: string;
+    name?: string;
+    avatar: string | null;
+  }[];
   isOnline: boolean;
   lastSeen: Date;
   isVerified: boolean;
