@@ -1,13 +1,5 @@
 import { NavLink } from "react-router-dom";
-import {
-  Home,
-  Compass,
-  MessageCircle,
-  Bell,
-  User,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { Home, Compass, Bell, User, Settings, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth.ts";
 import { useState } from "react";
 import Modal from "../ui/Modal";
@@ -17,7 +9,6 @@ const LeftSidebar = () => {
   const links = [
     { name: "Home", path: "/", Icon: Home },
     { name: "Explore", path: "/explore", Icon: Compass },
-    { name: "Messages", path: "/messages", Icon: MessageCircle },
     { name: "Notifications", path: "/notifications", Icon: Bell },
     { name: "Profile", path: "/profile", Icon: User },
     { name: "Settings", path: "/settings", Icon: Settings },
