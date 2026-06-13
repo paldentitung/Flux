@@ -30,9 +30,9 @@ const EditProfileModal = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <div
         style={{ fontFamily: "'DM Sans', sans-serif" }}
-        className=" bg-(--background) rounded-2xl overflow-hidden"
+        className=" bg-(--background) rounded-2xl overflow-hidden p-2 flex flex-col gap-4"
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-(--post-card-border)">
+        <div className="flex items-center justify-between  border-b border-(--post-card-border)">
           <span className="text-sm font-semibold text-(--foreground)">
             Edit profile
           </span>
@@ -44,7 +44,7 @@ const EditProfileModal = ({
           </button>
         </div>
 
-        <div className="flex items-center gap-4 px-5 pt-5">
+        <div className="flex items-center gap-4 ">
           <div className="relative group">
             <input
               type="file"
@@ -95,7 +95,7 @@ const EditProfileModal = ({
         </div>
 
         {/* Fields */}
-        <div className="flex flex-col gap-3.5 p-5">
+        <div className="flex flex-col gap-3.5 ">
           <div>
             <label className="block text-xs font-medium text-(--muted-foreground) uppercase tracking-widest mb-1.5">
               Name

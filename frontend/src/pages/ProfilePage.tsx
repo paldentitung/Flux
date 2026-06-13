@@ -12,13 +12,14 @@ const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, useCleanUsername } = useAuth();
   const { posts } = usePosts();
 
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isFollowing, setIsFollowing] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isFollowOpen, setIsFollowOpen] = useState(false);
   if (!user) return null;
   const userPosts = posts.filter((p) => p.userId._id === user._id);
   const isOwnProfile = true;
@@ -103,8 +104,8 @@ const ProfilePage = () => {
                 <BadgeCheck size={18} className="text-purple-500" />
               )}
             </div>
-            <p className="text-sm text-(--muted-foreground) mb-3">
-              @{user.username}
+            <p className="text-sm text-gray-400 mb-3">
+              @{useCleanUsername(user?.username)}
             </p>
             {user.bio && (
               <p className="text-sm text-(--foreground) leading-relaxed max-w-lg">
@@ -122,7 +123,7 @@ const ProfilePage = () => {
             ].map(({ label, value }) => (
               <div
                 key={label}
-                onClick={() => label !== "Posts" && setIsOpen(true)}
+                onClick={() => label !== "Posts" && setIsFollowOpen(true)}
                 className={`flex items-baseline gap-1.5 ${label !== "Posts" ? "cursor-pointer hover:opacity-70 transition" : ""}`}
               >
                 <span className="text-base font-semibold text-(--foreground)">
@@ -219,8 +220,8 @@ const ProfilePage = () => {
         user={user}
       />
       <FollowModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        isOpen={isFollowOpen}
+        onClose={() => setIsFollowOpen(false)}
         user={user}
       />
     </>
