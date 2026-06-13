@@ -37,9 +37,13 @@ const PostCardBody = ({
   const [isLiked, setIsliked] = useState<boolean | null>(
     post.likes.includes(user?._id || ""),
   );
-  useEffect(() => {
-    fetchComments(post._id);
-  }, [post._id]);
+  // PostCardBody.tsx
+  const toggleComments = () => {
+    if (!showComments && comments.length === 0) {
+      fetchComments(post._id);
+    }
+    setShowComments((prev) => !prev);
+  };
 
   const submitComment = () => {
     if (!newComment.trim()) return;

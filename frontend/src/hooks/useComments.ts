@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   getCommentByPost,
   getReplyComment,
@@ -13,7 +13,7 @@ export const useComments = () => {
     {},
   );
 
-  const fetchComments = async (postId: string) => {
+  const fetchComments = useCallback(async (postId: string) => {
     try {
       setLoading(true);
       const res = await getCommentByPost(postId);
@@ -23,7 +23,7 @@ export const useComments = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleAddComment = async (postId: string, text: string) => {
     try {
@@ -66,10 +66,6 @@ export const useComments = () => {
       setLoadingReplies((prev) => ({ ...prev, [commentId]: false }));
     }
   };
-
-  useEffect(() => {
-    console.log("Comments updated:", comments);
-  }, [comments]);
 
   return {
     comments,
