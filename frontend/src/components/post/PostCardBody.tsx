@@ -89,13 +89,19 @@ const PostCardBody = ({
               {post.userId._id === user?._id ? (
                 <>
                   <button
-                    onClick={onEditClick}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onEditClick();
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
                   >
                     Edit post
                   </button>
                   <button
-                    onClick={onDeleteClick}
+                    onClick={() => {
+                      setMenuOpen(false);
+                      onDeleteClick();
+                    }}
                     className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
                   >
                     Delete post
@@ -158,7 +164,7 @@ const PostCardBody = ({
             <span className="text-xs">{post.likes.length}</span>
           </button>
           <button
-            onClick={() => setShowComments((prev) => !prev)}
+            onClick={toggleComments}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer text-sm ${
               showComments
                 ? "text-(--primary) bg-[hsl(var(--surface-hover))]"

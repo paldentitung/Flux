@@ -31,7 +31,7 @@ export const updatePostService = async (postId, userId, updates) => {
       returnDocument: "after",
       runValidators: true,
     },
-  );
+  ).populate("userId", "_id username name avatar");
 
   if (!updatedPost) {
     throw new AppError("Post not found or unauthorized", 404);

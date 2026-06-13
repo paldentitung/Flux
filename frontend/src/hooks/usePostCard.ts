@@ -27,6 +27,7 @@ export const usePostCard = (post: Post) => {
   };
 
   const openEdit = () => {
+    setMenuOpen(false);
     setContent(post.content);
     setExistingImages(post.images ?? []);
     setPreviews([]);
@@ -60,6 +61,7 @@ export const usePostCard = (post: Post) => {
   const confirmDelete = async () => {
     await handleDeletePost(post._id);
     setDeleteOpen(false);
+    setMenuOpen(false);
   };
 
   const confirmUpdate = async () => {
