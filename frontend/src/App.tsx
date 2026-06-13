@@ -12,7 +12,6 @@ import ProfilePage from "./pages/ProfilePage";
 import ExplorePage from "./pages/ExplorePage";
 import NotificationPage from "./pages/NotificationPage";
 import SettingPage from "./pages/SettingPage";
-import MessagePage from "./pages/MessagePage";
 const App = () => {
   return (
     <>
@@ -81,14 +80,7 @@ const App = () => {
               </MainLayout>
             }
           />
-          <Route
-            path="/messages"
-            element={
-              <MainLayout contentMax="wide">
-                <MessagePage />
-              </MainLayout>
-            }
-          />
+
           <Route
             path="/profile"
             element={

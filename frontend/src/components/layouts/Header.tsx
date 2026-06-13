@@ -1,41 +1,9 @@
-import { Plus, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useHideOnScroll } from "../../hooks/useHideOnScroll";
-import Modal from "../ui/Modal";
-import { useState, useRef } from "react";
-import { usePosts } from "../../hooks/usePosts.ts";
-import ComposerForm from "../post/ComposerForm";
-import toast from "react-hot-toast";
+
 import { Link } from "react-router-dom";
 const Header = () => {
   const showNav = useHideOnScroll();
-  const [open, setOpen] = useState(false);
-  const [text, setText] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
-  const [images, setImages] = useState<string[]>([]);
-  const fileRef = useRef<HTMLInputElement | null>(null);
-  const { handleCreatePost, loading } = usePosts();
-
-  const reset = () => {
-    setText("");
-    setFiles([]);
-    setImages([]);
-    setOpen(false);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(e.target.files || []);
-    setFiles((prev) => [...prev, ...selected]);
-    setImages((prev) => [...prev, ...selected.map(URL.createObjectURL)]);
-  };
-
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("content", text);
-    files.forEach((f) => formData.append("images", f));
-    await handleCreatePost(formData);
-    toast.success("Posted!");
-    reset();
-  };
 
   return (
     <>
@@ -54,12 +22,6 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-3 text-[hsl(var(--sidebar-icon))]">
-          <Plus
-            size={20}
-            onClick={() => setOpen(true)}
-            className="cursor-pointer hover:text-white transition-colors"
-          />
-
           <Link to="/settings">
             <Settings
               size={20}
@@ -68,19 +30,6 @@ const Header = () => {
           </Link>
         </div>
       </div>
-
-      <Modal isOpen={open} onClose={reset}>
-        <ComposerForm
-          text={text}
-          images={images}
-          loading={loading.create}
-          fileRef={fileRef}
-          onText={setText}
-          onFile={handleFileChange}
-          onSubmit={handleSubmit}
-          onCancel={reset}
-        />
-      </Modal>
     </>
   );
 };
