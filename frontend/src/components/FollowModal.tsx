@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Search } from "lucide-react";
 import Modal from "./ui/Modal";
 import Avatar from "./ui/Avatar";
@@ -33,6 +33,10 @@ const FollowModal = ({
       u.username?.toLowerCase().includes(search.toLowerCase()) ||
       u.name?.toLowerCase().includes(search.toLowerCase()),
   );
+
+  useEffect(() => {
+    if (isOpen) setTab(defaultTab);
+  }, [isOpen, defaultTab]);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col w-full gap-3 ">

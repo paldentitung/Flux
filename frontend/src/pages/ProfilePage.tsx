@@ -17,7 +17,9 @@ const ProfilePage = () => {
 
   const [view, setView] = useState<"grid" | "list">("grid");
   const [isFollowing, setIsFollowing] = useState(false);
-
+  const [followDefaultTab, setFollowDefaultTab] = useState<
+    "followers" | "following"
+  >("followers");
   const [isOpen, setIsOpen] = useState(false);
   const [isFollowOpen, setIsFollowOpen] = useState(false);
   if (!user) return null;
@@ -123,7 +125,15 @@ const ProfilePage = () => {
             ].map(({ label, value }) => (
               <div
                 key={label}
-                onClick={() => label !== "Posts" && setIsFollowOpen(true)}
+                onClick={() => {
+                  if (label === "Followers") {
+                    setFollowDefaultTab("followers");
+                    setIsFollowOpen(true);
+                  } else if (label === "Following") {
+                    setFollowDefaultTab("following");
+                    setIsFollowOpen(true);
+                  }
+                }}
                 className={`flex items-baseline gap-1.5 ${label !== "Posts" ? "cursor-pointer hover:opacity-70 transition" : ""}`}
               >
                 <span className="text-base font-semibold text-(--foreground)">
@@ -223,6 +233,7 @@ const ProfilePage = () => {
         isOpen={isFollowOpen}
         onClose={() => setIsFollowOpen(false)}
         user={user}
+        defaultTab={followDefaultTab}
       />
     </>
   );
