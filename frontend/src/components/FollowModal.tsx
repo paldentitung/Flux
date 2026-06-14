@@ -3,6 +3,7 @@ import { X, Search } from "lucide-react";
 import Modal from "./ui/Modal";
 import Avatar from "./ui/Avatar";
 import type { User } from "../types/user.types";
+import { useProfile } from "../hooks/useProfile";
 
 type Tab = "followers" | "following";
 
@@ -21,6 +22,7 @@ const FollowModal = ({
 }: Props) => {
   const [tab, setTab] = useState<Tab>(defaultTab);
   const [search, setSearch] = useState("");
+  const { handleFollowUser, handleUnFollowUser } = useProfile();
 
   const followerIds = user.followers ?? [];
   const followingIds = user.following ?? [];
@@ -36,13 +38,13 @@ const FollowModal = ({
       <div className="flex flex-col w-full gap-3 ">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-(--post-card-border)">
-          <div className="flex gap-1">
+          <div className="flex gap-1 justify-center items-center mx-auto">
             <button
               onClick={() => setTab("followers")}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition hover:cursor-pointer ${
                 tab === "followers"
-                  ? "bg-(--primary)/10 text-(--primary)"
-                  : "text-(--muted-foreground) hover:text-(--foreground)"
+                  ? "bg-[hsl(var(--primary))] text-(--primary)"
+                  : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
               }`}
             >
               Followers
@@ -52,10 +54,10 @@ const FollowModal = ({
             </button>
             <button
               onClick={() => setTab("following")}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
+              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition hover:cursor-pointer ${
                 tab === "following"
-                  ? "bg-(--primary)/10 text-(--primary)"
-                  : "text-(--muted-foreground) hover:text-(--foreground)"
+                  ? "bg-[hsl(var(--primary))] text-(--primary)"
+                  : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))]"
               }`}
             >
               Following
@@ -112,11 +114,17 @@ const FollowModal = ({
                   </span>
                 </div>
                 {tab === "followers" ? (
-                  <button className="text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition">
-                    Remove
+                  <button
+                    onClick={() => handleFollowUser(u)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition  `}
+                  >
+                    Follow
                   </button>
                 ) : (
-                  <button className="text-xs px-3 py-1.5 rounded-lg border border-red-400/40 text-red-500 hover:bg-red-500/10 transition">
+                  <button
+                    onClick={() => handleUnFollowUser(u._id)}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-red-400/40 text-red-500 hover:bg-red-500/10 transition"
+                  >
                     Unfollow
                   </button>
                 )}
