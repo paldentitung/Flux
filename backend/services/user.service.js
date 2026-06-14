@@ -66,3 +66,22 @@ export const unfollowUserService = async (currentUserId, targetUserId) => {
 
   return { success: true };
 };
+
+export const changeAvatarService = async (userId, avatarURL) => {
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const updatedUser = User.findByIdAndUpdate(
+    userId,
+    { avatar: avatarURL },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  return user;
+};

@@ -1,6 +1,7 @@
 import {
   followUserService,
   unfollowUserService,
+  changeAvatarService,
 } from "../services/user.service.js";
 
 export const followUserController = async (req, res, next) => {
@@ -23,6 +24,25 @@ export const unfollowUserController = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "User unfollowed successfully",
+    data: result,
+  });
+};
+
+export const changeAvatarConroller = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No file uploaded",
+    });
+  }
+
+  const avatarUrl = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
+
+  const result = await changeAvatarService(req.user._id, avatarUrl);
+
+  res.status(200).json({
+    success: true,
+    message: "Avatar changed",
     data: result,
   });
 };
