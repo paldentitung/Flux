@@ -5,6 +5,7 @@ import {
   changeAvatarConroller,
   followUserController,
   unfollowUserController,
+  removeAvatarConroller,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -18,4 +19,6 @@ router.post(
   upload.single("avatar"),
   changeAvatarConroller,
 );
+
+router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));
 export default router;

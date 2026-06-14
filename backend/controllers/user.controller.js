@@ -2,6 +2,7 @@ import {
   followUserService,
   unfollowUserService,
   changeAvatarService,
+  removeAvatarService,
 } from "../services/user.service.js";
 
 export const followUserController = async (req, res, next) => {
@@ -43,6 +44,16 @@ export const changeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar changed",
+    data: result,
+  });
+};
+
+export const removeAvatarConroller = async (req, res) => {
+  const result = await removeAvatarService(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: "Avatar remove",
     data: result,
   });
 };

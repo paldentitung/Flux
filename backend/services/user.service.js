@@ -1,6 +1,7 @@
 import AppError from "../utils/AppError.js";
 import User from "../models/User.js";
-
+import fs from "fs";
+import path from "path";
 export const followUserService = async (currentUserId, targetUserId) => {
   if (currentUserId === targetUserId) {
     throw new AppError("You cannot follow yourself", 400);
@@ -83,5 +84,33 @@ export const changeAvatarService = async (userId, avatarURL) => {
     },
   );
 
-  return user;
+  return updatedUser;
+};
+
+export const removeAvatarService = async (userId) => {
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  if (!user.avatar) {
+    return user;
+  }
+
+  const filePath = path.join(process.cwd(), user.avatar);
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.log("Failed to delete avatar file:", err.message);
+    }
+  });
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { avatar: null },
+    { new: true },
+  );
+
+  return updatedUser;
 };
