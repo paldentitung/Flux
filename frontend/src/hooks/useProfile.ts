@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { followUser, unfollowUser } from "../services/userService";
+import {
+  changeAvatar,
+  followUser,
+  unfollowUser,
+} from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { User, UserSummary } from "../types/user.types";
 import { toast } from "react-hot-toast";
@@ -48,9 +52,34 @@ export const useProfile = () => {
     }
   };
 
+  const handleChangeAvatar = async (avatar: File) => {
+    if (!user) return;
+    const previousAvatar = user.avatar;
+    const optimisticUrl = URL.createObjectURL(avatar);
+
+    setUser({ ...user, avatar: optimisticUrl });
+
+    try {
+      const formData = new FormData();
+      formData.append("avatar", avatar);
+      const res = await changeAvatar(formData);
+
+      if (res.success) {
+        setUser({ ...user, avatar: res.data.avatar });
+        toast.success("avatar changed");
+      }
+    } catch (error: any) {
+      setUser({ ...user, avatar: previousAvatar });
+      toast.error(error.message);
+    } finally {
+      URL.revokeObjectURL(optimisticUrl);
+    }
+  };
+
   return {
     handleFollowUser,
     handleUnFollowUser,
     loading,
+    handleChangeAvatar,
   };
 };

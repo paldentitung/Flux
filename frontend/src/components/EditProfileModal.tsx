@@ -4,6 +4,7 @@ import { X, Camera } from "lucide-react";
 import Avatar from "./ui/Avatar";
 import type { User } from "../types/user.types";
 import LoadingButton from "./ui/LoadingButton";
+import { useProfile } from "../hooks/useProfile";
 
 const EditProfileModal = ({
   isOpen,
@@ -14,16 +15,18 @@ const EditProfileModal = ({
   onClose: () => void;
   user: User;
 }) => {
+  const { handleChangeAvatar } = useProfile();
   const [preview, setPreview] = useState<string | null>(user.avatar);
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setPreview(URL.createObjectURL(file));
+    await handleChangeAvatar(file);
   };
 
   return (

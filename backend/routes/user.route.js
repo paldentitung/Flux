@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/:id/follow", protect, asyncHandler(followUserController));
 router.delete("/:id/unfollow", protect, asyncHandler(unfollowUserController));
 
-router.post(
+router.patch(
   "/me/avatar",
   protect,
   upload.single("avatar"),

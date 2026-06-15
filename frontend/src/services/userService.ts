@@ -21,3 +21,14 @@ export const unfollowUser = async (targetUserId: string) => {
     true,
   );
 };
+
+export const changeAvatar = async (formData: FormData) => {
+  return request(
+    "/user/me/avatar",
+    {
+      method: "PATCH",
+      body: formData,
+    },
+    true,
+  );
+};
