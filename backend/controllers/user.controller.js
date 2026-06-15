@@ -1,8 +1,10 @@
+import { updatePostService } from "../services/posts.service.js";
 import {
   followUserService,
   unfollowUserService,
   changeAvatarService,
   removeAvatarService,
+  updateProfileService,
 } from "../services/user.service.js";
 
 export const followUserController = async (req, res, next) => {
@@ -54,6 +56,15 @@ export const removeAvatarConroller = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Avatar remove",
+    data: result,
+  });
+};
+
+export const updateProfileController = async (req, res) => {
+  const result = await updateProfileService(req.user._id, req.body);
+  res.status(200).json({
+    success: true,
+    message: "Profile updated",
     data: result,
   });
 };

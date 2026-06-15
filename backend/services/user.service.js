@@ -114,3 +114,32 @@ export const removeAvatarService = async (userId) => {
 
   return updatedUser;
 };
+
+export const updateProfileService = async (userId, formData) => {
+  const allowedFields = ["name", "bio"];
+
+  const updates = {};
+  for (const field of allowedFields) {
+    if (formData[field] !== undefined) {
+      updates[field] = formData[field];
+    }
+  }
+
+  if (Object.keys(updates).length === 0) {
+    throw new AppError("No valid fields to update", 400);
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+    new: true,
+    runValidators: true,
+  })
+    .select("-password")
+    .populate("followers", "_id username name avatar")
+    .populate("following", "_id username name avatar");
+
+  if (!updatedUser) {
+    throw new AppError("User not found", 404);
+  }
+
+  return updatedUser;
+};
