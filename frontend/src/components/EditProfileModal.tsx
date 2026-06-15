@@ -15,8 +15,12 @@ const EditProfileModal = ({
   onClose: () => void;
   user: User;
 }) => {
-  const { handleChangeAvatar, handleUpdateProfile, handleRemoveAvatar } =
-    useProfile();
+  const {
+    handleChangeAvatar,
+    handleUpdateProfile,
+    handleRemoveAvatar,
+    loading,
+  } = useProfile();
   const [preview, setPreview] = useState<string | null>(user.avatar);
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -175,6 +179,8 @@ const EditProfileModal = ({
 
           <LoadingButton
             onClick={handleSubmit}
+            loading={loading}
+            loadingText="Updating"
             type="submit"
             className="px-5 py-2 rounded-xl text-sm font-medium text-white transition"
           >

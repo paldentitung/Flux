@@ -7,10 +7,16 @@ import {
   unfollowUserController,
   removeAvatarConroller,
   updateProfileController,
+  getMyProfileController,
+  getUserProfileConroller,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
 const router = express.Router();
+
+router.get("/me", protect, asyncHandler(getMyProfileController));
+router.get("/user/:userId", protect, asyncHandler(getUserProfileConroller));
+
 router.post("/:id/follow", protect, asyncHandler(followUserController));
 router.delete("/:id/unfollow", protect, asyncHandler(unfollowUserController));
 

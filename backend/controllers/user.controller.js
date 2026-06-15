@@ -5,7 +5,30 @@ import {
   changeAvatarService,
   removeAvatarService,
   updateProfileService,
+  getMyProfileService,
+  getUserProfileService,
 } from "../services/user.service.js";
+
+export const getMyProfileController = async (req, res) => {
+  const result = await getMyProfileService(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    message: "Profile fetched",
+    data: result,
+  });
+};
+
+export const getUserProfileConroller = async (req, res) => {
+  const { userId } = req.params;
+  const result = await getUserProfileService(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Profile fetched",
+    data: result,
+  });
+};
 
 export const followUserController = async (req, res, next) => {
   const currentUserId = req.user.id;

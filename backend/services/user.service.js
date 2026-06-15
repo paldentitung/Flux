@@ -2,6 +2,27 @@ import AppError from "../utils/AppError.js";
 import User from "../models/User.js";
 import fs from "fs";
 import path from "path";
+
+export const getMyProfileService = async (userId) => {
+  const user = await User.findById(userId).select("-password");
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+  return user;
+};
+
+export const getUserProfileService = async (userId) => {
+  const user = await User.findById(userId)
+    .select("-password -email -blockedUsers")
+    .populate("followers", "_id username name avatar")
+    .populate("following", "_id username name avatar");
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
+};
 export const followUserService = async (currentUserId, targetUserId) => {
   if (currentUserId === targetUserId) {
     throw new AppError("You cannot follow yourself", 400);
