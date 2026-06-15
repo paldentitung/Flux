@@ -79,13 +79,21 @@ export const useProfile = () => {
   };
 
   const handleUpdateProfile = async (formData: UpdateProfileData) => {
+    if (!user) return;
+    const previousData = { name: user.name, bio: user.bio };
+
+    setLoading(true);
+    setUser({ ...user, ...formData });
+
     try {
       const res = await updateProfile(formData);
 
       if (res.success) {
+        setUser({ ...user, ...res.data });
         toast.success(res.message);
       }
     } catch (error: any) {
+      setUser({ ...user, ...previousData });
       toast.error(error.message);
     } finally {
       setLoading(false);
