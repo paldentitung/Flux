@@ -55,6 +55,39 @@ const ProfilePage = () => {
 
   if (!user) return null;
 
+  const handleFollowClick = async () => {
+    if (!profileUser) return;
+
+    await handleFollowUser({
+      _id: profileUser._id!,
+      username: profileUser.username,
+      name: profileUser.name,
+      avatar: profileUser.avatar,
+    });
+
+    if (!isOwnProfile) {
+      setVisitedProfile((prev) =>
+        prev ? { ...prev, followers: [...prev.followers, user] } : prev,
+      );
+    }
+  };
+
+  const handleUnfollowClick = async () => {
+    if (!profileUser) return;
+
+    await handleUnFollowUser(profileUser._id!);
+
+    if (!isOwnProfile) {
+      setVisitedProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              followers: prev.followers.filter((f) => f._id !== user._id),
+            }
+          : prev,
+      );
+    }
+  };
   const profileUser = isOwnProfile ? user : visitedProfile;
 
   if (!isOwnProfile && loading) return null; // or a loading spinner
@@ -113,14 +146,7 @@ const ProfilePage = () => {
                 <>
                   <button
                     onClick={() =>
-                      isFollowing
-                        ? handleUnFollowUser(profileUser._id)
-                        : handleFollowUser({
-                            _id: profileUser._id,
-                            username: profileUser.username,
-                            name: profileUser.name,
-                            avatar: profileUser.avatar,
-                          })
+                      isFollowing ? handleUnfollowClick() : handleFollowClick()
                     }
                     className="px-5 py-2 rounded-lg text-sm font-medium transition"
                     style={
