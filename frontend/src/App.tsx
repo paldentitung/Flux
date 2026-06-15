@@ -80,9 +80,16 @@ const App = () => {
               </MainLayout>
             }
           />
-
           <Route
             path="/profile"
+            element={
+              <MainLayout>
+                <ProfilePage />
+              </MainLayout>
+            }
+          />{" "}
+          <Route
+            path="/profile/:userId"
             element={
               <MainLayout>
                 <ProfilePage />

@@ -56,3 +56,7 @@ export const updateProfile = async (formData: UpdateProfileData) => {
     true,
   );
 };
+
+export const getUserProfile = async (userId: string) => {
+  return request(`/user/user/${userId}`, {}, true);
+};

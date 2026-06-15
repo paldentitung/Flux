@@ -1,30 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Grid3X3, List, BadgeCheck, Heart, MessageCircle } from "lucide-react";
-
+import { getUserProfile } from "../services/userService";
 import LoadingButton from "../components/ui/LoadingButton";
 import Avatar from "../components/ui/Avatar";
 import { useAuth } from "../hooks/useAuth";
 import { usePosts } from "../hooks/usePosts";
+import { useProfile } from "../hooks/useProfile";
 import PostCard from "../components/post/PostCard";
 import EditProfileModal from "../components/EditProfileModal";
 import FollowModal from "../components/FollowModal";
+import { useParams } from "react-router-dom";
+import type { User } from "../types/user.types";
+
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
 const ProfilePage = () => {
+  const { userId } = useParams<{ userId?: string }>();
   const { user, useCleanUsername } = useAuth();
   const { posts } = usePosts();
+  const { handleFollowUser, handleUnFollowUser } = useProfile();
 
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [isFollowing, setIsFollowing] = useState(false);
   const [followDefaultTab, setFollowDefaultTab] = useState<
     "followers" | "following"
   >("followers");
   const [isOpen, setIsOpen] = useState(false);
   const [isFollowOpen, setIsFollowOpen] = useState(false);
+  const [visitedProfile, setVisitedProfile] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const isOwnProfile = !userId || userId === user?._id;
+
+  useEffect(() => {
+    if (isOwnProfile) {
+      setVisitedProfile(null);
+      return;
+    }
+
+    const fetchProfile = async () => {
+      setLoading(true);
+      try {
+        const res = await getUserProfile(userId!);
+        if (res.success) setVisitedProfile(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [userId, isOwnProfile]);
+
   if (!user) return null;
-  const userPosts = posts.filter((p) => p.userId._id === user._id);
-  const isOwnProfile = true;
+
+  const profileUser = isOwnProfile ? user : visitedProfile;
+
+  if (!isOwnProfile && loading) return null; // or a loading spinner
+  if (!profileUser) return null;
+
+  const userPosts = posts.filter((p) => p.userId._id === profileUser._id);
+
+  const isFollowing =
+    user.following?.some((f) => f._id === profileUser._id) ?? false;
 
   return (
     <>
@@ -55,8 +94,8 @@ const ProfilePage = () => {
           <div className="relative -mt-16 mb-6 flex items-end justify-between">
             {/* Avatar */}
             <Avatar
-              src={user.avatar}
-              name={user.name || user.username}
+              src={profileUser.avatar}
+              name={profileUser.name || profileUser.username}
               size={112}
               className="border-4 border-(--background) rounded-full"
             />
@@ -73,6 +112,16 @@ const ProfilePage = () => {
               ) : (
                 <>
                   <button
+                    onClick={() =>
+                      isFollowing
+                        ? handleUnFollowUser(profileUser._id)
+                        : handleFollowUser({
+                            _id: profileUser._id,
+                            username: profileUser.username,
+                            name: profileUser.name,
+                            avatar: profileUser.avatar,
+                          })
+                    }
                     className="px-5 py-2 rounded-lg text-sm font-medium transition"
                     style={
                       isFollowing
@@ -84,9 +133,6 @@ const ProfilePage = () => {
                     }
                   >
                     {isFollowing ? "Following" : "Follow"}
-                  </button>
-                  <button className="px-5 py-2 rounded-lg text-sm font-medium border border-(--post-card-border) text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition">
-                    Message
                   </button>
                 </>
               )}
@@ -100,18 +146,18 @@ const ProfilePage = () => {
                 style={{ fontFamily: "'DM Serif Display', serif" }}
                 className="text-2xl text-(--foreground)"
               >
-                {user.name ?? user.username}
+                {profileUser.name ?? profileUser.username}
               </h1>
-              {user.isVerified && (
+              {profileUser.isVerified && (
                 <BadgeCheck size={18} className="text-purple-500" />
               )}
             </div>
             <p className="text-sm text-gray-400 mb-3">
-              @{useCleanUsername(user?.username)}
+              @{useCleanUsername(profileUser?.username)}
             </p>
-            {user.bio && (
+            {profileUser.bio && (
               <p className="text-sm text-(--foreground) leading-relaxed max-w-lg">
-                {user.bio}
+                {profileUser.bio}
               </p>
             )}
           </div>
@@ -120,8 +166,8 @@ const ProfilePage = () => {
           <div className="flex gap-6 mb-8 border-b border-(--post-card-border) pb-5">
             {[
               { label: "Posts", value: userPosts.length },
-              { label: "Followers", value: user.followers.length },
-              { label: "Following", value: user.following.length },
+              { label: "Followers", value: profileUser.followers.length },
+              { label: "Following", value: profileUser.following.length },
             ].map(({ label, value }) => (
               <div
                 key={label}
@@ -168,7 +214,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Posts */}
-          {posts.length === 0 ? (
+          {userPosts.length === 0 ? (
             <p className="text-sm text-(--muted-foreground) text-center py-16">
               No posts yet
             </p>
@@ -224,15 +270,17 @@ const ProfilePage = () => {
           )}
         </div>
       </div>
-      <EditProfileModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        user={user}
-      />
+      {isOwnProfile && (
+        <EditProfileModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          user={profileUser}
+        />
+      )}
       <FollowModal
         isOpen={isFollowOpen}
         onClose={() => setIsFollowOpen(false)}
-        user={user}
+        user={profileUser}
         defaultTab={followDefaultTab}
       />
     </>

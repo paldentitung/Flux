@@ -4,6 +4,8 @@ import Modal from "./ui/Modal";
 import Avatar from "./ui/Avatar";
 import type { User } from "../types/user.types";
 import { useProfile } from "../hooks/useProfile";
+import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 type Tab = "followers" | "following";
 
@@ -23,6 +25,7 @@ const FollowModal = ({
   const [tab, setTab] = useState<Tab>(defaultTab);
   const [search, setSearch] = useState("");
   const { handleFollowUser, handleUnFollowUser } = useProfile();
+  const { user: currentUser } = useAuth();
 
   const followerIds = user.followers ?? [];
   const followingIds = user.following ?? [];
@@ -103,37 +106,59 @@ const FollowModal = ({
                   : "Not following anyone yet"}
             </p>
           ) : (
-            filtered.map((u) => (
-              <div
-                key={u._id}
-                className="flex items-center gap-3 px-5 py-3 border-b border-(--post-card-border) last:border-b-0"
-              >
-                <Avatar src={u.avatar} name={u.name || u.username} size={40} />
-                <div className="flex flex-col flex-1 min-w-0">
-                  <span className="text-sm font-medium text-(--foreground) truncate">
-                    {u.name || u.username}
-                  </span>
-                  <span className="text-xs text-(--muted-foreground)">
-                    @{u.username}
-                  </span>
+            filtered.map((u) => {
+              const isFollowingThisUser =
+                currentUser?.following?.some((f) => f._id === u._id) ?? false;
+              const isSelf = currentUser?._id === u._id;
+
+              return (
+                <div
+                  key={u._id}
+                  className="flex items-center gap-3 px-5 py-3 border-b border-(--post-card-border) last:border-b-0"
+                >
+                  <Avatar
+                    src={u.avatar}
+                    name={u.name || u.username}
+                    size={40}
+                  />
+                  <Link
+                    to={`/profile/${u._id}`}
+                    className="flex flex-col flex-1 min-w-0"
+                  >
+                    <span className="text-sm font-medium text-(--foreground) truncate">
+                      {u.name || u.username}
+                    </span>
+                    <span className="text-xs text-(--muted-foreground)">
+                      @{u.username}
+                    </span>
+                  </Link>
+
+                  {!isSelf &&
+                    (isFollowingThisUser ? (
+                      <button
+                        onClick={() => handleUnFollowUser(u._id)}
+                        className="text-xs px-3 py-1.5 rounded-lg border border-red-400/40 text-red-500 hover:bg-red-500/10 transition"
+                      >
+                        Unfollow
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          handleFollowUser({
+                            _id: u._id,
+                            username: u.username,
+                            name: u.name,
+                            avatar: u.avatar,
+                          })
+                        }
+                        className="text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
+                      >
+                        Follow
+                      </button>
+                    ))}
                 </div>
-                {tab === "followers" ? (
-                  <button
-                    onClick={() => handleFollowUser(u)}
-                    className={`text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition  `}
-                  >
-                    Follow
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleUnFollowUser(u._id)}
-                    className="text-xs px-3 py-1.5 rounded-lg border border-red-400/40 text-red-500 hover:bg-red-500/10 transition"
-                  >
-                    Unfollow
-                  </button>
-                )}
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
