@@ -35,12 +35,14 @@ const EditProfileModal = ({
 
   const handleSubmit = async () => {
     await handleUpdateProfile(formData);
+    onClose();
   };
 
   const removeAvatar = async () => {
     setPreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
     await handleRemoveAvatar();
+    onClose();
   };
 
   return (
