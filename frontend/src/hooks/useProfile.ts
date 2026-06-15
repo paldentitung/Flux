@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   changeAvatar,
   followUser,
+  removeAvatar,
   unfollowUser,
   updateProfile,
 } from "../services/userService";
@@ -90,11 +91,33 @@ export const useProfile = () => {
       setLoading(false);
     }
   };
+
+  const handleRemoveAvatar = async () => {
+    if (!user) return;
+    const previousAvatar = user.avatar;
+
+    setUser({ ...user, avatar: null });
+    setLoading(true);
+
+    try {
+      const res = await removeAvatar();
+
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error: any) {
+      setUser({ ...user, avatar: previousAvatar });
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     handleFollowUser,
     handleUnFollowUser,
     loading,
     handleChangeAvatar,
     handleUpdateProfile,
+    handleRemoveAvatar,
   };
 };

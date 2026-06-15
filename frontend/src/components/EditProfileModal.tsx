@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import Modal from "./ui/Modal";
-import { X, Camera } from "lucide-react";
+import { X, Camera, Trash2 } from "lucide-react";
 import Avatar from "./ui/Avatar";
 import type { User } from "../types/user.types";
 import LoadingButton from "./ui/LoadingButton";
@@ -15,7 +15,8 @@ const EditProfileModal = ({
   onClose: () => void;
   user: User;
 }) => {
-  const { handleChangeAvatar, handleUpdateProfile } = useProfile();
+  const { handleChangeAvatar, handleUpdateProfile, handleRemoveAvatar } =
+    useProfile();
   const [preview, setPreview] = useState<string | null>(user.avatar);
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +37,12 @@ const EditProfileModal = ({
     await handleUpdateProfile(formData);
   };
 
+  const removeAvatar = async () => {
+    setPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    await handleRemoveAvatar();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div
@@ -53,7 +60,6 @@ const EditProfileModal = ({
             <X size={15} />
           </button>
         </div>
-
         <div className="flex items-center gap-4 ">
           <div className="relative group">
             <input
@@ -101,9 +107,19 @@ const EditProfileModal = ({
             <p className="text-xs text-(--muted-foreground)">
               JPG, PNG or GIF · Max 5MB
             </p>
+
+            {preview && (
+              <button
+                type="button"
+                onClick={removeAvatar}
+                className="mt-1 flex items-center gap-1 text-xs text-red-400 hover:text-red-300 transition"
+              >
+                <Trash2 size={12} />
+                Remove
+              </button>
+            )}
           </div>
         </div>
-
         {/* Fields */}
         <div className="flex flex-col gap-3.5 ">
           <div>

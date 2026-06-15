@@ -33,6 +33,15 @@ export const changeAvatar = async (formData: FormData) => {
     true,
   );
 };
+export const removeAvatar = async () => {
+  return request(
+    "/user/me/avatar",
+    {
+      method: "DELETE",
+    },
+    true,
+  );
+};
 
 export const updateProfile = async (formData: UpdateProfileData) => {
   return request(
