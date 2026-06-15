@@ -3,9 +3,10 @@ import {
   changeAvatar,
   followUser,
   unfollowUser,
+  updateProfile,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
-import type { User, UserSummary } from "../types/user.types";
+import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
 import { toast } from "react-hot-toast";
 export const useProfile = () => {
   const { user, setUser } = useAuth();
@@ -76,10 +77,24 @@ export const useProfile = () => {
     }
   };
 
+  const handleUpdateProfile = async (formData: UpdateProfileData) => {
+    try {
+      const res = await updateProfile(formData);
+
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return {
     handleFollowUser,
     handleUnFollowUser,
     loading,
     handleChangeAvatar,
+    handleUpdateProfile,
   };
 };

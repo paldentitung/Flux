@@ -15,11 +15,14 @@ const EditProfileModal = ({
   onClose: () => void;
   user: User;
 }) => {
-  const { handleChangeAvatar } = useProfile();
+  const { handleChangeAvatar, handleUpdateProfile } = useProfile();
   const [preview, setPreview] = useState<string | null>(user.avatar);
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [formData, setFormData] = useState({
+    name: user.name ?? "",
+    bio: user.bio ?? "",
+  });
   if (!isOpen) return null;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,6 +30,10 @@ const EditProfileModal = ({
     if (!file) return;
     setPreview(URL.createObjectURL(file));
     await handleChangeAvatar(file);
+  };
+
+  const handleSubmit = async () => {
+    await handleUpdateProfile(formData);
   };
 
   return (
@@ -106,24 +113,12 @@ const EditProfileModal = ({
             <input
               type="text"
               defaultValue={user.name}
+              value={formData.name}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               className="w-full bg-(--post-card-bg) border border-(--post-card-border) rounded-xl px-3 py-2.5 text-sm text-(--foreground) outline-none focus:border-purple-500 transition"
             />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-(--muted-foreground) uppercase tracking-widest mb-1.5">
-              Username
-            </label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-(--muted-foreground)">
-                @
-              </span>
-              <input
-                type="text"
-                defaultValue={user.username}
-                className="w-full bg-(--post-card-bg) border border-(--post-card-border) rounded-xl pl-6 pr-3 py-2.5 text-sm text-(--foreground) outline-none focus:border-purple-500 transition"
-              />
-            </div>
           </div>
 
           <div>
@@ -142,7 +137,10 @@ const EditProfileModal = ({
               placeholder="Tell people about yourself…"
               defaultValue={user.bio}
               maxLength={160}
-              onChange={(e) => setBioLength(e.target.value.length)}
+              onChange={(e) => {
+                setFormData((prev) => ({ ...prev, bio: e.target.value }));
+                setBioLength(e.target.value.length);
+              }}
               className="w-full bg-(--post-card-bg) border border-(--post-card-border) rounded-xl px-3 py-2.5 text-sm text-(--foreground) resize-none outline-none focus:border-purple-500 transition leading-relaxed"
             />
           </div>
@@ -157,7 +155,11 @@ const EditProfileModal = ({
             Cancel
           </button>
 
-          <LoadingButton className="px-5 py-2 rounded-xl text-sm font-medium text-white transition">
+          <LoadingButton
+            onClick={handleSubmit}
+            type="submit"
+            className="px-5 py-2 rounded-xl text-sm font-medium text-white transition"
+          >
             Save changes
           </LoadingButton>
         </div>

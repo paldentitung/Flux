@@ -1,3 +1,4 @@
+import type { UpdateProfileData } from "../types/user.types";
 import request from "./api";
 
 export const followUser = async (targetUserId: string) => {
@@ -28,6 +29,20 @@ export const changeAvatar = async (formData: FormData) => {
     {
       method: "PATCH",
       body: formData,
+    },
+    true,
+  );
+};
+
+export const updateProfile = async (formData: UpdateProfileData) => {
+  return request(
+    "/user/me/profile",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     },
     true,
   );

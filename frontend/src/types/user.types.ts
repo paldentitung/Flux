@@ -20,3 +20,7 @@ export type UserSummary = {
   name?: string;
   avatar: string | null;
 };
+export interface UpdateProfileData {
+  name?: string;
+  bio?: string;
+}
