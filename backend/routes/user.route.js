@@ -9,6 +9,7 @@ import {
   updateProfileController,
   getMyProfileController,
   getUserProfileConroller,
+  changePasswordController,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -30,4 +31,7 @@ router.patch(
 router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));
 
 router.post("/me/profile", protect, asyncHandler(updateProfileController));
+
+router.patch("/me/password", protect, asyncHandler(changePasswordController));
+
 export default router;

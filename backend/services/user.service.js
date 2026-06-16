@@ -2,6 +2,8 @@ import AppError from "../utils/AppError.js";
 import User from "../models/User.js";
 import fs from "fs";
 import path from "path";
+import bcrypt from "bcrypt";
+import { userMapper } from "../utils/userMapper.js";
 
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");
@@ -163,4 +165,30 @@ export const updateProfileService = async (userId, formData) => {
   }
 
   return updatedUser;
+};
+
+export const changePasswordService = async (
+  userId,
+  oldPassword,
+  newPassword,
+) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+  if (!isMatch) {
+    throw new AppError("Invalid old password", 400);
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+
+  await user.save();
+
+  return userMapper(user);
 };

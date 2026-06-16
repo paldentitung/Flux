@@ -7,6 +7,7 @@ import {
   updateProfileService,
   getMyProfileService,
   getUserProfileService,
+  changePasswordService,
 } from "../services/user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -88,6 +89,19 @@ export const updateProfileController = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Profile updated",
+    data: result,
+  });
+};
+
+export const changePasswordController = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const userId = req.user._id;
+
+  const result = await changePasswordService(userId, oldPassword, newPassword);
+
+  res.status(200).json({
+    success: true,
+    message: "Password changed",
     data: result,
   });
 };
