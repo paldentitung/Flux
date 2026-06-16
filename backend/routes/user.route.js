@@ -11,6 +11,7 @@ import {
   getUserProfileConroller,
   changePasswordController,
   blockUserController,
+  unblockUserController,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -36,5 +37,10 @@ router.post("/me/profile", protect, asyncHandler(updateProfileController));
 router.patch("/me/password", protect, asyncHandler(changePasswordController));
 
 router.post("/:id/block", protect, asyncHandler(blockUserController));
+router.post(
+  "/:targetUserId/unblock",
+  protect,
+  asyncHandler(unblockUserController),
+);
 
 export default router;

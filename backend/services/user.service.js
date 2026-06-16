@@ -242,3 +242,14 @@ export const blockUserService = async (userId, targetUserId) => {
 
   return userMapper(targetUser);
 };
+
+export const unblockUserService = async (userId, targetUserId) => {
+  await User.updateOne(
+    { _id: userId },
+    {
+      $pull: { blockedUsers: targetUserId },
+    },
+  );
+
+  return true;
+};

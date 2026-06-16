@@ -9,6 +9,7 @@ import {
   getUserProfileService,
   changePasswordService,
   blockUserService,
+  unblockUserService,
 } from "../services/user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -116,5 +117,17 @@ export const blockUserController = async (req, res) => {
     success: true,
     message: "User blocked",
     data: result,
+  });
+};
+
+export const unblockUserController = async (req, res) => {
+  const userId = req.user.id;
+  const { targetUserId } = req.params;
+
+  await unblockUserService(userId, targetUserId);
+
+  res.status(200).json({
+    success: true,
+    message: "User unblocked",
   });
 };
