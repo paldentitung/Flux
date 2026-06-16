@@ -48,12 +48,16 @@ router.patch("/me/private", protect, asyncHandler(togglePrivacyController));
 router.post(
   "/follow-requests/:id/accept",
   protect,
-  acceptFollowRequestController,
+  asyncHandler(acceptFollowRequestController),
 );
 router.post(
   "/follow-requests/:id/reject",
   protect,
-  rejectFollowRequestController,
+  asyncHandler(rejectFollowRequestController),
 );
-router.delete("/follow-requests/:id", protect, cancelFollowRequestController);
+router.delete(
+  "/follow-requests/:id",
+  protect,
+  asyncHandler(cancelFollowRequestController),
+);
 export default router;
