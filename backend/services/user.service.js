@@ -205,42 +205,42 @@ export const blockUserService = async (userId, targetUserId) => {
     throw new AppError("You cannot block yourself", 400);
   }
 
-  const user = await User.findById(userId);
   const targetUser = await User.findById(targetUserId);
-
   if (!targetUser) {
     throw new AppError("User not found", 404);
   }
 
-  // Already blocked
-  if (user.blockedUsers.includes(targetUserId)) {
+  // Check already blocked (optional but cleaner)
+  const user = await User.findById(userId);
+
+  if (user.blockedUsers?.includes(targetUserId)) {
     throw new AppError("User already blocked", 400);
   }
 
-  // Add to blocked list
-  user.blockedUsers.push(targetUserId);
-
-  // Remove follow relationship
-  user.following = user.following.filter(
-    (id) => id.toString() !== targetUserId,
+  // Block user + remove follow relationships
+  await User.updateOne(
+    { _id: userId },
+    {
+      $addToSet: { blockedUsers: targetUserId },
+      $pull: {
+        following: targetUserId,
+        followers: targetUserId,
+      },
+    },
   );
 
-  user.followers = user.followers.filter(
-    (id) => id.toString() !== targetUserId,
+  // Remove reverse follow relationships from target user
+  await User.updateOne(
+    { _id: targetUserId },
+    {
+      $pull: {
+        following: userId,
+        followers: userId,
+      },
+    },
   );
 
-  targetUser.following = targetUser.following.filter(
-    (id) => id.toString() !== userId,
-  );
-
-  targetUser.followers = targetUser.followers.filter(
-    (id) => id.toString() !== userId,
-  );
-
-  await user.save();
-  await targetUser.save();
-
-  return userMapper(targetUser);
+  return true;
 };
 
 export const unblockUserService = async (userId, targetUserId) => {
