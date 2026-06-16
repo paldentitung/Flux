@@ -133,7 +133,7 @@ export const changeAvatarService = async (userId, avatarURL) => {
     throw new Error("User not found");
   }
 
-  const updatedUser = User.findByIdAndUpdate(
+  const updatedUser = await User.findByIdAndUpdate(
     userId,
     { avatar: avatarURL },
     {
