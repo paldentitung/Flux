@@ -28,7 +28,7 @@ router.patch(
   "/me/avatar",
   protect,
   upload.single("avatar"),
-  changeAvatarConroller,
+  asyncHandler(changeAvatarConroller),
 );
 
 router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));
@@ -38,11 +38,7 @@ router.post("/me/profile", protect, asyncHandler(updateProfileController));
 router.patch("/me/password", protect, asyncHandler(changePasswordController));
 
 router.post("/:id/block", protect, asyncHandler(blockUserController));
-router.post(
-  "/:targetUserId/unblock",
-  protect,
-  asyncHandler(unblockUserController),
-);
+router.post("/:id/unblock", protect, asyncHandler(unblockUserController));
 
 router.patch("/me/private", protect, asyncHandler(togglePrivacyController));
 

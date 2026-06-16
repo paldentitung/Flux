@@ -122,10 +122,7 @@ export const blockUserController = async (req, res) => {
 };
 
 export const unblockUserController = async (req, res) => {
-  const userId = req.user.id;
-  const { targetUserId } = req.params;
-
-  await unblockUserService(userId, targetUserId);
+  await unblockUserService(req.user._id, req.params.id);
 
   res.status(200).json({
     success: true,
