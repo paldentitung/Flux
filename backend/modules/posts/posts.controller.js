@@ -1,11 +1,11 @@
-import Post from "../models/Post.js";
+import Post from "./post.model.js";
 import {
   createPostService,
   deletePostService,
   getPostService,
   updatePostService,
-} from "../services/posts.service.js";
-import AppError from "../utils/AppError.js";
+} from "./posts.service.js";
+import AppError from "../../utils/AppError.js";
 
 export const getPostsController = async (req, res) => {
   const result = await getPostService();

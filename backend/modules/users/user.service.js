@@ -1,9 +1,9 @@
-import AppError from "../utils/AppError.js";
-import User from "../models/User.js";
+import AppError from "../../utils/AppError.js";
+import User from "./user.model.js";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
-import { userMapper } from "../utils/userMapper.js";
+import { userMapper } from "./user.mapper.js";
 
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");

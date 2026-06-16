@@ -1,5 +1,5 @@
-import Comment from "../models/Comment.js";
-import Post from "../models/Post.js";
+import Comment from "./comment.model.js";
+import Post from "../posts/post.model.js";
 //create or use postid from params
 
 export const addComment = async (req, res) => {

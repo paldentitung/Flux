@@ -1,6 +1,6 @@
 import express from "express";
-import { protect } from "../middleware/auth.middleware.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { protect } from "../../middleware/auth.middleware.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 import {
   changeAvatarConroller,
   followUserController,
@@ -16,8 +16,8 @@ import {
   acceptFollowRequestController,
   rejectFollowRequestController,
   cancelFollowRequestController,
-} from "../controllers/user.controller.js";
-import { upload } from "../middleware/upload.middleware.js";
+} from "./user.controller.js";
+import { upload } from "../../middleware/upload.middleware.js";
 
 const router = express.Router();
 

@@ -8,8 +8,8 @@ import {
   resetPasswordController,
   verifyOtpController,
   resentOTPController,
-} from "../controllers/auth.controller.js";
-import { protect } from "../middleware/auth.middleware.js";
+} from "./auth.controller.js";
+import { protect } from "../../middleware/auth.middleware.js";
 import {
   forgotPasswordValidator,
   loginValidator,
@@ -17,9 +17,9 @@ import {
   resendOtpValidator,
   resetPasswordValidator,
   verifyOtpValidator,
-} from "../validators/authValidator.js";
-import { validate } from "../middleware/validate.middleware.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+} from "./auth.validator.js";
+import { validate } from "../../middleware/validate.middleware.js";
+import { asyncHandler } from "../../utils/asyncHandler.js";
 
 const router = express.Router();
 

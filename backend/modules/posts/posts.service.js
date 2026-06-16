@@ -1,6 +1,6 @@
-import Post from "../models/Post.js";
-import User from "../models/User.js";
-import AppError from "../utils/AppError.js";
+import Post from "./post.model.js";
+import User from "../users/user.model.js";
+import AppError from "../../utils/AppError.js";
 
 export const getPostService = async () => {
   const posts = await Post.find()

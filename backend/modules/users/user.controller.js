@@ -1,4 +1,4 @@
-import { updatePostService } from "../services/posts.service.js";
+import { updatePostService } from "../posts/posts.service.js";
 import {
   followUserService,
   unfollowUserService,
@@ -14,7 +14,7 @@ import {
   acceptFollowRequestService,
   rejectFollowRequestService,
   cancelFollowRequestService,
-} from "../services/user.service.js";
+} from "./user.service.js";
 
 export const getMyProfileController = async (req, res) => {
   const result = await getMyProfileService(req.user._id);

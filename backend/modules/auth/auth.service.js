@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
-import { generateToken } from "../utils/generateToken.js";
-import { sendTokenCookie } from "../utils/sendTokenCookie.js";
-import User from "../models/User.js";
-import { generateOtp } from "../utils/generateOtp.js";
-import sendEmail from "../utils/sendEmail.js";
-import AppError from "../utils/AppError.js";
+import { generateToken } from "../../utils/generateToken.js";
+import { sendTokenCookie } from "../../utils/sendTokenCookie.js";
+import User from "../users/user.model.js";
+import { generateOtp } from "../../utils/generateOtp.js";
+import sendEmail from "../../utils/sendEmail.js";
+import AppError from "../../utils/AppError.js";
 
 export const registerService = async ({ username, email, password }) => {
   const hasedPassword = await bcrypt.hash(password, 10);

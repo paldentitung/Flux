@@ -5,9 +5,9 @@ import {
   verifyOtpService,
   resetPasswordService,
   resendOTPService,
-} from "../services/auth.service.js";
-import { sendTokenCookie } from "../utils/sendTokenCookie.js";
-import { generateToken } from "../utils/generateToken.js";
+} from "./auth.service.js";
+import { sendTokenCookie } from "../../utils/sendTokenCookie.js";
+import { generateToken } from "../../utils/generateToken.js";
 export const registerController = async (req, res) => {
   const { username, email, password } = req.body;
   const { user } = await registerService({ username, email, password });

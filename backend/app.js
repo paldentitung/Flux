@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middleware/error.middleware.js";
-import authRoute from "./routes/auth.route.js";
-import postsRoute from "./routes/posts.route.js";
-import commentRoute from "./routes/comment.route.js";
-import userRoute from "./routes/user.route.js";
+import authRoute from "./modules/auth/auth.route.js";
+import postsRoute from "./modules/posts/posts.route.js";
+import commentRoute from "./modules/comments/comment.route.js";
+import userRoute from "./modules/users/user.route.js";
 
 const app = express();
 
