@@ -13,9 +13,9 @@ export const getMyProfileService = async (userId) => {
   return user;
 };
 
-export const getUserProfileService = async (userId) => {
+export const getUserProfileService = async (userId, viewerId) => {
   const user = await User.findById(userId)
-    .select("-password -email -blockedUsers")
+    .select("-password -email")
     .populate("followers", "_id username name avatar")
     .populate("following", "_id username name avatar");
 
@@ -23,7 +23,14 @@ export const getUserProfileService = async (userId) => {
     throw new AppError("User not found", 404);
   }
 
-  return user;
+  if (user.blockedUsers.includes(viewerId)) {
+    throw new AppError("You are blocked by this user", 403);
+  }
+
+  const userObj = user.toObject();
+  delete userObj.blockedUsers;
+
+  return userObj;
 };
 export const followUserService = async (currentUserId, targetUserId) => {
   if (currentUserId === targetUserId) {
@@ -191,4 +198,47 @@ export const changePasswordService = async (
   await user.save();
 
   return userMapper(user);
+};
+
+export const blockUserService = async (userId, targetUserId) => {
+  if (userId === targetUserId) {
+    throw new AppError("You cannot block yourself", 400);
+  }
+
+  const user = await User.findById(userId);
+  const targetUser = await User.findById(targetUserId);
+
+  if (!targetUser) {
+    throw new AppError("User not found", 404);
+  }
+
+  // Already blocked
+  if (user.blockedUsers.includes(targetUserId)) {
+    throw new AppError("User already blocked", 400);
+  }
+
+  // Add to blocked list
+  user.blockedUsers.push(targetUserId);
+
+  // Remove follow relationship
+  user.following = user.following.filter(
+    (id) => id.toString() !== targetUserId,
+  );
+
+  user.followers = user.followers.filter(
+    (id) => id.toString() !== targetUserId,
+  );
+
+  targetUser.following = targetUser.following.filter(
+    (id) => id.toString() !== userId,
+  );
+
+  targetUser.followers = targetUser.followers.filter(
+    (id) => id.toString() !== userId,
+  );
+
+  await user.save();
+  await targetUser.save();
+
+  return userMapper(targetUser);
 };

@@ -8,6 +8,7 @@ import {
   getMyProfileService,
   getUserProfileService,
   changePasswordService,
+  blockUserService,
 } from "../services/user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -22,7 +23,10 @@ export const getMyProfileController = async (req, res) => {
 
 export const getUserProfileConroller = async (req, res) => {
   const { userId } = req.params;
-  const result = await getUserProfileService(userId);
+  const viewerId = req.user.id;
+  console.log("viewer id", viewerId);
+
+  const result = await getUserProfileService(userId, viewerId);
 
   res.status(200).json({
     success: true,
@@ -30,7 +34,6 @@ export const getUserProfileConroller = async (req, res) => {
     data: result,
   });
 };
-
 export const followUserController = async (req, res, next) => {
   const currentUserId = req.user.id;
   const targetUserId = req.params.id;
@@ -102,6 +105,16 @@ export const changePasswordController = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Password changed",
+    data: result,
+  });
+};
+
+export const blockUserController = async (req, res) => {
+  const result = await blockUserService(req.user._id, req.params.id);
+
+  res.status(200).json({
+    success: true,
+    message: "User blocked",
     data: result,
   });
 };

@@ -10,6 +10,7 @@ import {
   getMyProfileController,
   getUserProfileConroller,
   changePasswordController,
+  blockUserController,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -33,5 +34,7 @@ router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));
 router.post("/me/profile", protect, asyncHandler(updateProfileController));
 
 router.patch("/me/password", protect, asyncHandler(changePasswordController));
+
+router.post("/:id/block", protect, asyncHandler(blockUserController));
 
 export default router;
