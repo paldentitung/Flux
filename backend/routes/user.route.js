@@ -12,6 +12,7 @@ import {
   changePasswordController,
   blockUserController,
   unblockUserController,
+  togglePrivacyController,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -42,5 +43,7 @@ router.post(
   protect,
   asyncHandler(unblockUserController),
 );
+
+router.patch("/me/private", protect, asyncHandler(togglePrivacyController));
 
 export default router;

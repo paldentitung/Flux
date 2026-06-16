@@ -10,6 +10,7 @@ import {
   changePasswordService,
   blockUserService,
   unblockUserService,
+  togglePrivacyService,
 } from "../services/user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -129,5 +130,17 @@ export const unblockUserController = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "User unblocked",
+  });
+};
+
+export const togglePrivacyController = async (req, res) => {
+  const userId = req.user.id;
+
+  const isPrivate = await togglePrivacyService(userId);
+
+  res.status(200).json({
+    success: true,
+    message: `Account is now ${isPrivate ? "private" : "public"}`,
+    data: { isPrivate },
   });
 };

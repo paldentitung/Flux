@@ -61,6 +61,10 @@ const UserSchema = new mongoose.Schema(
       ],
       default: [],
     },
+    isPrivate: {
+      type: Boolean,
+      default: false,
+    },
     otp: String,
     otpExpiry: Date,
     resetOtp: String,

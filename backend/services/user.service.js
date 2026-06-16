@@ -23,7 +23,18 @@ export const getUserProfileService = async (userId, viewerId) => {
     throw new AppError("User not found", 404);
   }
 
-  if (user.blockedUsers.includes(viewerId)) {
+  const viewer = viewerId.toString();
+  const isOwner = user._id.toString() === viewer;
+  const isFollower = user.followers.some(
+    (follower) => follower._id.toString() === viewer,
+  );
+
+  if (user.isPrivate && !isOwner && !isFollower) {
+    throw new AppError("This account is private", 403);
+  }
+
+  const isBlocked = user.blockedUsers.some((id) => id.toString() === viewer);
+  if (isBlocked) {
     throw new AppError("You are blocked by this user", 403);
   }
 
@@ -252,4 +263,18 @@ export const unblockUserService = async (userId, targetUserId) => {
   );
 
   return true;
+};
+
+export const togglePrivacyService = async (userId) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  user.isPrivate = !user.isPrivate;
+
+  await user.save();
+
+  return user.isPrivate;
 };
