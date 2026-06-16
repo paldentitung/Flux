@@ -13,6 +13,9 @@ import {
   blockUserController,
   unblockUserController,
   togglePrivacyController,
+  acceptFollowRequestController,
+  rejectFollowRequestController,
+  cancelFollowRequestController,
 } from "../controllers/user.controller.js";
 import { upload } from "../middleware/upload.middleware.js";
 
@@ -42,4 +45,15 @@ router.post("/:id/unblock", protect, asyncHandler(unblockUserController));
 
 router.patch("/me/private", protect, asyncHandler(togglePrivacyController));
 
+router.post(
+  "/follow-requests/:id/accept",
+  protect,
+  acceptFollowRequestController,
+);
+router.post(
+  "/follow-requests/:id/reject",
+  protect,
+  rejectFollowRequestController,
+);
+router.delete("/follow-requests/:id", protect, cancelFollowRequestController);
 export default router;

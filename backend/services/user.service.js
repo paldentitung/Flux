@@ -57,19 +57,34 @@ export const followUserService = async (currentUserId, targetUserId) => {
     throw new AppError("User not found", 404);
   }
 
-  // block check
-  if (
-    currentUser.blockedUsers.includes(targetUserId) ||
-    targetUser.blockedUsers.includes(currentUserId)
-  ) {
+  const isBlocked =
+    currentUser.blockedUsers.some((id) => id.toString() === targetUserId) ||
+    targetUser.blockedUsers.some((id) => id.toString() === currentUserId);
+
+  if (isBlocked) {
     throw new AppError("Cannot follow this user", 400);
   }
 
-  //check if already following
-  if (currentUser.following.includes(targetUserId)) {
-    throw new AppError("Already following", 400);
+  const alreadyFollowing = currentUser.following.some(
+    (id) => id.toString() === targetUserId,
+  );
+  const alreadyRequested = targetUser.followRequests?.some(
+    (id) => id.toString() === currentUserId,
+  );
+  if (alreadyRequested) {
+    throw new AppError("Follow request already sent", 400);
   }
 
+  if (alreadyFollowing) {
+    throw new AppError("Already following", 400);
+  }
+  if (targetUser.isPrivate) {
+    await User.findByIdAndUpdate(targetUserId, {
+      $addToSet: { followRequests: currentUserId },
+    });
+
+    return { message: "Follow request sent" };
+  }
   await Promise.all([
     User.findByIdAndUpdate(currentUserId, {
       $addToSet: { following: targetUserId },
@@ -84,17 +99,21 @@ export const followUserService = async (currentUserId, targetUserId) => {
 
 export const unfollowUserService = async (currentUserId, targetUserId) => {
   if (currentUserId === targetUserId) {
-    throw new Error("You cannot unfollow yourself");
+    throw new AppError("You cannot unfollow yourself", 400);
   }
 
   const currentUser = await User.findById(currentUserId);
 
   if (!currentUser) {
-    throw new Error("User not found");
+    throw new AppError("User not found", 404);
   }
 
-  if (!currentUser.following.includes(targetUserId)) {
-    throw new Error("You are not following this user");
+  const isFollowing = currentUser.following.some(
+    (id) => id.toString() === targetUserId,
+  );
+
+  if (!isFollowing) {
+    throw new AppError("You are not following this user", 400);
   }
 
   await Promise.all([
@@ -102,13 +121,11 @@ export const unfollowUserService = async (currentUserId, targetUserId) => {
       $pull: { following: targetUserId },
     }),
     User.findByIdAndUpdate(targetUserId, {
-      $pull: { followers: currentUserId },
+      $pull: { followers: currentUserId, followRequests: currentUserId },
     }),
   ]);
-
   return { success: true };
 };
-
 export const changeAvatarService = async (userId, avatarURL) => {
   const user = await User.findById(userId).select("-password");
 
@@ -277,4 +294,65 @@ export const togglePrivacyService = async (userId) => {
   await user.save();
 
   return user.isPrivate;
+};
+export const acceptFollowRequestService = async (
+  currentUserId,
+  requesterId,
+) => {
+  const currentUser = await User.findById(currentUserId);
+  if (!currentUser) throw new AppError("User not found", 404);
+
+  const hasRequest = currentUser.followRequests.some(
+    (id) => id.toString() === requesterId,
+  );
+  if (!hasRequest) {
+    throw new AppError("No follow request from this user", 400);
+  }
+
+  await Promise.all([
+    User.findByIdAndUpdate(currentUserId, {
+      $pull: { followRequests: requesterId },
+      $addToSet: { followers: requesterId },
+    }),
+    User.findByIdAndUpdate(requesterId, {
+      $addToSet: { following: currentUserId },
+    }),
+  ]);
+
+  return { success: true };
+};
+
+export const rejectFollowRequestService = async (
+  currentUserId,
+  requesterId,
+) => {
+  await User.findByIdAndUpdate(currentUserId, {
+    $pull: { followRequests: requesterId },
+  });
+  return { success: true };
+};
+
+export const cancelFollowRequestService = async (
+  currentUserId,
+  targetUserId,
+) => {
+  const targetUser = await User.findById(targetUserId);
+
+  if (!targetUser) {
+    throw new AppError("User not found", 404);
+  }
+
+  const hasRequest = targetUser.followRequests.some(
+    (id) => id.toString() === currentUserId,
+  );
+
+  if (!hasRequest) {
+    throw new AppError("No pending follow request to this user", 400);
+  }
+
+  await User.findByIdAndUpdate(targetUserId, {
+    $pull: { followRequests: currentUserId },
+  });
+
+  return { success: true };
 };

@@ -11,6 +11,9 @@ import {
   blockUserService,
   unblockUserService,
   togglePrivacyService,
+  acceptFollowRequestService,
+  rejectFollowRequestService,
+  cancelFollowRequestService,
 } from "../services/user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -139,5 +142,44 @@ export const togglePrivacyController = async (req, res) => {
     success: true,
     message: `Account is now ${isPrivate ? "private" : "public"}`,
     data: { isPrivate },
+  });
+};
+
+export const acceptFollowRequestController = async (req, res) => {
+  const currentUserId = req.user.id;
+  const requesterId = req.params.id;
+
+  const result = await acceptFollowRequestService(currentUserId, requesterId);
+
+  res.status(200).json({
+    success: true,
+    message: "Follow request accepted",
+    data: result,
+  });
+};
+
+export const rejectFollowRequestController = async (req, res) => {
+  const currentUserId = req.user.id;
+  const requesterId = req.params.id;
+
+  const result = await rejectFollowRequestService(currentUserId, requesterId);
+
+  res.status(200).json({
+    success: true,
+    message: "Follow request rejected",
+    data: result,
+  });
+};
+
+export const cancelFollowRequestController = async (req, res) => {
+  const currentUserId = req.user.id;
+  const targetUserId = req.params.id;
+
+  const result = await cancelFollowRequestService(currentUserId, targetUserId);
+
+  res.status(200).json({
+    success: true,
+    message: "Follow request cancelled",
+    data: result,
   });
 };
