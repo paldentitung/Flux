@@ -16,6 +16,7 @@ import {
   acceptFollowRequestController,
   rejectFollowRequestController,
   cancelFollowRequestController,
+  getBlocksUsersController,
 } from "./user.controller.js";
 import { upload } from "../../middleware/upload.middleware.js";
 
@@ -60,4 +61,6 @@ router.delete(
   protect,
   asyncHandler(cancelFollowRequestController),
 );
+
+router.get("/me/blocks", protect, asyncHandler(getBlocksUsersController));
 export default router;

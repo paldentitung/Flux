@@ -295,6 +295,7 @@ export const togglePrivacyService = async (userId) => {
 
   return user.isPrivate;
 };
+
 export const acceptFollowRequestService = async (
   currentUserId,
   requesterId,
@@ -355,4 +356,17 @@ export const cancelFollowRequestService = async (
   });
 
   return { success: true };
+};
+
+export const getBlocksUsersService = async (userId) => {
+  const user = await User.findById(userId)
+    .populate("blockedUsers", "username name avatar bio")
+    .select("-password");
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const blocks = user.blockedUsers;
+
+  return blocks;
 };

@@ -14,6 +14,7 @@ import {
   acceptFollowRequestService,
   rejectFollowRequestService,
   cancelFollowRequestService,
+  getBlocksUsersService,
 } from "./user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -180,6 +181,18 @@ export const cancelFollowRequestController = async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Follow request cancelled",
+    data: result,
+  });
+};
+
+export const getBlocksUsersController = async (req, res) => {
+  const userId = req.user.id;
+
+  const result = await getBlocksUsersService(userId);
+
+  res.status(200).json({
+    success: true,
+    message: "Blocks fetched",
     data: result,
   });
 };
