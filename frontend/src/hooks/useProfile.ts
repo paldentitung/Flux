@@ -7,6 +7,7 @@ import {
   updateProfile,
   changePassword,
   blockUser,
+  unblockUser,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
@@ -153,6 +154,19 @@ export const useProfile = () => {
       setLoading(false);
     }
   };
+  const handleUnBlockUser = async (id: string) => {
+    setLoading(true);
+    try {
+      const res = await unblockUser(id);
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     handleFollowUser,
@@ -163,5 +177,6 @@ export const useProfile = () => {
     handleRemoveAvatar,
     handleChangePassword,
     handleBlockUser,
+    handleUnBlockUser,
   };
 };

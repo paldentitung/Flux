@@ -29,8 +29,12 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, useCleanUsername } = useAuth();
   const { posts } = usePosts();
-  const { handleFollowUser, handleUnFollowUser, handleBlockUser } =
-    useProfile();
+  const {
+    handleFollowUser,
+    handleUnFollowUser,
+    handleBlockUser,
+    handleUnBlockUser,
+  } = useProfile();
 
   const [view, setView] = useState<"grid" | "list">("grid");
   const [followDefaultTab, setFollowDefaultTab] = useState<
@@ -121,7 +125,26 @@ const ProfilePage = () => {
     }
   };
 
+  const handleUnblockClick = async () => {
+    if (!profileUser) return;
+
+    setIsBlocking(true);
+    try {
+      await handleUnBlockUser(profileUser._id!);
+      setOpen(false);
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to unblock user");
+    } finally {
+      setIsBlocking(false);
+    }
+  };
   const profileUser = isOwnProfile ? user : visitedProfile;
+  const isUserBlocked =
+    user.blockedUsers?.some((b: any) =>
+      typeof b === "string"
+        ? b === profileUser?._id
+        : b._id === profileUser?._id,
+    ) ?? false;
 
   if (!isOwnProfile && loading) return null; // or a loading spinner
 
@@ -221,10 +244,14 @@ const ProfilePage = () => {
                     {open && (
                       <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
                         <button
-                          onClick={handleBlockClick}
+                          onClick={
+                            isUserBlocked
+                              ? handleUnblockClick
+                              : handleBlockClick
+                          }
                           className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
                         >
-                          Block User
+                          {isUserBlocked ? "Unblock User" : "Block User"}
                         </button>
 
                         <button className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition">

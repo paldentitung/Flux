@@ -87,3 +87,12 @@ export const blockUser = async (id: string) => {
     true,
   );
 };
+export const unblockUser = async (id: string) => {
+  return request(
+    `/user/${id}/unblock`,
+    {
+      method: "POST",
+    },
+    true,
+  );
+};
