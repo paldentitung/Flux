@@ -117,7 +117,10 @@ const SettingPage = () => {
             ))}
 
             <button
-              onClick={handleLogout}
+              onClick={() => {
+                window.confirm("are you sure");
+                handleLogout;
+              }}
               className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition text-left mt-2 md:mt-4"
             >
               <LogOut size={16} />

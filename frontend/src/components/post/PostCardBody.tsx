@@ -6,7 +6,7 @@ import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
 import { usePosts } from "../../hooks/usePosts";
 import Avatar from "../ui/Avatar";
-
+import { Link } from "react-router-dom";
 type Props = {
   post: Post;
   onEditClick: () => void;
@@ -61,20 +61,25 @@ const PostCardBody = ({
     <div className="bg-(--post-card-bg) border border-(--post-card-border) p-5 rounded-xl flex flex-col gap-4 shadow-sm">
       {/* ── Header ── */}
       <div className="flex items-center gap-3">
-        <Avatar
-          src={post.userId.avatar}
-          name={post.userId.name || post.userId.username}
-          size={40}
-        />
-        <div className="flex flex-col mr-auto">
-          <h2 className="text-(--foreground) font-medium text-sm">
-            {post.userId.name}
-          </h2>
-          <span className="text-xs text-(--muted-foreground)">
-            @{useCleanUsername(post.userId.username)} •{" "}
-            {formatDate(post.createdAt)}
-          </span>
-        </div>
+        <Link
+          to={`/profile/${post.userId._id}`}
+          className="flex items-center gap-2 flex-1"
+        >
+          <Avatar
+            src={post.userId.avatar}
+            name={post.userId.name || post.userId.username}
+            size={40}
+          />
+          <div className="flex flex-col mr-auto">
+            <h2 className="text-(--foreground) font-medium text-sm">
+              {post.userId.name}
+            </h2>
+            <span className="text-xs text-(--muted-foreground)">
+              @{useCleanUsername(post.userId.username)} •{" "}
+              {formatDate(post.createdAt)}
+            </span>
+          </div>
+        </Link>
 
         {/* Overflow menu */}
         <div className="relative">
