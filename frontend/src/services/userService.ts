@@ -109,3 +109,13 @@ export const toggleUserPrivary = async () => {
     true,
   );
 };
+
+export const getBlockedUsers = async () => {
+  return request(
+    "/user/me/blocked",
+    {
+      method: "GET",
+    },
+    true,
+  );
+};

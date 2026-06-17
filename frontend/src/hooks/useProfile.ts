@@ -9,6 +9,7 @@ import {
   blockUser,
   unblockUser,
   toggleUserPrivary,
+  getBlockedUsers,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
@@ -16,6 +17,7 @@ import { toast } from "react-hot-toast";
 export const useProfile = () => {
   const { user, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [blockedUsers, setBlockedUsers] = useState<UserSummary[]>([]);
 
   const handleFollowUser = async (targetUser: UserSummary) => {
     if (!user) return;
@@ -157,12 +159,15 @@ export const useProfile = () => {
   };
   const handleUnBlockUser = async (id: string) => {
     setLoading(true);
+    const previous = blockedUsers;
+    setBlockedUsers((prev) => prev.filter((u) => u._id !== id));
     try {
       const res = await unblockUser(id);
       if (res.success) {
         toast.success(res.message);
       }
     } catch (error: any) {
+      setBlockedUsers(previous);
       toast.error(error.message);
     } finally {
       setLoading(false);
@@ -185,6 +190,18 @@ export const useProfile = () => {
     }
   };
 
+  const fetchBlockedUsers = async () => {
+    try {
+      const res = await getBlockedUsers();
+      console.log("RAW RESPONSE:", res);
+      if (res.success) {
+        setBlockedUsers(res.data);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return {
     handleFollowUser,
     handleUnFollowUser,
@@ -196,5 +213,7 @@ export const useProfile = () => {
     handleBlockUser,
     handleUnBlockUser,
     handleToggleUserPrivary,
+    fetchBlockedUsers,
+    blockedUsers,
   };
 };

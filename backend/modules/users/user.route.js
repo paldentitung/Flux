@@ -62,5 +62,5 @@ router.delete(
   asyncHandler(cancelFollowRequestController),
 );
 
-router.get("/me/blocks", protect, asyncHandler(getBlocksUsersController));
+router.get("/me/blocked", protect, asyncHandler(getBlocksUsersController));
 export default router;

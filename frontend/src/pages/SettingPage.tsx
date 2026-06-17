@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User, Lock, Bell, Shield, LogOut, Eye, EyeClosed } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
@@ -20,11 +20,6 @@ const NAV: { id: Section; label: string; Icon: typeof User }[] = [
   { id: "notifications", label: "Notifications", Icon: Bell },
 ];
 
-const blockedUsers = [
-  { _id: "b1", name: "Krishna Bhandari", username: "krishnab", avatar: "" },
-  { _id: "b2", name: "Sunita Rana", username: "sunitar", avatar: "" },
-];
-
 const SettingPage = () => {
   const { user, handleLogout } = useAuth();
   const [active, setActive] = useState<Section>("profile");
@@ -34,8 +29,14 @@ const SettingPage = () => {
     comments: true,
     mentions: false,
   });
-  const { handleChangePassword, loading, handleToggleUserPrivary } =
-    useProfile();
+  const {
+    handleChangePassword,
+    loading,
+    handleToggleUserPrivary,
+    blockedUsers,
+    fetchBlockedUsers,
+    handleUnBlockUser,
+  } = useProfile();
 
   const [formData, setFormData] = useState({
     currentPassword: "",
@@ -66,6 +67,10 @@ const SettingPage = () => {
 
   const toggle = (key: keyof typeof toggles) =>
     setToggles((t) => ({ ...t, [key]: !t[key] }));
+
+  useEffect(() => {
+    fetchBlockedUsers();
+  }, []);
 
   return (
     <div
@@ -289,11 +294,7 @@ const SettingPage = () => {
                     Blocked accounts can't view your profile or contact you.
                   </p>
 
-                  {blockedUsers.length === 0 ? (
-                    <p className="text-sm text-(--muted-foreground) py-4">
-                      You haven't blocked anyone
-                    </p>
-                  ) : (
+                  {blockedUsers.length > 0 ? (
                     <div className="flex flex-col gap-1">
                       {blockedUsers.map((b) => (
                         <div
@@ -301,6 +302,7 @@ const SettingPage = () => {
                           className="flex items-center gap-3 py-2.5"
                         >
                           <Avatar src={b.avatar} name={b.name} size={36} />
+
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-(--foreground) truncate">
                               {b.name}
@@ -309,11 +311,26 @@ const SettingPage = () => {
                               @{b.username}
                             </p>
                           </div>
-                          <button className="text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition">
+
+                          <LoadingButton
+                            loading={loading}
+                            loadingText="Unblocking…"
+                            onClick={() => handleUnBlockUser(b._id)}
+                            className="text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition"
+                          >
                             Unblock
-                          </button>
+                          </LoadingButton>
                         </div>
                       ))}
+                    </div>
+                  ) : (
+                    <div className="py-8 text-center">
+                      <p className="text-sm text-(--muted-foreground)">
+                        You haven’t blocked anyone yet
+                      </p>
+                      <p className="text-xs text-(--muted-foreground) mt-1">
+                        Blocked users will appear here
+                      </p>
                     </div>
                   )}
                 </div>
