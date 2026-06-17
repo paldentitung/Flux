@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Ban,
   Ellipsis,
+  Lock,
 } from "lucide-react";
 import { getUserProfile } from "../services/userService";
 import LoadingButton from "../components/ui/LoadingButton";
@@ -48,22 +49,27 @@ const ProfilePage = () => {
   const [isBlockedByUser, setIsBlockedByUser] = useState(false);
   const isOwnProfile = !userId || userId === user?._id;
   const [open, setOpen] = useState(false);
+  const [isPrivateAccount, setIsPrivateAccount] = useState(false);
   useEffect(() => {
     if (isOwnProfile) {
       setVisitedProfile(null);
       setIsBlockedByUser(false);
+      setIsPrivateAccount(false);
       return;
     }
 
     const fetchProfile = async () => {
       setLoading(true);
       setIsBlockedByUser(false);
+      setIsPrivateAccount(false);
       try {
         const res = await getUserProfile(userId!);
         if (res.success) setVisitedProfile(res.data);
       } catch (err: any) {
         if (err?.message === "You are blocked by this user") {
           setIsBlockedByUser(true);
+        } else if (err?.message === "This account is private") {
+          setIsPrivateAccount(true);
         } else {
           console.error(err);
         }
@@ -165,7 +171,23 @@ const ProfilePage = () => {
       </div>
     );
   }
-
+  if (!isOwnProfile && isPrivateAccount) {
+    return (
+      <div className="min-h-screen bg-(--background) flex items-center justify-center px-4">
+        <div className="flex flex-col items-center text-center max-w-sm">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-5 bg-(--post-card-bg) border border-(--post-card-border)">
+            <Lock size={28} className="text-(--muted-foreground)" />
+          </div>
+          <h1 className="text-xl text-(--foreground) mb-2">
+            This account is private
+          </h1>
+          <p className="text-sm text-(--muted-foreground) leading-relaxed">
+            Follow this account to see their photos and posts.
+          </p>
+        </div>
+      </div>
+    );
+  }
   if (!profileUser) return null;
 
   const userPosts = posts.filter((p) => p.userId._id === profileUser._id);

@@ -43,7 +43,7 @@ router.patch("/me/password", protect, asyncHandler(changePasswordController));
 router.post("/:id/block", protect, asyncHandler(blockUserController));
 router.post("/:id/unblock", protect, asyncHandler(unblockUserController));
 
-router.patch("/me/private", protect, asyncHandler(togglePrivacyController));
+router.patch("/me/privacy", protect, asyncHandler(togglePrivacyController));
 
 router.post(
   "/follow-requests/:id/accept",

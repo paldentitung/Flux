@@ -9,6 +9,7 @@ export type User = {
   following: UserSummary[];
   isOnline: boolean;
   lastSeen: Date;
+  isPrivate: boolean;
   isVerified: boolean;
   blockedUsers: string[];
   createdAt: Date;

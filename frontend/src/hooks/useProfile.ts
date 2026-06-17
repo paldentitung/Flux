@@ -8,6 +8,7 @@ import {
   changePassword,
   blockUser,
   unblockUser,
+  toggleUserPrivary,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
@@ -168,6 +169,22 @@ export const useProfile = () => {
     }
   };
 
+  const handleToggleUserPrivary = async () => {
+    try {
+      const res = await toggleUserPrivary();
+      if (res.success) {
+        toast.success(res.message);
+        setUser((prev) =>
+          prev ? { ...prev, isPrivate: res.data.isPrivate } : prev,
+        );
+      } else {
+        toast.error(res.message ?? "Failed to update privacy");
+      }
+    } catch (error: any) {
+      toast.error(error?.message ?? "Failed to update privacy");
+    }
+  };
+
   return {
     handleFollowUser,
     handleUnFollowUser,
@@ -178,5 +195,6 @@ export const useProfile = () => {
     handleChangePassword,
     handleBlockUser,
     handleUnBlockUser,
+    handleToggleUserPrivary,
   };
 };

@@ -96,3 +96,16 @@ export const unblockUser = async (id: string) => {
     true,
   );
 };
+
+export const toggleUserPrivary = async () => {
+  return request(
+    "/user/me/privacy",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+    true,
+  );
+};

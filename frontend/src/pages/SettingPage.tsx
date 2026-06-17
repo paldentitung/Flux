@@ -4,6 +4,7 @@ import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
 import { useAuth } from "../hooks/useAuth";
 import { useProfile } from "../hooks/useProfile";
+import { toggleUserPrivary } from "../services/userService";
 
 type Section =
   | "profile"
@@ -32,10 +33,9 @@ const SettingPage = () => {
     follows: true,
     comments: true,
     mentions: false,
-    privateAccount: false,
   });
-
-  const { handleChangePassword, loading } = useProfile();
+  const { handleChangePassword, loading, handleToggleUserPrivary } =
+    useProfile();
 
   const [formData, setFormData] = useState({
     currentPassword: "",
@@ -277,8 +277,8 @@ const SettingPage = () => {
                 <ToggleRow
                   label="Private account"
                   description="Only people you approve can see your posts and follow you"
-                  checked={toggles.privateAccount}
-                  onChange={() => toggle("privateAccount")}
+                  checked={user?.isPrivate ?? false}
+                  onChange={handleToggleUserPrivary}
                 />
 
                 <div className="border-t border-(--post-card-border) pt-5">
