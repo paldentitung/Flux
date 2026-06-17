@@ -5,6 +5,7 @@ import {
   removeAvatar,
   unfollowUser,
   updateProfile,
+  changePassword,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
@@ -120,6 +121,24 @@ export const useProfile = () => {
       setLoading(false);
     }
   };
+
+  const handleChangePassword = async (
+    oldPassword: string,
+    newPassword: string,
+  ) => {
+    setLoading(true);
+    try {
+      const res = await changePassword(oldPassword, newPassword);
+      if (res.success) {
+        toast.success(res.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     handleFollowUser,
     handleUnFollowUser,
@@ -127,5 +146,6 @@ export const useProfile = () => {
     handleChangeAvatar,
     handleUpdateProfile,
     handleRemoveAvatar,
+    handleChangePassword,
   };
 };

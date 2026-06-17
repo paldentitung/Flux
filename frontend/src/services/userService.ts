@@ -60,3 +60,20 @@ export const updateProfile = async (formData: UpdateProfileData) => {
 export const getUserProfile = async (userId: string) => {
   return request(`/user/user/${userId}`, {}, true);
 };
+
+export const changePassword = async (
+  oldPassword: string,
+  newPassword: string,
+) => {
+  return request(
+    "/user/me/password",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ oldPassword, newPassword }),
+    },
+    true,
+  );
+};

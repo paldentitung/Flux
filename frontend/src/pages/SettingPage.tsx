@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { User, Lock, Bell, Shield, LogOut } from "lucide-react";
+import { User, Lock, Bell, Shield, LogOut, Eye, EyeClosed } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
 import { useAuth } from "../hooks/useAuth";
+import { useProfile } from "../hooks/useProfile";
 
 type Section =
   | "profile"
@@ -33,6 +34,35 @@ const SettingPage = () => {
     mentions: false,
     privateAccount: false,
   });
+
+  const { handleChangePassword, loading } = useProfile();
+
+  const [formData, setFormData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [showPassword, setShowPassword] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+
+  const toggleShowPassword = (key: keyof typeof showPassword) =>
+    setShowPassword((s) => ({ ...s, [key]: !s[key] }));
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const submitChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await handleChangePassword(formData.currentPassword, formData.newPassword);
+  };
 
   const toggle = (key: keyof typeof toggles) =>
     setToggles((t) => ({ ...t, [key]: !t[key] }));
@@ -110,7 +140,7 @@ const SettingPage = () => {
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <Field
+                  {/* <Field
                     label="Name"
                     defaultValue={user?.name ?? ""}
                     placeholder="Your name"
@@ -119,7 +149,7 @@ const SettingPage = () => {
                     label="Username"
                     defaultValue={user?.username ?? ""}
                     placeholder="username"
-                  />
+                  /> */}
                 </div>
 
                 <div>
@@ -156,13 +186,6 @@ const SettingPage = () => {
                   </p>
                 </div>
 
-                <Field
-                  label="Email"
-                  defaultValue={user?.email ?? ""}
-                  placeholder="you@example.com"
-                  type="email"
-                />
-
                 <div className="border-t border-(--post-card-border) pt-5">
                   <h3 className="text-sm font-semibold text-(--foreground) mb-3">
                     Change password
@@ -170,19 +193,55 @@ const SettingPage = () => {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <Field
                       label="Current password"
-                      type="password"
+                      type={showPassword.currentPassword ? "text" : "password"}
+                      name="currentPassword"
+                      value={formData.currentPassword}
+                      onChange={handleChange}
                       placeholder="••••••••"
+                      showToggle
+                      isVisible={showPassword.currentPassword}
+                      onToggleVisibility={() =>
+                        toggleShowPassword("currentPassword")
+                      }
                     />
+
                     <Field
                       label="New password"
-                      type="password"
+                      type={showPassword.newPassword ? "text" : "password"}
+                      name="newPassword"
+                      value={formData.newPassword}
+                      onChange={handleChange}
                       placeholder="••••••••"
+                      showToggle
+                      isVisible={showPassword.newPassword}
+                      onToggleVisibility={() =>
+                        toggleShowPassword("newPassword")
+                      }
+                    />
+
+                    <Field
+                      label="Confirm new password"
+                      type={showPassword.confirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      showToggle
+                      isVisible={showPassword.confirmPassword}
+                      onToggleVisibility={() =>
+                        toggleShowPassword("confirmPassword")
+                      }
                     />
                   </div>
                 </div>
 
                 <div className="flex justify-end">
-                  <LoadingButton className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition">
+                  <LoadingButton
+                    onClick={submitChangePassword}
+                    loading={loading}
+                    loadingText="Changing…"
+                    className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition"
+                  >
                     Update account
                   </LoadingButton>
                 </div>
@@ -310,25 +369,49 @@ const SettingPage = () => {
 
 const Field = ({
   label,
-  defaultValue,
+  value,
   placeholder,
   type = "text",
+  name,
+  onChange,
+  showToggle = false,
+  isVisible = false,
+  onToggleVisibility,
 }: {
   label: string;
-  defaultValue?: string;
+  value: string;
   placeholder?: string;
   type?: string;
+  name: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  showToggle?: boolean;
+  isVisible?: boolean;
+  onToggleVisibility?: () => void;
 }) => (
   <div>
     <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
       {label}
     </label>
-    <input
-      type={type}
-      defaultValue={defaultValue}
-      placeholder={placeholder}
-      className="input-auth"
-    />
+    <div className="relative">
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`input-auth ${showToggle ? "pr-10" : ""}`}
+      />
+      {showToggle && (
+        <button
+          type="button"
+          onClick={onToggleVisibility}
+          aria-label={isVisible ? "Hide password" : "Show password"}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-(--foreground) transition"
+        >
+          {isVisible ? <EyeClosed size={16} /> : <Eye size={16} />}
+        </button>
+      )}
+    </div>
   </div>
 );
 
