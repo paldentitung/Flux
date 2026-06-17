@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Grid3X3, List, BadgeCheck, Heart, MessageCircle } from "lucide-react";
+import {
+  Grid3X3,
+  List,
+  BadgeCheck,
+  Heart,
+  MessageCircle,
+  Ban,
+  Ellipsis,
+} from "lucide-react";
 import { getUserProfile } from "../services/userService";
 import LoadingButton from "../components/ui/LoadingButton";
 import Avatar from "../components/ui/Avatar";
@@ -9,17 +17,20 @@ import { useProfile } from "../hooks/useProfile";
 import PostCard from "../components/post/PostCard";
 import EditProfileModal from "../components/EditProfileModal";
 import FollowModal from "../components/FollowModal";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import type { User } from "../types/user.types";
+import toast from "react-hot-toast";
 
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
 const ProfilePage = () => {
   const { userId } = useParams<{ userId?: string }>();
+  const navigate = useNavigate();
   const { user, useCleanUsername } = useAuth();
   const { posts } = usePosts();
-  const { handleFollowUser, handleUnFollowUser } = useProfile();
+  const { handleFollowUser, handleUnFollowUser, handleBlockUser } =
+    useProfile();
 
   const [view, setView] = useState<"grid" | "list">("grid");
   const [followDefaultTab, setFollowDefaultTab] = useState<
@@ -29,22 +40,29 @@ const ProfilePage = () => {
   const [isFollowOpen, setIsFollowOpen] = useState(false);
   const [visitedProfile, setVisitedProfile] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [isBlocking, setIsBlocking] = useState(false);
+  const [isBlockedByUser, setIsBlockedByUser] = useState(false);
   const isOwnProfile = !userId || userId === user?._id;
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     if (isOwnProfile) {
       setVisitedProfile(null);
+      setIsBlockedByUser(false);
       return;
     }
 
     const fetchProfile = async () => {
       setLoading(true);
+      setIsBlockedByUser(false);
       try {
         const res = await getUserProfile(userId!);
         if (res.success) setVisitedProfile(res.data);
-      } catch (err) {
-        console.error(err);
+      } catch (err: any) {
+        if (err?.message === "You are blocked by this user") {
+          setIsBlockedByUser(true);
+        } else {
+          console.error(err);
+        }
       } finally {
         setLoading(false);
       }
@@ -88,9 +106,43 @@ const ProfilePage = () => {
       );
     }
   };
+
+  const handleBlockClick = async () => {
+    if (!profileUser) return;
+
+    setIsBlocking(true);
+    try {
+      await handleBlockUser(profileUser._id!);
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      toast.error(err?.message ?? "Failed to block user");
+    } finally {
+      setIsBlocking(false);
+    }
+  };
+
   const profileUser = isOwnProfile ? user : visitedProfile;
 
   if (!isOwnProfile && loading) return null; // or a loading spinner
+
+  if (!isOwnProfile && isBlockedByUser) {
+    return (
+      <div className="min-h-screen bg-(--background) flex items-center justify-center px-4">
+        <div className="flex flex-col items-center text-center max-w-sm">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-5 bg-(--post-card-bg) border border-(--post-card-border)">
+            <Ban size={28} className="text-(--muted-foreground)" />
+          </div>
+          <h1 className="text-xl text-(--foreground) mb-2">
+            This account is unavailable
+          </h1>
+          <p className="text-sm text-(--muted-foreground) leading-relaxed">
+            You can't view this profile right now.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!profileUser) return null;
 
   const userPosts = posts.filter((p) => p.userId._id === profileUser._id);
@@ -143,7 +195,7 @@ const ProfilePage = () => {
                   Edit profile
                 </LoadingButton>
               ) : (
-                <>
+                <div className="flex gap-2 items-center">
                   <button
                     onClick={() =>
                       isFollowing ? handleUnfollowClick() : handleFollowClick()
@@ -160,7 +212,28 @@ const ProfilePage = () => {
                   >
                     {isFollowing ? "Following" : "Follow"}
                   </button>
-                </>
+
+                  <div className="relative mt-1">
+                    <button onClick={() => setOpen(!open)}>
+                      <Ellipsis />
+                    </button>
+
+                    {open && (
+                      <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
+                        <button
+                          onClick={handleBlockClick}
+                          className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
+                        >
+                          Block User
+                        </button>
+
+                        <button className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition">
+                          Report User
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
           </div>

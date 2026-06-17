@@ -77,3 +77,13 @@ export const changePassword = async (
     true,
   );
 };
+
+export const blockUser = async (id: string) => {
+  return request(
+    `/user/${id}/block`,
+    {
+      method: "POST",
+    },
+    true,
+  );
+};
