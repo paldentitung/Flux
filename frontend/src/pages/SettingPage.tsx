@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User, Lock, Bell, Shield, LogOut, Eye, EyeClosed } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
 import { useAuth } from "../hooks/useAuth";
 import { useProfile } from "../hooks/useProfile";
-import { toggleUserPrivary } from "../services/userService";
 
 type Section =
   | "profile"
@@ -36,6 +35,9 @@ const SettingPage = () => {
     blockedUsers,
     fetchBlockedUsers,
     handleUnBlockUser,
+    handleUpdateProfile,
+    handleRemoveAvatar,
+    handleChangeAvatar,
   } = useProfile();
 
   const [formData, setFormData] = useState({
@@ -48,6 +50,11 @@ const SettingPage = () => {
     currentPassword: false,
     newPassword: false,
     confirmPassword: false,
+  });
+
+  const [profileData, setProfileData] = useState({
+    name: user?.name || "",
+    bio: user?.bio || "",
   });
 
   const toggleShowPassword = (key: keyof typeof showPassword) =>
@@ -67,6 +74,12 @@ const SettingPage = () => {
 
   const toggle = (key: keyof typeof toggles) =>
     setToggles((t) => ({ ...t, [key]: !t[key] }));
+
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = () => {
+    fileRef.current?.click();
+  };
 
   useEffect(() => {
     fetchBlockedUsers();
@@ -135,10 +148,30 @@ const SettingPage = () => {
                     size={64}
                   />
                   <div className="flex gap-2">
-                    <LoadingButton className="px-4 py-2 rounded-lg text-sm font-medium border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition">
+                    <input
+                      type="file"
+                      ref={fileRef}
+                      hidden
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          handleChangeAvatar(file);
+                        }
+                      }}
+                    />
+                    <LoadingButton
+                      onClick={handleFile}
+                      className="px-4 py-2 rounded-lg text-sm font-medium border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition"
+                    >
                       Change photo
                     </LoadingButton>
-                    <button className="px-4 py-2 rounded-lg text-sm font-medium text-(--muted-foreground) hover:text-red-500 transition">
+                    <button
+                      onClick={() => {
+                        window.confirm("are you sure");
+                        handleRemoveAvatar();
+                      }}
+                      className="px-4 py-2 rounded-lg text-sm font-medium text-(--muted-foreground) hover:text-red-500 transition"
+                    >
                       Remove
                     </button>
                   </div>
@@ -159,18 +192,41 @@ const SettingPage = () => {
 
                 <div>
                   <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
+                    Name
+                  </label>
+                  <input
+                    placeholder="Name"
+                    className="input-auth"
+                    value={profileData.name}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
+                  />
+                  <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
                     Bio
                   </label>
                   <textarea
                     rows={3}
-                    placeholder="Tell people about yourself"
+                    placeholder="Bio"
                     className="input-auth resize-none"
-                    defaultValue={user?.bio ?? ""}
+                    value={profileData.bio}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        bio: e.target.value,
+                      }))
+                    }
                   />
                 </div>
 
                 <div className="flex justify-end">
-                  <LoadingButton className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition">
+                  <LoadingButton
+                    onClick={() => handleUpdateProfile(profileData)}
+                    className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition"
+                  >
                     Save changes
                   </LoadingButton>
                 </div>

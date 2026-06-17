@@ -12,7 +12,7 @@ import {
   getBlockedUsers,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
-import type { UpdateProfileData, User, UserSummary } from "../types/user.types";
+import type { UpdateProfileData, UserSummary } from "../types/user.types";
 import { toast } from "react-hot-toast";
 export const useProfile = () => {
   const { user, setUser } = useAuth();
