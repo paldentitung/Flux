@@ -93,9 +93,6 @@ export const PostProvider = ({ children }: PostProviderProps) => {
       if (!res.success) {
         throw new Error("Failed to fetch post");
       }
-
-      toast.success("Post fetched");
-
       return res.data;
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");

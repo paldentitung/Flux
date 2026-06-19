@@ -131,9 +131,12 @@ const PostCardBody = ({
       </div>
 
       {/* ── Content ── */}
-      <p className="text-(--foreground) text-sm leading-relaxed">
+      <Link
+        to={`/post/${post._id}`}
+        className="text-(--foreground) text-sm leading-relaxed"
+      >
         {post.content}
-      </p>
+      </Link>
 
       {/* ── Images ── */}
       {post.images?.length === 1 && (
