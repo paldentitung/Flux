@@ -21,7 +21,7 @@ import FollowModal from "../components/FollowModal";
 import { useParams, useNavigate } from "react-router-dom";
 import type { User } from "../types/user.types";
 import toast from "react-hot-toast";
-
+import ProfileImageModal from "../components/ProfileImageModal";
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
@@ -50,6 +50,7 @@ const ProfilePage = () => {
   const isOwnProfile = !userId || userId === user?._id;
   const [open, setOpen] = useState(false);
   const [isPrivateAccount, setIsPrivateAccount] = useState(false);
+  const [showProfilePicture, setShowProfilePicture] = useState(false);
   useEffect(() => {
     if (isOwnProfile) {
       setVisitedProfile(null);
@@ -223,12 +224,14 @@ const ProfilePage = () => {
         <div className="max-w-3xl mx-auto  md:px-6 mt-2">
           <div className="relative -mt-16 mb-6 flex items-end justify-between">
             {/* Avatar */}
-            <Avatar
-              src={profileUser.avatar}
-              name={profileUser.name || profileUser.username}
-              size={112}
-              className="border-4 border-(--background) rounded-full"
-            />
+            <button onClick={() => setShowProfilePicture(true)}>
+              <Avatar
+                src={profileUser.avatar}
+                name={profileUser.name || profileUser.username}
+                size={112}
+                className="border-4 border-(--background) rounded-full"
+              />
+            </button>
 
             {/* Action buttons */}
             <div className="flex gap-2 pb-2">
@@ -430,6 +433,13 @@ const ProfilePage = () => {
         onClose={() => setIsFollowOpen(false)}
         user={profileUser}
         defaultTab={followDefaultTab}
+      />
+
+      <ProfileImageModal
+        isOpen={showProfilePicture}
+        imageUrl={profileUser.avatar}
+        name={profileUser.name || profileUser.username}
+        onClose={() => setShowProfilePicture(false)}
       />
     </>
   );
