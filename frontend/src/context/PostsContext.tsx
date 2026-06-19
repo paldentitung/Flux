@@ -35,11 +35,23 @@ export const PostProvider = ({ children }: PostProviderProps) => {
   useEffect(() => {
     console.log("posts updated", posts);
   }, [posts]);
+
   const handleCreatePost = async (formData: FormData) => {
     try {
       setL("create", true);
       const res = await createPost(formData);
-      if (res?.data) setPosts((prev) => [res.data, ...prev]);
+      if (res?.data) {
+        const postWithUser = {
+          ...res.data,
+          userId: {
+            _id: user!._id,
+            name: user!.name,
+            username: user!.username,
+            avatar: user!.avatar,
+          },
+        };
+        setPosts((prev) => [postWithUser, ...prev]);
+      }
       return res;
     } finally {
       setL("create", false);
