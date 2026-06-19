@@ -26,7 +26,7 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-lg mx-4 rounded-xl bg-(--auth-card-bg) border border-(--auth-card-border) shadow-(--shadow-modal) p-4 ">
+      <div className="relative w-full max-w-lg mx-4 rounded-xl bg-(--auth-card-bg) border border-(--auth-card-border) shadow-(--shadow-modal) p-4 max-h-[90vh] overflow-y-auto">
         {children}
       </div>
     </div>

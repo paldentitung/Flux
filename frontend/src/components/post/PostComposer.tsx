@@ -40,7 +40,7 @@ const PostComposer = ({
   };
 
   return (
-    <>
+    <div>
       <button
         onClick={() => setOpen(true)}
         className="flex items-center gap-3 p-5 w-full rounded-lg bg-(--post-card-bg) border border-(--post-card-border) text-(--muted-foreground) hover:bg-(--surface-hover) transition"
@@ -61,7 +61,7 @@ const PostComposer = ({
           onCancel={reset}
         />
       </Modal>
-    </>
+    </div>
   );
 };
 

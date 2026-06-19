@@ -45,9 +45,14 @@ const ComposerForm = ({
     </div>
 
     {images.length > 0 && (
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 max-h-62 overflow-auto scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {images.map((img, i) => (
-          <img key={i} src={img} className="rounded-lg max-h-60 object-cover" />
+          <div
+            key={i}
+            className="relative aspect-square overflow-hidden rounded-lg"
+          >
+            <img src={img} className="w-full h-full object-cover" />
+          </div>
         ))}
       </div>
     )}
