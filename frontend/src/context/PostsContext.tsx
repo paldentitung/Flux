@@ -6,6 +6,7 @@ import {
   deletePost,
   updatePost,
   likePost,
+  getPostById,
 } from "../services/postsService";
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
@@ -85,6 +86,23 @@ export const PostProvider = ({ children }: PostProviderProps) => {
     }
   };
 
+  const fetchedPostById = async (postId: string): Promise<Post> => {
+    try {
+      const res = await getPostById(postId);
+
+      if (!res.success) {
+        throw new Error("Failed to fetch post");
+      }
+
+      toast.success("Post fetched");
+
+      return res.data;
+    } catch (error: any) {
+      toast.error(error.message || "Something went wrong");
+      throw error;
+    }
+  };
+
   return (
     <PostsContext.Provider
       value={{
@@ -94,6 +112,7 @@ export const PostProvider = ({ children }: PostProviderProps) => {
         handleDeletePost,
         handleUpdatePost,
         handleLikePost,
+        fetchedPostById,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ import CommentItem from "./CommentItem";
 import { usePosts } from "../../hooks/usePosts";
 import Avatar from "../ui/Avatar";
 import { Link } from "react-router-dom";
+import ImageLightbox from "../ImageLightbox.tsx";
 type Props = {
   post: Post;
   onEditClick: () => void;
@@ -37,6 +38,10 @@ const PostCardBody = ({
   const [isLiked, setIsliked] = useState<boolean | null>(
     post.likes.includes(user?._id || ""),
   );
+  const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({
+    open: false,
+    index: 0,
+  });
   // PostCardBody.tsx
   const toggleComments = () => {
     if (!showComments && comments.length === 0) {
@@ -140,7 +145,14 @@ const PostCardBody = ({
       {post.images?.length > 1 && (
         <div className="grid grid-cols-2 gap-2">
           {post.images.slice(0, 4).map((img, i) => (
-            <div key={i} className="relative">
+            <div
+              key={i}
+              onClick={() => {
+                console.log("clicked", i);
+                setLightbox({ open: true, index: i });
+              }}
+              className="relative"
+            >
               <img src={img} className="w-full h-48 object-cover rounded-lg" />
               {i === 3 && post.images.length > 4 && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
@@ -152,6 +164,13 @@ const PostCardBody = ({
             </div>
           ))}
         </div>
+      )}
+      {lightbox.open && (
+        <ImageLightbox
+          images={post.images}
+          startIndex={lightbox.index}
+          onClose={() => setLightbox({ open: false, index: 0 })}
+        />
       )}
 
       {/* ── Action bar ── */}

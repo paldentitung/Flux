@@ -3,6 +3,10 @@ import request from "./api";
 export const getPosts = () => {
   return request("/posts");
 };
+
+export const getPostById = async (postId: string) => {
+  return request(`/posts/${postId}`, {}, true);
+};
 export const createPost = (formData: FormData) => {
   return request("/posts", {
     method: "POST",

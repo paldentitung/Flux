@@ -2,6 +2,7 @@ import Post from "./post.model.js";
 import {
   createPostService,
   deletePostService,
+  getPostByIdService,
   getPostService,
   updatePostService,
 } from "./posts.service.js";
@@ -12,6 +13,13 @@ export const getPostsController = async (req, res) => {
   res
     .status(200)
     .json({ success: true, message: "Posts fetched", data: result });
+};
+
+export const getPostByIdController = async (req, res) => {
+  const result = await getPostByIdService(req.params.postId);
+  res
+    .status(200)
+    .json({ success: true, message: "Post fetched", data: result });
 };
 export const createPostController = async (req, res) => {
   const userId = req.user._id;

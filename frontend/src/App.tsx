@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ExplorePage from "./pages/ExplorePage";
 import NotificationPage from "./pages/NotificationPage";
 import SettingPage from "./pages/SettingPage";
+import PostDetailPage from "./pages/PostDetailPage";
 const App = () => {
   return (
     <>
@@ -93,6 +94,14 @@ const App = () => {
             element={
               <MainLayout>
                 <ProfilePage />
+              </MainLayout>
+            }
+          />{" "}
+          <Route
+            path="/post/:postId"
+            element={
+              <MainLayout>
+                <PostDetailPage />
               </MainLayout>
             }
           />

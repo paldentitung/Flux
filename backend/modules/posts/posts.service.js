@@ -8,6 +8,13 @@ export const getPostService = async () => {
     .sort({ createdAt: -1 });
   return posts;
 };
+
+export const getPostByIdService = async (postId) => {
+  const post = await Post.findById(postId)
+    .populate("userId", "-password")
+    .sort({ createdAt: -1 });
+  return post;
+};
 export const createPostService = async (userId, content, images = []) => {
   const user = await User.findById(userId);
 

@@ -2,6 +2,7 @@ import express from "express";
 import {
   createPostController,
   deletePostController,
+  getPostByIdController,
   getPostsController,
   updatePostController,
 } from "./posts.controller.js";
@@ -11,6 +12,7 @@ import { asyncHandler } from "../../utils/asyncHandler.js";
 const router = express.Router();
 
 router.get("/", protect, asyncHandler(getPostsController));
+router.get("/:postId", protect, asyncHandler(getPostByIdController));
 router.post(
   "/",
   protect,

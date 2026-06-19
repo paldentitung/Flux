@@ -22,4 +22,5 @@ export interface PostsContextValue {
   handleDeletePost: (postId: string) => Promise<void>;
   handleUpdatePost: (postId: string, formData: FormData) => Promise<void>;
   handleLikePost: (postId: string) => Promise<void>;
+  fetchedPostById: (postId: string) => Promise<Post>;
 }
