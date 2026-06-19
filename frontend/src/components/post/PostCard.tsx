@@ -3,8 +3,19 @@ import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";
 import { usePostCard } from "../../hooks/usePostCard";
 import PostCardBody from "./PostCardBody";
+import { useNavigate, useLocation } from "react-router-dom";
 const PostCard = ({ post }: { post: Post }) => {
   const p = usePostCard(post);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const confirmDelete = async () => {
+    await p.confirmDelete();
+    if (location.pathname.includes(`/post/${post._id}`)) {
+      navigate("/");
+    }
+  };
 
   return (
     <>
@@ -36,7 +47,7 @@ const PostCard = ({ post }: { post: Post }) => {
               Cancel
             </button>
             <LoadingButton
-              onClick={p.confirmDelete}
+              onClick={confirmDelete}
               loading={p.loading.delete}
               loadingText="Deleting..."
               className="flex-1 px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm font-medium transition-colors cursor-pointer"
