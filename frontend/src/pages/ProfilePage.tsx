@@ -22,6 +22,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { User } from "../types/user.types";
 import toast from "react-hot-toast";
 import ProfileImageModal from "../components/ProfileImageModal";
+import { Link } from "react-router-dom";
 const formatCount = (n: number) =>
   n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
 
@@ -372,7 +373,8 @@ const ProfilePage = () => {
           ) : view === "grid" ? (
             <div className="grid grid-cols-3 gap-1 pb-10">
               {userPosts.map((post) => (
-                <div
+                <Link
+                  to={`/post/${post._id}`}
                   key={post._id}
                   className="relative aspect-square overflow-hidden rounded-lg cursor-pointer bg-(--post-card-bg) group"
                 >
@@ -409,7 +411,7 @@ const ProfilePage = () => {
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
