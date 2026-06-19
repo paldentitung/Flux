@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { User, Lock, Bell, Shield, LogOut, Eye, EyeClosed } from "lucide-react";
+import {
+  User,
+  Lock,
+  Bell,
+  Shield,
+  LogOut,
+  Eye,
+  EyeClosed,
+  Trash2,
+  Camera,
+} from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
 import { useAuth } from "../hooks/useAuth";
@@ -105,10 +115,10 @@ const SettingPage = () => {
               <button
                 key={id}
                 onClick={() => setActive(id)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition text-left ${
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition text-left hover:cursor-pointer ${
                   active === id
-                    ? "bg-(--surface-hover) text-(--foreground)"
-                    : "text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--surface-hover)"
+                    ? "bg-[hsl(var(--surface-hover))] text-[hsl(var(--foreground))]"
+                    : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-hover))]"
                 }`}
               >
                 <Icon size={16} />
@@ -166,21 +176,28 @@ const SettingPage = () => {
                       onClick={handleFile}
                       className="px-4 py-2 rounded-lg text-sm font-medium border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition"
                     >
+                      <Camera size={15} />
                       Change photo
                     </LoadingButton>
                     <button
                       onClick={() => {
-                        window.confirm("are you sure");
-                        handleRemoveAvatar();
+                        if (
+                          window.confirm(
+                            "Are you sure you want to remove your avatar?",
+                          )
+                        ) {
+                          handleRemoveAvatar();
+                        }
                       }}
-                      className="px-4 py-2 rounded-lg text-sm font-medium text-(--muted-foreground) hover:text-red-500 transition"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 active:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md hover:cursor-pointer"
                     >
+                      <Trash2 size={16} />
                       Remove
                     </button>
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-6">
                   {/* <Field
                     label="Name"
                     defaultValue={user?.name ?? ""}
@@ -193,7 +210,7 @@ const SettingPage = () => {
                   /> */}
                 </div>
 
-                <div>
+                <div className="flex flex-col space-y-5">
                   <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
                     Name
                   </label>
