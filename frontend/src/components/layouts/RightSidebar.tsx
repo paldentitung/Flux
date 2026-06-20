@@ -1,33 +1,28 @@
 import { useEffect, useState } from "react";
 import type { User } from "../../types/user.types";
 import { useProfile } from "../../hooks/useProfile";
+import { useAuth } from "../../hooks/useAuth"; // adjust to wherever `user` comes from
+import request from "../../services/api";
 
 const RightSidebar = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [followState, setFollowState] = useState<
-    Record<string, "following" | "requested">
-  >({});
   const [skip, setSkip] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [requestedIds, setRequestedIds] = useState<Set<string>>(new Set());
+
+  const { handleFollowUser } = useProfile();
+  const { user } = useAuth(); // wherever your global user/setUser lives
 
   const fetchSuggestions = async (skipValue = 0) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/user/suggestions?skip=${skipValue}`,
-        { credentials: "include" },
-      );
-      const data = await res.json();
+      const data = await request(`/user/suggestions?skip=${skipValue}`);
       if (data.success) {
         if (data.data.length === 0 && skipValue > 0) {
-          // exhausted the pool — loop back to the start
           return fetchSuggestions(0);
         }
         setUsers(data.data);
         setSkip(skipValue);
-        setHasMore(data.data.length === 5); // fewer than 5 back = likely last page
       }
     } catch (err) {
       console.error("Failed to load suggestions", err);
@@ -35,13 +30,20 @@ const RightSidebar = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchSuggestions();
   }, []);
-  const handleRefresh = () => {
-    fetchSuggestions(skip + 5);
+
+  const handleRefresh = () => fetchSuggestions(skip + 5);
+
+  const handleFollow = async (u: User) => {
+    await handleFollowUser(u);
+    if (u.isPrivate) {
+      setRequestedIds((prev) => new Set(prev).add(u._id));
+    }
   };
-  const { handleFollowUser } = useProfile();
+
   const initials = (name?: string) =>
     (name || "?")
       .split(" ")
@@ -49,7 +51,11 @@ const RightSidebar = () => {
       .join("")
       .slice(0, 2)
       .toUpperCase();
-  const visibleUsers = users.slice(0, visibleCount);
+
+  const isFollowing = (id: string) =>
+    user?.following?.some((f) => f._id === id) ?? false;
+
+  const isRequested = (id: string) => requestedIds.has(id);
 
   return (
     <div className="w-72 min-h-screen flex-col bg-[hsl(var(--background-tertiary))] border-l border-white/5 py-6 px-4 gap-3 hidden lg:flex fixed right-0">
@@ -60,10 +66,13 @@ const RightSidebar = () => {
           </p>
           <button
             onClick={handleRefresh}
+            disabled={loading}
             aria-label="Refresh suggestions"
-            className="text-[hsl(var(--muted-foreground))] hover:text-white transition-colors"
+            className="text-[hsl(var(--muted-foreground))] hover:text-white transition-colors disabled:opacity-50"
           >
-            <RefreshIcon className="w-3.5 h-3.5" />
+            <RefreshIcon
+              className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`}
+            />
           </button>
         </div>
 
@@ -90,65 +99,56 @@ const RightSidebar = () => {
             </p>
           </div>
         ) : (
-          <>
-            <div className="flex flex-col divide-y divide-white/5">
-              {visibleUsers.map((u) => {
-                const state = followState[u._id];
-                const label =
-                  state === "following"
-                    ? "Following"
-                    : state === "requested"
-                      ? "Requested"
-                      : u.isPrivate
-                        ? "Request"
-                        : "Follow";
+          <div className="flex flex-col divide-y divide-white/5">
+            {users.map((u) => {
+              const following = isFollowing(u._id);
+              const requested = isRequested(u._id);
+              const label = following
+                ? "Following"
+                : requested
+                  ? "Requested"
+                  : u.isPrivate
+                    ? "Request"
+                    : "Follow";
+              const disabled = following || requested;
 
-                return (
-                  <div
-                    key={u._id}
-                    className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
-                  >
-                    {u.avatar ? (
-                      <img
-                        src={u.avatar}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover shrink-0"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-[hsl(var(--primary)/0.2)] text-[hsl(var(--primary))] flex items-center justify-center text-[11px] font-medium shrink-0">
-                        {initials(u.name)}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{u.name}</p>
-                      <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">
-                        @{u.username}
-                      </p>
+              return (
+                <div
+                  key={u._id}
+                  className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+                >
+                  {u.avatar ? (
+                    <img
+                      src={u.avatar}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[hsl(var(--primary)/0.2)] text-[hsl(var(--primary))] flex items-center justify-center text-[11px] font-medium shrink-0">
+                      {initials(u.name)}
                     </div>
-                    <button
-                      onClick={() => handleFollowUser(u)}
-                      className={`text-[11px] font-medium rounded-full px-3 py-1 transition-colors shrink-0 border ${
-                        state
-                          ? "bg-white/5 border-white/10 text-[hsl(var(--muted-foreground))]"
-                          : "border-white/10 bg-[hsl(var(--primary))] hover:bg-white/5"
-                      }`}
-                    >
-                      {label}
-                    </button>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{u.name}</p>
+                    <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">
+                      @{u.username}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
-
-            {visibleCount < users.length && (
-              <button
-                onClick={() => setVisibleCount(users.length)}
-                className="text-xs text-[hsl(var(--muted-foreground))] hover:text-white transition-colors pt-1"
-              >
-                Show more
-              </button>
-            )}
-          </>
+                  <button
+                    onClick={() => handleFollow(u)}
+                    disabled={disabled}
+                    className={`text-[11px] font-medium rounded-full px-3 py-1 transition-colors shrink-0 border ${
+                      disabled
+                        ? "bg-white/5 border-white/10 text-[hsl(var(--muted-foreground))] cursor-not-allowed"
+                        : "border-white/10 bg-[hsl(var(--primary))] hover:bg-white/5"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
