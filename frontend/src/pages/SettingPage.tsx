@@ -9,18 +9,14 @@ import {
   EyeClosed,
   Trash2,
   Camera,
+  ChevronRight,
 } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
 import { useAuth } from "../hooks/useAuth";
 import { useProfile } from "../hooks/useProfile";
 
-type Section =
-  | "profile"
-  | "account"
-  | "privacy"
-  | "notifications"
-  | "appearance";
+type Section = "profile" | "account" | "privacy" | "notifications";
 
 const NAV: { id: Section; label: string; Icon: typeof User }[] = [
   { id: "profile", label: "Profile", Icon: User },
@@ -31,7 +27,7 @@ const NAV: { id: Section; label: string; Icon: typeof User }[] = [
 
 const SettingPage = () => {
   const { user, handleLogout } = useAuth();
-  const [active, setActive] = useState<Section>("profile");
+  const [active, setActive] = useState<Section | null>(null);
   const [toggles, setToggles] = useState({
     likes: true,
     follows: true,
@@ -71,10 +67,7 @@ const SettingPage = () => {
     setShowPassword((s) => ({ ...s, [key]: !s[key] }));
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const submitChangePassword = async (e: React.FormEvent) => {
@@ -87,373 +80,371 @@ const SettingPage = () => {
 
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = () => {
-    fileRef.current?.click();
-  };
-
   useEffect(() => {
     fetchBlockedUsers();
+    if (window.innerWidth >= 768) setActive("profile");
   }, []);
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
   return (
-    <div
-      style={{ fontFamily: "var(--font-body)" }}
-      className="min-h-screen bg-(--background)"
-    >
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-8">
-        <h1
-          style={{ fontFamily: "var(--font-heading)" }}
-          className="text-2xl text-(--foreground) mb-6"
-        >
-          Settings
-        </h1>
+    <div className="min-h-screen font-sans">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8">
+        {(active === null || !isMobile) && (
+          <h1 className="text-2xl font-semibold text-white mb-5 tracking-tight">
+            Settings
+          </h1>
+        )}
 
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar nav */}
-          <nav className="md:flex md:flex-col gap-1 overflow-x-auto grid grid-cols-3  md:overflow-visible md:w-56 shrink-0">
-            {NAV.map(({ id, label, Icon }) => (
+        {active !== null && (
+          <button
+            onClick={() => setActive(null)}
+            className="md:hidden flex items-center gap-1.5 text-sm text-zinc-400 mb-4 hover:text-white transition"
+          >
+            ← Back
+          </button>
+        )}
+
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+          {/* Sidebar / Mobile menu */}
+          <nav
+            className={`md:flex md:flex-col md:gap-1 md:w-52 md:shrink-0 ${
+              active !== null ? "hidden md:flex" : "flex flex-col"
+            }`}
+          >
+            {/* Mobile list */}
+            <div className="md:hidden flex flex-col rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden">
+              {NAV.map(({ id, label, Icon }, i) => (
+                <button
+                  key={id}
+                  onClick={() => setActive(id)}
+                  className={`flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-left transition hover:bg-zinc-800 text-zinc-100 ${
+                    i !== NAV.length - 1 ? "border-b border-zinc-800" : ""
+                  }`}
+                >
+                  <Icon size={16} className="text-zinc-400" />
+                  <span className="flex-1">{label}</span>
+                  <ChevronRight size={15} className="text-zinc-500" />
+                </button>
+              ))}
               <button
-                key={id}
-                onClick={() => setActive(id)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition text-left hover:cursor-pointer ${
-                  active === id
-                    ? "bg-[hsl(var(--surface-hover))] text-[hsl(var(--foreground))]"
-                    : "text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] hover:bg-[hsl(var(--surface-hover))]"
-                }`}
+                onClick={() => {
+                  if (window.confirm("Are you sure?")) handleLogout();
+                }}
+                className="flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-red-400 hover:bg-red-500/10 transition text-left"
               >
-                <Icon size={16} />
-                {label}
+                <LogOut size={16} />
+                Sign out
               </button>
-            ))}
+            </div>
 
-            <button
-              onClick={() => {
-                window.confirm("are you sure");
-                handleLogout;
-              }}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition text-left mt-2 md:mt-4"
-            >
-              <LogOut size={16} />
-              Sign out
-            </button>
+            {/* Desktop sidebar */}
+            <div className="hidden md:flex md:flex-col md:gap-0.5">
+              {NAV.map(({ id, label, Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActive(id)}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition text-left ${
+                    active === id
+                      ? "bg-zinc-800 text-white"
+                      : "text-zinc-400 hover:text-white hover:bg-zinc-800/60"
+                  }`}
+                >
+                  <Icon size={15} />
+                  {label}
+                </button>
+              ))}
+              <button
+                onClick={() => {
+                  if (window.confirm("Are you sure?")) handleLogout();
+                }}
+                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition text-left mt-3"
+              >
+                <LogOut size={15} />
+                Sign out
+              </button>
+            </div>
           </nav>
 
-          {/* Content */}
-          <div className="flex-1 rounded-2xl border border-(--post-card-border) bg-(--post-card-bg) p-6">
-            {active === "profile" && (
-              <div className="flex flex-col gap-5">
-                <div>
-                  <h2
-                    style={{ fontFamily: "var(--font-heading)" }}
-                    className="text-lg text-(--foreground) mb-1"
-                  >
-                    Profile information
-                  </h2>
-                  <p className="text-sm text-(--muted-foreground)">
+          {/* Content panel */}
+          {active !== null && (
+            <div className="flex-1 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 md:p-6">
+              <div className="mb-5">
+                <h2 className="text-base font-semibold text-white">
+                  {NAV.find((n) => n.id === active)?.label}
+                </h2>
+              </div>
+
+              {/* ── Profile ── */}
+              {active === "profile" && (
+                <div className="flex flex-col gap-5">
+                  <p className="text-sm text-zinc-400 -mt-3">
                     This is how others see you on Flux.
                   </p>
-                </div>
 
-                <div className="flex items-center gap-4">
-                  <Avatar
-                    src={user?.avatar}
-                    name={user?.name || user?.username}
-                    size={64}
-                  />
-                  <div className="flex gap-2">
-                    <input
-                      type="file"
-                      ref={fileRef}
-                      hidden
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          handleChangeAvatar(file);
-                        }
-                      }}
+                  <div className="flex items-center gap-4">
+                    <Avatar
+                      src={user?.avatar}
+                      name={user?.name || user?.username}
+                      size={64}
                     />
-                    <LoadingButton
-                      onClick={handleFile}
-                      className="px-4 py-2 rounded-lg text-sm font-medium border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition"
-                    >
-                      <Camera size={15} />
-                      Change photo
-                    </LoadingButton>
-                    <button
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Are you sure you want to remove your avatar?",
-                          )
-                        ) {
-                          handleRemoveAvatar();
+                    <div className="flex flex-wrap gap-2">
+                      <input
+                        type="file"
+                        ref={fileRef}
+                        hidden
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleChangeAvatar(file);
+                        }}
+                      />
+                      <LoadingButton
+                        onClick={() => fileRef.current?.click()}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium border border-zinc-700 text-zinc-200 hover:bg-zinc-800 transition"
+                      >
+                        <Camera size={15} />
+                        Change photo
+                      </LoadingButton>
+                      <button
+                        onClick={() => {
+                          if (window.confirm("Remove your avatar?"))
+                            handleRemoveAvatar();
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition"
+                      >
+                        <Trash2 size={15} />
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-zinc-300 mb-1.5 block">
+                        Name
+                      </label>
+                      <input
+                        placeholder="Name"
+                        className="input-auth"
+                        value={profileData.name}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
                         }
-                      }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-medium hover:bg-red-600 active:bg-red-700 transition-colors duration-200 shadow-sm hover:shadow-md hover:cursor-pointer"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-zinc-300 mb-1.5 block">
+                        Bio
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder="Bio"
+                        className="input-auth resize-none"
+                        value={profileData.bio}
+                        onChange={(e) =>
+                          setProfileData((prev) => ({
+                            ...prev,
+                            bio: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <LoadingButton
+                      onClick={() => handleUpdateProfile(profileData)}
+                      className="px-5 py-2 rounded-lg text-sm font-semibold bg-violet-600 text-white hover:bg-violet-700 transition"
                     >
-                      <Trash2 size={16} />
-                      Remove
+                      Save changes
+                    </LoadingButton>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Account ── */}
+              {active === "account" && (
+                <div className="flex flex-col gap-5">
+                  <p className="text-sm text-zinc-400 -mt-3">
+                    Manage your email and password.
+                  </p>
+
+                  <div className="border-t border-zinc-800 pt-5">
+                    <h3 className="text-sm font-semibold text-zinc-200 mb-3">
+                      Change password
+                    </h3>
+                    <div className="flex flex-col gap-4">
+                      <Field
+                        label="Current password"
+                        type={
+                          showPassword.currentPassword ? "text" : "password"
+                        }
+                        name="currentPassword"
+                        value={formData.currentPassword}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        showToggle
+                        isVisible={showPassword.currentPassword}
+                        onToggleVisibility={() =>
+                          toggleShowPassword("currentPassword")
+                        }
+                      />
+                      <Field
+                        label="New password"
+                        type={showPassword.newPassword ? "text" : "password"}
+                        name="newPassword"
+                        value={formData.newPassword}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        showToggle
+                        isVisible={showPassword.newPassword}
+                        onToggleVisibility={() =>
+                          toggleShowPassword("newPassword")
+                        }
+                      />
+                      <Field
+                        label="Confirm new password"
+                        type={
+                          showPassword.confirmPassword ? "text" : "password"
+                        }
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        placeholder="••••••••"
+                        showToggle
+                        isVisible={showPassword.confirmPassword}
+                        onToggleVisibility={() =>
+                          toggleShowPassword("confirmPassword")
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <LoadingButton
+                      onClick={submitChangePassword}
+                      loading={loading}
+                      loadingText="Changing…"
+                      className="px-5 py-2 rounded-lg text-sm font-semibold bg-violet-600 text-white hover:bg-violet-700 transition"
+                    >
+                      Update password
+                    </LoadingButton>
+                  </div>
+
+                  <div className="border-t border-zinc-800 pt-5">
+                    <h3 className="text-sm font-semibold text-red-400 mb-1">
+                      Delete account
+                    </h3>
+                    <p className="text-sm text-zinc-400 mb-3">
+                      Permanently remove your account and all of its content.
+                    </p>
+                    <button className="px-4 py-2 rounded-lg text-sm font-medium border border-red-500/30 text-red-400 hover:bg-red-500/10 transition">
+                      Delete my account
                     </button>
                   </div>
                 </div>
+              )}
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  {/* <Field
-                    label="Name"
-                    defaultValue={user?.name ?? ""}
-                    placeholder="Your name"
-                  />
-                  <Field
-                    label="Username"
-                    defaultValue={user?.username ?? ""}
-                    placeholder="username"
-                  /> */}
-                </div>
-
-                <div className="flex flex-col space-y-5">
-                  <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
-                    Name
-                  </label>
-                  <input
-                    placeholder="Name"
-                    className="input-auth"
-                    value={profileData.name}
-                    onChange={(e) =>
-                      setProfileData((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                  />
-                  <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
-                    Bio
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Bio"
-                    className="input-auth resize-none"
-                    value={profileData.bio}
-                    onChange={(e) =>
-                      setProfileData((prev) => ({
-                        ...prev,
-                        bio: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-
-                <div className="flex justify-end">
-                  <LoadingButton
-                    onClick={() => handleUpdateProfile(profileData)}
-                    className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition"
-                  >
-                    Save changes
-                  </LoadingButton>
-                </div>
-              </div>
-            )}
-
-            {active === "account" && (
-              <div className="flex flex-col gap-5">
-                <div>
-                  <h2
-                    style={{ fontFamily: "var(--font-heading)" }}
-                    className="text-lg text-(--foreground) mb-1"
-                  >
-                    Account
-                  </h2>
-                  <p className="text-sm text-(--muted-foreground)">
-                    Manage your email and password.
-                  </p>
-                </div>
-
-                <div className="border-t border-(--post-card-border) pt-5">
-                  <h3 className="text-sm font-semibold text-(--foreground) mb-3">
-                    Change password
-                  </h3>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <Field
-                      label="Current password"
-                      type={showPassword.currentPassword ? "text" : "password"}
-                      name="currentPassword"
-                      value={formData.currentPassword}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      showToggle
-                      isVisible={showPassword.currentPassword}
-                      onToggleVisibility={() =>
-                        toggleShowPassword("currentPassword")
-                      }
-                    />
-
-                    <Field
-                      label="New password"
-                      type={showPassword.newPassword ? "text" : "password"}
-                      name="newPassword"
-                      value={formData.newPassword}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      showToggle
-                      isVisible={showPassword.newPassword}
-                      onToggleVisibility={() =>
-                        toggleShowPassword("newPassword")
-                      }
-                    />
-
-                    <Field
-                      label="Confirm new password"
-                      type={showPassword.confirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      placeholder="••••••••"
-                      showToggle
-                      isVisible={showPassword.confirmPassword}
-                      onToggleVisibility={() =>
-                        toggleShowPassword("confirmPassword")
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <LoadingButton
-                    onClick={submitChangePassword}
-                    loading={loading}
-                    loadingText="Changing…"
-                    className="px-5 py-2 rounded-lg text-sm font-semibold bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] hover:opacity-90 transition"
-                  >
-                    Update account
-                  </LoadingButton>
-                </div>
-
-                <div className="border-t border-(--post-card-border) pt-5">
-                  <h3 className="text-sm font-semibold text-red-500 mb-1">
-                    Delete account
-                  </h3>
-                  <p className="text-sm text-(--muted-foreground) mb-3">
-                    Permanently remove your account and all of its content.
-                  </p>
-                  <button className="px-4 py-2 rounded-lg text-sm font-medium border border-red-400/40 text-red-500 hover:bg-red-500/10 transition">
-                    Delete my account
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {active === "privacy" && (
-              <div className="flex flex-col gap-5">
-                <div>
-                  <h2
-                    style={{ fontFamily: "var(--font-heading)" }}
-                    className="text-lg text-(--foreground) mb-1"
-                  >
-                    Privacy & blocking
-                  </h2>
-                  <p className="text-sm text-(--muted-foreground)">
+              {/* ── Privacy ── */}
+              {active === "privacy" && (
+                <div className="flex flex-col gap-5">
+                  <p className="text-sm text-zinc-400 -mt-3">
                     Control who can see and interact with you.
                   </p>
-                </div>
 
-                <ToggleRow
-                  label="Private account"
-                  description="Only people you approve can see your posts and follow you"
-                  checked={user?.isPrivate ?? false}
-                  onChange={handleToggleUserPrivary}
-                />
+                  <ToggleRow
+                    label="Private account"
+                    description="Only people you approve can see your posts and follow you"
+                    checked={user?.isPrivate ?? false}
+                    onChange={handleToggleUserPrivary}
+                  />
 
-                <div className="border-t border-(--post-card-border) pt-5">
-                  <h3 className="text-sm font-semibold text-(--foreground) mb-1">
-                    Blocked accounts
-                  </h3>
-                  <p className="text-sm text-(--muted-foreground) mb-3">
-                    Blocked accounts can't view your profile or contact you.
-                  </p>
+                  <div className="border-t border-zinc-800 pt-5">
+                    <h3 className="text-sm font-semibold text-zinc-200 mb-1">
+                      Blocked accounts
+                    </h3>
+                    <p className="text-sm text-zinc-400 mb-3">
+                      Blocked accounts can't view your profile or contact you.
+                    </p>
 
-                  {blockedUsers.length > 0 ? (
-                    <div className="flex flex-col gap-1">
-                      {blockedUsers.map((b) => (
-                        <div
-                          key={b._id}
-                          className="flex items-center gap-3 py-2.5"
-                        >
-                          <Avatar src={b.avatar} name={b.name} size={36} />
-
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-(--foreground) truncate">
-                              {b.name}
-                            </p>
-                            <p className="text-xs text-(--muted-foreground)">
-                              @{b.username}
-                            </p>
-                          </div>
-
-                          <LoadingButton
-                            loading={loading}
-                            loadingText="Unblocking…"
-                            onClick={() => handleUnBlockUser(b._id)}
-                            className="text-xs px-3 py-1.5 rounded-lg border border-(--post-card-border) text-(--foreground) hover:bg-(--surface-hover) transition"
+                    {blockedUsers.length > 0 ? (
+                      <div className="flex flex-col gap-1">
+                        {blockedUsers.map((b) => (
+                          <div
+                            key={b._id}
+                            className="flex items-center gap-3 py-2.5"
                           >
-                            Unblock
-                          </LoadingButton>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="py-8 text-center">
-                      <p className="text-sm text-(--muted-foreground)">
-                        You haven’t blocked anyone yet
-                      </p>
-                      <p className="text-xs text-(--muted-foreground) mt-1">
-                        Blocked users will appear here
-                      </p>
-                    </div>
-                  )}
+                            <Avatar src={b.avatar} name={b.name} size={36} />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-zinc-100 truncate">
+                                {b.name}
+                              </p>
+                              <p className="text-xs text-zinc-400">
+                                @{b.username}
+                              </p>
+                            </div>
+                            <LoadingButton
+                              loading={loading}
+                              loadingText="Unblocking…"
+                              onClick={() => handleUnBlockUser(b._id)}
+                              className="text-xs px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-200 hover:bg-zinc-800 transition"
+                            >
+                              Unblock
+                            </LoadingButton>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-8 text-center">
+                        <p className="text-sm text-zinc-400">
+                          You haven't blocked anyone yet
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1">
+                          Blocked users will appear here
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {active === "notifications" && (
-              <div className="flex flex-col gap-5">
-                <div>
-                  <h2
-                    style={{ fontFamily: "var(--font-heading)" }}
-                    className="text-lg text-(--foreground) mb-1"
-                  >
-                    Notification preferences
-                  </h2>
-                  <p className="text-sm text-(--muted-foreground)">
+              {/* ── Notifications ── */}
+              {active === "notifications" && (
+                <div className="flex flex-col gap-5">
+                  <p className="text-sm text-zinc-400 -mt-3">
                     Choose what you get notified about.
                   </p>
+                  <ToggleRow
+                    label="Likes"
+                    description="When someone likes your post"
+                    checked={toggles.likes}
+                    onChange={() => toggle("likes")}
+                  />
+                  <ToggleRow
+                    label="New followers"
+                    description="When someone starts following you"
+                    checked={toggles.follows}
+                    onChange={() => toggle("follows")}
+                  />
+                  <ToggleRow
+                    label="Comments"
+                    description="When someone comments on your post"
+                    checked={toggles.comments}
+                    onChange={() => toggle("comments")}
+                  />
+                  <ToggleRow
+                    label="Mentions"
+                    description="When someone mentions you in a comment"
+                    checked={toggles.mentions}
+                    onChange={() => toggle("mentions")}
+                  />
                 </div>
-
-                <ToggleRow
-                  label="Likes"
-                  description="When someone likes your post"
-                  checked={toggles.likes}
-                  onChange={() => toggle("likes")}
-                />
-                <ToggleRow
-                  label="New followers"
-                  description="When someone starts following you"
-                  checked={toggles.follows}
-                  onChange={() => toggle("follows")}
-                />
-                <ToggleRow
-                  label="Comments"
-                  description="When someone comments on your post"
-                  checked={toggles.comments}
-                  onChange={() => toggle("comments")}
-                />
-                <ToggleRow
-                  label="Mentions"
-                  description="When someone mentions you in a comment"
-                  checked={toggles.mentions}
-                  onChange={() => toggle("mentions")}
-                />
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -482,7 +473,7 @@ const Field = ({
   onToggleVisibility?: () => void;
 }) => (
   <div>
-    <label className="text-sm font-medium text-(--foreground) mb-1.5 block">
+    <label className="text-sm font-medium text-zinc-300 mb-1.5 block">
       {label}
     </label>
     <div className="relative">
@@ -498,8 +489,7 @@ const Field = ({
         <button
           type="button"
           onClick={onToggleVisibility}
-          aria-label={isVisible ? "Hide password" : "Show password"}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-(--foreground) transition"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-100 transition"
         >
           {isVisible ? <EyeClosed size={16} /> : <Eye size={16} />}
         </button>
@@ -521,21 +511,20 @@ const ToggleRow = ({
 }) => (
   <div className="flex items-center justify-between gap-4 py-1">
     <div className="min-w-0">
-      <p className="text-sm font-medium text-(--foreground)">{label}</p>
-      <p className="text-xs text-(--muted-foreground) mt-0.5">{description}</p>
+      <p className="text-sm font-medium text-zinc-100">{label}</p>
+      <p className="text-xs text-zinc-400 mt-0.5">{description}</p>
     </div>
     <button
       onClick={onChange}
       role="switch"
       aria-checked={checked}
-      className="relative w-10 h-5.5 rounded-full transition shrink-0"
-      style={{
-        background: checked ? "hsl(var(--primary))" : "var(--surface-hover)",
-      }}
+      className={`relative w-10 h-6 rounded-full transition-colors shrink-0 ${
+        checked ? "bg-violet-600" : "bg-zinc-700"
+      }`}
     >
       <span
-        className="absolute top-0.5 left-0.5 w-4.5 h-4.5 rounded-full bg-white transition-transform"
-        style={{ transform: checked ? "translateX(18px)" : "translateX(0)" }}
+        className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform duration-200"
+        style={{ transform: checked ? "translateX(16px)" : "translateX(0)" }}
       />
     </button>
   </div>
