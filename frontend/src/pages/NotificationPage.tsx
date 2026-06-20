@@ -6,108 +6,47 @@ import {
   CheckCheck,
 } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
+import { useNotifications } from "../hooks/useNotifications";
 
-type NotificationType = "like" | "follow" | "comment" | "mention";
+type NotificationType = "follow" | "follow_request" | "follow_request_accepted";
 
 type Notification = {
   _id: string;
   type: NotificationType;
-  read: boolean;
+  isRead: boolean;
   createdAt: string;
-  actor: { _id: string; name?: string; username: string; avatar?: string };
-  postPreview?: string;
+  sender: { _id: string; name?: string; username: string; avatar?: string };
 };
 
 const ICONS: Record<NotificationType, typeof Heart> = {
-  like: Heart,
   follow: UserPlus,
-  comment: MessageCircle,
-  mention: AtSign,
+  follow_request: UserPlus,
+  follow_request_accepted: UserPlus,
 };
 
 const ICON_COLORS: Record<NotificationType, string> = {
-  like: "var(--notif-icon-like)",
   follow: "var(--notif-icon-follow)",
-  comment: "var(--notif-icon-comment)",
-  mention: "var(--notif-icon-message)",
+  follow_request: "var(--notif-icon-follow)",
+  follow_request_accepted: "var(--notif-icon-follow)",
 };
 
 const MESSAGES: Record<NotificationType, string> = {
-  like: "liked your post",
   follow: "started following you",
-  comment: "commented on your post",
-  mention: "mentioned you in a comment",
+  follow_request: "requested to follow you",
+  follow_request_accepted: "accepted your follow request",
 };
 
-const notifications: Notification[] = [
-  {
-    _id: "1",
-    type: "follow",
-    read: false,
-    createdAt: "2m ago",
-    actor: {
-      _id: "u1",
-      name: "Ramesh Shrestha",
-      username: "ramesh",
-      avatar: "",
-    },
-  },
-  {
-    _id: "2",
-    type: "like",
-    read: false,
-    createdAt: "14m ago",
-    actor: { _id: "u2", name: "Sita Gurung", username: "sitag", avatar: "" },
-    postPreview: "Just shipped the new dashboard redesign 🎉",
-  },
-  {
-    _id: "3",
-    type: "comment",
-    read: false,
-    createdAt: "1h ago",
-    actor: {
-      _id: "u3",
-      name: "Bikash Thapa",
-      username: "bikash_t",
-      avatar: "",
-    },
-    postPreview: "This is exactly what I needed, thanks for sharing!",
-  },
-  {
-    _id: "4",
-    type: "mention",
-    read: true,
-    createdAt: "3h ago",
-    actor: { _id: "u4", name: "Anjali Rai", username: "anjalir", avatar: "" },
-    postPreview: "@you check this out when you get a chance",
-  },
-  {
-    _id: "5",
-    type: "like",
-    read: true,
-    createdAt: "5h ago",
-    actor: { _id: "u5", name: "Prakash KC", username: "prakashkc", avatar: "" },
-    postPreview: "Refactored the auth flow, much cleaner now",
-  },
-  {
-    _id: "6",
-    type: "follow",
-    read: true,
-    createdAt: "1d ago",
-    actor: { _id: "u6", name: "Maya Tamang", username: "mayat", avatar: "" },
-  },
-  {
-    _id: "7",
-    type: "comment",
-    read: true,
-    createdAt: "2d ago",
-    actor: { _id: "u7", name: "Dawa Lama", username: "dawal", avatar: "" },
-    postPreview: "Great write-up on state management patterns",
-  },
-];
-
 const NotificationPage = () => {
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const {
+    notifications,
+    unreadCount,
+    loading,
+    handleMarkAsRead,
+    handleMarkAllAsRead,
+    handleDelete,
+    handleAccept,
+    handleReject,
+  } = useNotifications();
 
   return (
     <div
@@ -131,14 +70,24 @@ const NotificationPage = () => {
             )}
           </div>
 
-          <button className="flex items-center gap-1.5 text-sm font-medium text-(--muted-foreground) hover:text-(--foreground) transition px-3 py-1.5 rounded-lg hover:bg-(--surface-hover)">
+          <button
+            onClick={handleMarkAllAsRead}
+            className="flex items-center gap-1.5 text-sm font-medium text-(--muted-foreground) hover:text-(--foreground) transition px-3 py-1.5 rounded-lg hover:bg-(--surface-hover)"
+          >
             <CheckCheck size={16} />
             Mark all as read
           </button>
         </div>
 
+        {/* Loading */}
+        {loading && (
+          <p className="text-sm text-(--muted-foreground) text-center py-10">
+            Loading...
+          </p>
+        )}
+
         {/* List */}
-        {notifications.length === 0 ? (
+        {!loading && notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="w-14 h-14 rounded-full bg-(--surface) flex items-center justify-center mb-4">
               <Heart size={22} className="text-(--muted-foreground)" />
@@ -152,21 +101,22 @@ const NotificationPage = () => {
           </div>
         ) : (
           <div className="flex flex-col rounded-2xl border border-(--post-card-border) overflow-hidden bg-(--post-card-bg)">
-            {notifications.map((n, i) => {
+            {(notifications as Notification[]).map((n, i) => {
               const Icon = ICONS[n.type];
               return (
                 <div
                   key={n._id}
+                  onClick={() => !n.isRead && handleMarkAsRead(n._id)}
                   className={`flex items-start gap-3 px-4 py-3.5 transition cursor-pointer hover:bg-(--surface-hover) ${
                     i !== notifications.length - 1
                       ? "border-b border-(--post-card-border)"
                       : ""
                   }`}
                   style={{
-                    background: !n.read
+                    background: !n.isRead
                       ? "var(--notif-unread-bg)"
                       : "transparent",
-                    borderLeft: !n.read
+                    borderLeft: !n.isRead
                       ? "3px solid var(--notif-unread-border)"
                       : "3px solid transparent",
                   }}
@@ -174,8 +124,8 @@ const NotificationPage = () => {
                   {/* Avatar + type icon */}
                   <div className="relative shrink-0">
                     <Avatar
-                      src={n.actor.avatar}
-                      name={n.actor.name || n.actor.username}
+                      src={n.sender.avatar}
+                      name={n.sender.name || n.sender.username}
                       size={42}
                     />
                     <span
@@ -188,30 +138,61 @@ const NotificationPage = () => {
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-(--foreground) leading-relaxed">
+                    <p className="text-sm text-[hsl(var(--text-primary))] leading-relaxed">
                       <span className="font-semibold">
-                        {n.actor.name || n.actor.username}
+                        {n.sender.name || n.sender.username}
                       </span>{" "}
-                      <span className="text-(--muted-foreground)">
+                      <span className="text-[hsl(var(--text-muted))]">
                         {MESSAGES[n.type]}
                       </span>
                     </p>
-                    {n.postPreview && (
-                      <p className="text-sm text-(--muted-foreground) mt-1 truncate">
-                        "{n.postPreview}"
-                      </p>
-                    )}
-                    <p className="text-xs text-(--muted-foreground) mt-1.5">
-                      {n.createdAt}
+                    <p className="text-xs text-[hsl(var(--text-muted))] mt-1.5">
+                      {new Date(n.createdAt).toLocaleString()}
                     </p>
+
+                    {/* Accept / Reject buttons for follow requests */}
+                    {n.type === "follow_request" && (
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAccept(n.sender._id, n._id);
+                          }}
+                          className="px-3 py-1 text-xs font-medium rounded-lg text-white transition"
+                          style={{ background: "#533483" }}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleReject(n.sender._id, n._id);
+                          }}
+                          className="px-3 py-1 text-xs font-medium rounded-lg border border-[hsl(var(--post-card-border))] text-[hsl(var(--text-muted))] hover:text-red-500 transition"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    )}
                   </div>
 
-                  {!n.read && (
-                    <span
-                      className="w-2 h-2 rounded-full shrink-0 mt-2"
-                      style={{ background: "var(--notif-unread-border)" }}
-                    />
-                  )}
+                  <div className="flex items-center gap-2 shrink-0 mt-1">
+                    {!n.isRead && (
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ background: "var(--notif-unread-border)" }}
+                      />
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(n._id);
+                      }}
+                      className="text-xs text-(--muted-foreground) hover:text-red-500 transition"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
               );
             })}
