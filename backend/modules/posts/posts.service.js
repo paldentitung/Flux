@@ -2,10 +2,15 @@ import Post from "./post.model.js";
 import User from "../users/user.model.js";
 import AppError from "../../utils/AppError.js";
 
-export const getPostService = async () => {
+export const getPostService = async (page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+
   const posts = await Post.find()
     .populate("userId", "-password")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
   return posts;
 };
 

@@ -9,7 +9,11 @@ import {
 import AppError from "../../utils/AppError.js";
 
 export const getPostsController = async (req, res) => {
-  const result = await getPostService();
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const result = await getPostService(page, limit);
+
   res
     .status(200)
     .json({ success: true, message: "Posts fetched", data: result });
