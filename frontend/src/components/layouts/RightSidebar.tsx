@@ -11,7 +11,7 @@ const RightSidebar = () => {
   const [requestedIds, setRequestedIds] = useState<Set<string>>(new Set());
 
   const { handleFollowUser } = useProfile();
-  const { user } = useAuth(); // wherever your global user/setUser lives
+  const { user } = useAuth();
 
   const fetchSuggestions = async (skipValue = 0) => {
     setLoading(true);
