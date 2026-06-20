@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
 import { userMapper } from "./user.mapper.js";
+import { createNotification } from "../notifications/notifications.service.js";
 
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");
@@ -82,7 +83,12 @@ export const followUserService = async (currentUserId, targetUserId) => {
     await User.findByIdAndUpdate(targetUserId, {
       $addToSet: { followRequests: currentUserId },
     });
-
+    // send notifcation
+    await createNotification({
+      recipient: targetUserId,
+      sender: currentUserId,
+      type: "follow_request",
+    });
     return { message: "Follow request sent" };
   }
   await Promise.all([
@@ -93,7 +99,11 @@ export const followUserService = async (currentUserId, targetUserId) => {
       $addToSet: { followers: currentUserId },
     }),
   ]);
-
+  await createNotification({
+    recipient: targetUserId,
+    sender: currentUserId,
+    type: "follow",
+  });
   return { success: true };
 };
 
@@ -319,7 +329,11 @@ export const acceptFollowRequestService = async (
       $addToSet: { following: currentUserId },
     }),
   ]);
-
+  await createNotification({
+    recipient: requesterId,
+    sender: currentUserId,
+    type: "follow_request_accepted",
+  });
   return { success: true };
 };
 

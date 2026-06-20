@@ -52,6 +52,7 @@ const ProfilePage = () => {
   const [open, setOpen] = useState(false);
   const [isPrivateAccount, setIsPrivateAccount] = useState(false);
   const [showProfilePicture, setShowProfilePicture] = useState(false);
+  const [hasRequested, setHasRequested] = useState(false);
   useEffect(() => {
     if (isOwnProfile) {
       setVisitedProfile(null);
@@ -59,7 +60,7 @@ const ProfilePage = () => {
       setIsPrivateAccount(false);
       return;
     }
-
+    setHasRequested(false);
     const fetchProfile = async () => {
       setLoading(true);
       setIsBlockedByUser(false);
@@ -84,18 +85,18 @@ const ProfilePage = () => {
   }, [userId, isOwnProfile]);
 
   if (!user) return null;
-
   const handleFollowClick = async () => {
-    if (!profileUser) return;
+    const targetId = profileUser?._id ?? userId;
+    if (!targetId) return;
 
     await handleFollowUser({
-      _id: profileUser._id!,
-      username: profileUser.username,
-      name: profileUser.name,
-      avatar: profileUser.avatar,
+      _id: targetId,
+      username: profileUser?.username ?? "",
+      name: profileUser?.name ?? "",
+      avatar: profileUser?.avatar ?? "",
     });
 
-    if (!isOwnProfile) {
+    if (!isOwnProfile && profileUser) {
       setVisitedProfile((prev) =>
         prev ? { ...prev, followers: [...prev.followers, user] } : prev,
       );
@@ -175,17 +176,59 @@ const ProfilePage = () => {
   }
   if (!isOwnProfile && isPrivateAccount) {
     return (
-      <div className="min-h-screen bg-(--background) flex items-center justify-center px-4">
-        <div className="flex flex-col items-center text-center max-w-sm">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center mb-5 bg-(--post-card-bg) border border-(--post-card-border)">
-            <Lock size={28} className="text-(--muted-foreground)" />
+      <div
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+        className="min-h-screen bg-(--background)"
+      >
+        {/* Cover */}
+        <div className="relative h-52 w-full overflow-hidden">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%)",
+            }}
+          />
+        </div>
+
+        <div className="max-w-3xl mx-auto md:px-6 mt-2">
+          <div className="relative -mt-16 mb-6 flex items-end justify-between">
+            {/* Avatar — no src since profile is private, show initials fallback */}
+            <Avatar
+              src={undefined}
+              name={userId!}
+              size={112}
+              className="border-4 border-(--background) rounded-full"
+            />
+
+            {/* Follow Request button */}
+            <div className="pb-2">
+              <button
+                onClick={async () => {
+                  await handleFollowClick();
+                  setHasRequested(true);
+                }}
+                disabled={hasRequested}
+                className="px-5 py-2 rounded-lg text-sm font-medium transition active:opacity-15 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ background: "#533483", color: "#fff" }}
+              >
+                {hasRequested ? "Requested" : "Request to Follow"}
+              </button>
+            </div>
           </div>
-          <h1 className="text-xl text-(--foreground) mb-2">
-            This account is private
-          </h1>
-          <p className="text-sm text-(--muted-foreground) leading-relaxed">
-            Follow this account to see their photos and posts.
-          </p>
+
+          {/* Private notice */}
+          <div className="flex flex-col items-center text-center py-16 gap-3">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center bg-(--post-card-bg) border border-(--post-card-border)">
+              <Lock size={24} className="text-(--muted-foreground)" />
+            </div>
+            <h2 className="text-lg text-(--foreground)">
+              This account is private
+            </h2>
+            <p className="text-sm text-(--muted-foreground)">
+              Follow this account to see their photos and posts.
+            </p>
+          </div>
         </div>
       </div>
     );

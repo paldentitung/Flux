@@ -30,8 +30,8 @@ export const useProfile = () => {
 
     try {
       await followUser(targetUser._id);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error.message);
       setUser({ ...user, following: prevFollowing });
     }
   };
