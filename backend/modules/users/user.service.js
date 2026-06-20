@@ -5,7 +5,7 @@ import path from "path";
 import bcrypt from "bcrypt";
 import { userMapper } from "./user.mapper.js";
 import { createNotification } from "../notifications/notifications.service.js";
-
+import mongoose from "mongoose";
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");
   if (!user) {
@@ -383,4 +383,44 @@ export const getBlocksUsersService = async (userId) => {
   const blocks = user.blockedUsers;
 
   return blocks;
+};
+
+export const getSuggestedUsersService = async (userId, skip = 0) => {
+  const currentUser = await User.findById(userId).select(
+    "following blockedUsers followRequests",
+  );
+
+  const currentUserObjectId = new mongoose.Types.ObjectId(userId);
+
+  const excludeIds = [
+    currentUserObjectId,
+    ...currentUser.following,
+    ...currentUser.blockedUsers,
+    ...currentUser.followRequests,
+  ];
+
+  const suggestions = await User.aggregate([
+    { $match: { _id: { $nin: excludeIds } } },
+    {
+      $addFields: {
+        mutualCount: {
+          $size: { $setIntersection: ["$followers", currentUser.following] },
+        },
+      },
+    },
+    { $sort: { mutualCount: -1, createdAt: -1 } },
+    { $skip: skip },
+    { $limit: 5 },
+    {
+      $project: {
+        name: 1,
+        username: 1,
+        avatar: 1,
+        isPrivate: 1,
+        mutualCount: 1,
+      },
+    },
+  ]);
+
+  return suggestions;
 };

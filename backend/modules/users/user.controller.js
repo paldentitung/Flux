@@ -15,6 +15,7 @@ import {
   rejectFollowRequestService,
   cancelFollowRequestService,
   getBlocksUsersService,
+  getSuggestedUsersService,
 } from "./user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -195,4 +196,10 @@ export const getBlocksUsersController = async (req, res) => {
     message: "Blocks fetched",
     data: result,
   });
+};
+export const getSuggestedUsers = async (req, res, next) => {
+  const skip = parseInt(req.query.skip) || 0;
+  const result = await getSuggestedUsersService(req.user.id, skip);
+
+  res.status(200).json({ success: true, data: result });
 };

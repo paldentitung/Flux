@@ -17,6 +17,7 @@ import {
   rejectFollowRequestController,
   cancelFollowRequestController,
   getBlocksUsersController,
+  getSuggestedUsers,
 } from "./user.controller.js";
 import { upload } from "../../middleware/upload.middleware.js";
 
@@ -63,4 +64,5 @@ router.delete(
 );
 
 router.get("/me/blocked", protect, asyncHandler(getBlocksUsersController));
+router.get("/suggestions", protect, asyncHandler(getSuggestedUsers));
 export default router;
