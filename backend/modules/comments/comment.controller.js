@@ -1,21 +1,17 @@
-import Comment from "./comment.model.js";
-import Post from "../posts/post.model.js";
+import {
+  addCommentService,
+  getCommentsByPostService,
+  deleteCommentService,
+  addReplyToCommentService,
+  getRepliesByCommentService,
+} from "./comment.service.js";
 
 export const addComment = async (req, res) => {
   const { text } = req.body;
   const { postId } = req.params;
   const userId = req.user.id;
 
-  const comment = await Comment.create({ postId, userId, text });
-
-  await Post.findByIdAndUpdate(postId, {
-    $inc: { commentsCount: 1 },
-  });
-
-  const populated = await comment.populate(
-    "userId",
-    "_id name username avatar",
-  ); // ✅
+  const populated = await addCommentService({ postId, userId, text });
 
   res.status(201).json({
     success: true,
@@ -27,16 +23,7 @@ export const addComment = async (req, res) => {
 export const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
 
-  const comments = await Comment.find({
-    postId,
-    _id: { $nin: await Comment.distinct("replies") },
-  })
-    .populate("userId", "_id name username avatar")
-    .populate({
-      path: "replies",
-      populate: { path: "userId", select: "_id name username avatar" },
-    })
-    .sort({ createdAt: -1 });
+  const comments = await getCommentsByPostService(postId);
 
   res.status(200).json({
     success: true,
@@ -48,27 +35,14 @@ export const getCommentsByPost = async (req, res) => {
 export const deleteComment = async (req, res) => {
   const { commentId } = req.params;
 
-  const comment = await Comment.findById(commentId);
-  if (!comment) {
-    return res.status(404).json({
+  try {
+    await deleteCommentService(commentId, req.user.id);
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
       success: false,
-      message: "Comment not found",
+      message: error.message,
     });
   }
-
-  if (comment.userId.toString() !== req.user.id) {
-    return res.status(403).json({
-      success: false,
-      message: "Not allowed",
-    });
-  }
-
-  // If this comment is a reply, remove its reference from parent comment.
-  await Comment.updateOne(
-    { replies: comment._id },
-    { $pull: { replies: comment._id } },
-  );
-  await Comment.findByIdAndDelete(commentId);
 
   res.status(200).json({
     success: true,
@@ -81,27 +55,19 @@ export const addReplyToComment = async (req, res) => {
   const { text } = req.body;
   const userId = req.user.id;
 
-  const parentComment = await Comment.findById(commentId);
-  if (!parentComment) {
-    return res.status(404).json({
+  let populatedReply;
+  try {
+    populatedReply = await addReplyToCommentService({
+      commentId,
+      userId,
+      text,
+    });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
       success: false,
-      message: "Parent comment not found",
+      message: error.message,
     });
   }
-
-  const reply = await Comment.create({
-    postId: parentComment.postId,
-    userId,
-    text,
-  });
-
-  parentComment.replies.push(reply._id);
-  await parentComment.save();
-
-  const populatedReply = await reply.populate(
-    "userId",
-    "_id name username avatar",
-  );
 
   res.status(201).json({
     success: true,
@@ -113,22 +79,19 @@ export const addReplyToComment = async (req, res) => {
 export const getRepliesByComment = async (req, res) => {
   const { commentId } = req.params;
 
-  const comment = await Comment.findById(commentId).populate({
-    path: "replies",
-    options: { sort: { createdAt: -1 } },
-    populate: { path: "userId", select: "_id name username avatar" },
-  });
-
-  if (!comment) {
-    return res.status(404).json({
+  let replies;
+  try {
+    replies = await getRepliesByCommentService(commentId);
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
       success: false,
-      message: "Comment not found",
+      message: error.message,
     });
   }
 
   res.status(200).json({
     success: true,
     message: "Replies fetched successfully",
-    data: comment.replies,
+    data: replies,
   });
 };
