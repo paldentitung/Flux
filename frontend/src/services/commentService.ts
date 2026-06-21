@@ -22,3 +22,7 @@ export const addReplyComment = async (commentId: string, text: string) => {
     body: JSON.stringify({ text }),
   });
 };
+
+export const likeComment = async (commentId: string) => {
+  return request(`/comment/${commentId}/like`, { method: "PUT" }, true);
+};

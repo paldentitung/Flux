@@ -6,6 +6,7 @@ import {
   deleteComment,
   addReplyToComment,
   getRepliesByComment,
+  likeComment,
 } from "./comment.controller.js";
 const router = express.Router();
 import { protect } from "../../middleware/auth.middleware.js";
@@ -16,5 +17,5 @@ router.post("/:postId", protect, asyncHandler(addComment));
 router.get("/reply/:commentId", protect, asyncHandler(getRepliesByComment));
 router.post("/reply/:commentId", protect, asyncHandler(addReplyToComment));
 router.delete("/:commentId", protect, asyncHandler(deleteComment));
-
+router.put("/:commentId/like", protect, asyncHandler(likeComment));
 export default router;

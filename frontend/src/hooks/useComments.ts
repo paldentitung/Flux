@@ -4,8 +4,10 @@ import {
   getReplyComment,
   addReplyComment,
   addComment,
+  likeComment,
 } from "../services/commentService";
 import { usePosts } from "./usePosts";
+import toast from "react-hot-toast";
 
 export const useComments = () => {
   const [comments, setComments] = useState<any[]>([]);
@@ -79,6 +81,20 @@ export const useComments = () => {
     }
   };
 
+  const handleLikeComment = async (commentId: string) => {
+    try {
+      const res = await likeComment(commentId);
+
+      if (res.success) {
+        toast.success(res.message);
+      }
+      return { liked: res.data.liked, likesCount: res.data.likesCount };
+    } catch (error) {
+      console.error("Failed to add reply comment", error);
+      throw error;
+    }
+  };
+
   return {
     comments,
     loading,
@@ -87,5 +103,6 @@ export const useComments = () => {
     fetchReplyComments,
     handleAddComment,
     handleAddReplyComment,
+    handleLikeComment,
   };
 };

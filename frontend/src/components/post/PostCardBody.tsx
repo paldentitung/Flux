@@ -32,6 +32,7 @@ const PostCardBody = ({
     fetchComments,
     handleAddComment,
     handleAddReplyComment,
+    handleLikeComment,
   } = useComments();
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -224,6 +225,7 @@ const PostCardBody = ({
                 key={comment._id}
                 comment={comment}
                 onAddReply={handleAddReplyComment}
+                onLikeComment={handleLikeComment}
               />
             ))
           )}

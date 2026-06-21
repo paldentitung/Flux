@@ -4,6 +4,7 @@ import {
   deleteCommentService,
   addReplyToCommentService,
   getRepliesByCommentService,
+  likeCommentService,
 } from "./comment.service.js";
 
 export const addComment = async (req, res) => {
@@ -93,5 +94,18 @@ export const getRepliesByComment = async (req, res) => {
     success: true,
     message: "Replies fetched successfully",
     data: replies,
+  });
+};
+
+export const likeComment = async (req, res) => {
+  const { commentId } = req.params;
+  const userId = req.user.id;
+
+  const result = await likeCommentService(commentId, userId);
+
+  res.status(200).json({
+    success: true,
+    message: result.liked ? "Comment liked" : "Comment unliked",
+    data: result,
   });
 };

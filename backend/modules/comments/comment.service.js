@@ -1,5 +1,6 @@
 import Comment from "./comment.model.js";
 import Post from "../posts/post.model.js";
+import AppError from "../../utils/AppError.js";
 
 export const addCommentService = async ({ postId, userId, text }) => {
   const comment = await Comment.create({ postId, userId, text });
@@ -76,6 +77,25 @@ export const addReplyToCommentService = async ({ commentId, userId, text }) => {
   );
 
   return populatedReply;
+};
+
+export const likeCommentService = async (commentId, userId) => {
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new AppError("Comment not found", 404);
+  }
+
+  const alreadyLiked = comment.likes.some((id) => id.toString() === userId);
+
+  if (alreadyLiked) {
+    comment.likes.pull(userId);
+  } else {
+    comment.likes.push(userId);
+  }
+
+  await comment.save();
+
+  return { liked: !alreadyLiked, likesCount: comment.likes.length };
 };
 
 export const getRepliesByCommentService = async (commentId) => {

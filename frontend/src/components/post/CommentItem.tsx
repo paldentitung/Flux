@@ -7,19 +7,47 @@ type Props = {
   comment: Comment;
   isReply?: boolean;
   onAddReply: (commentId: string, text: string) => void;
+  onLikeComment: (
+    commentId: string,
+  ) => Promise<{ liked: boolean; likesCount: number }>;
 };
 
-const CommentItem = ({ comment, isReply = false, onAddReply }: Props) => {
+const CommentItem = ({
+  comment,
+  isReply = false,
+  onAddReply,
+  onLikeComment,
+}: Props) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(comment.likes.length);
+  const [isLiking, setIsLiking] = useState(false);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
   const localReplies = comment.replies ?? [];
 
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setLikes((prev) => prev + (liked ? -1 : 1));
+  const handleLike = async () => {
+    if (isLiking) return; // 👈 block double-click while a request is in flight
+    setIsLiking(true);
+
+    // optimistic update
+    const prevLiked = liked;
+    const prevLikes = likes;
+    setLiked(!prevLiked);
+    setLikes(prevLikes + (prevLiked ? -1 : 1));
+
+    try {
+      const result = await onLikeComment(comment._id);
+      // 👈 sync with whatever the server actually did, not our guess
+      setLiked(result.liked);
+      setLikes(result.likesCount);
+    } catch (err) {
+      // 👈 revert on failure
+      setLiked(prevLiked);
+      setLikes(prevLikes);
+    } finally {
+      setIsLiking(false);
+    }
   };
 
   const handleReply = () => {
@@ -54,11 +82,12 @@ const CommentItem = ({ comment, isReply = false, onAddReply }: Props) => {
         <div className="flex items-center gap-3 pl-1">
           <button
             onClick={handleLike}
+            disabled={isLiking}
             className={`text-xs font-semibold transition ${
               liked
                 ? "text-blue-500"
                 : "text-(--muted-foreground) hover:text-(--foreground)"
-            }`}
+            } ${isLiking ? "opacity-60 cursor-not-allowed" : ""}`}
           >
             Like{likes > 0 && ` · ${likes}`}
           </button>
@@ -98,6 +127,7 @@ const CommentItem = ({ comment, isReply = false, onAddReply }: Props) => {
                 comment={reply}
                 isReply
                 onAddReply={onAddReply}
+                onLikeComment={onLikeComment}
               />
             ))}
           </div>
