@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import { userMapper } from "./user.mapper.js";
 import { createNotification } from "../notifications/notifications.service.js";
 import mongoose from "mongoose";
+import Notification from "../notifications/notifications.model.js";
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");
   if (!user) {
@@ -329,11 +330,24 @@ export const acceptFollowRequestService = async (
       $addToSet: { following: currentUserId },
     }),
   ]);
+
+  await Notification.updateOne(
+    {
+      recipient: currentUserId,
+      sender: requesterId,
+      type: "follow_request",
+    },
+    {
+      $set: { type: "follow_request_accepted", isRead: true },
+    },
+  );
+
   await createNotification({
     recipient: requesterId,
     sender: currentUserId,
     type: "follow_request_accepted",
   });
+
   return { success: true };
 };
 
@@ -344,9 +358,15 @@ export const rejectFollowRequestService = async (
   await User.findByIdAndUpdate(currentUserId, {
     $pull: { followRequests: requesterId },
   });
+
+  await Notification.deleteOne({
+    recipient: currentUserId,
+    sender: requesterId,
+    type: "follow_request",
+  });
+
   return { success: true };
 };
-
 export const cancelFollowRequestService = async (
   currentUserId,
   targetUserId,
