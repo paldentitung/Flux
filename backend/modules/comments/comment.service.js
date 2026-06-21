@@ -1,13 +1,23 @@
 import Comment from "./comment.model.js";
 import Post from "../posts/post.model.js";
 import AppError from "../../utils/AppError.js";
+import { createNotification } from "../notifications/notifications.service.js";
 
 export const addCommentService = async ({ postId, userId, text }) => {
   const comment = await Comment.create({ postId, userId, text });
 
-  await Post.findByIdAndUpdate(postId, {
+  const post = await Post.findByIdAndUpdate(postId, {
     $inc: { commentsCount: 1 },
   });
+
+  if (post) {
+    await createNotification({
+      recipient: post.userId,
+      sender: userId,
+      type: "comment",
+      postId: postId,
+    });
+  }
 
   const populated = await comment.populate(
     "userId",

@@ -4,7 +4,12 @@ import Notification from "./notifications.model.js";
  * Create a notification.
  * Called internally from user.service.js when a follow action occurs.
  */
-export const createNotification = async ({ recipient, sender, type }) => {
+export const createNotification = async ({
+  recipient,
+  sender,
+  type,
+  postId = null,
+}) => {
   if (recipient.toString() === sender.toString()) return null;
 
   // Avoid duplicate unread notifications of the same type between the same users
@@ -16,7 +21,12 @@ export const createNotification = async ({ recipient, sender, type }) => {
   });
   if (existing) return existing;
 
-  const notification = await Notification.create({ recipient, sender, type });
+  const notification = await Notification.create({
+    recipient,
+    sender,
+    type,
+    postId,
+  });
   return notification;
 };
 

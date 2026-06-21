@@ -1,6 +1,7 @@
 import Post from "./post.model.js";
 import User from "../users/user.model.js";
 import AppError from "../../utils/AppError.js";
+import { createNotification } from "../notifications/notifications.service.js";
 
 export const getPostService = async (page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
@@ -78,6 +79,12 @@ export const likePostService = async (userId, postId) => {
     post.likes.pull(userId);
   } else {
     post.likes.push(userId);
+    await createNotification({
+      recipient: post.userId,
+      sender: userId,
+      type: "like",
+      postId,
+    });
   }
 
   await post.save();

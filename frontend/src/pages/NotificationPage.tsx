@@ -5,16 +5,23 @@ import {
   AtSign,
   CheckCheck,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Avatar from "../components/ui/Avatar";
 import { useNotifications } from "../hooks/useNotifications";
 
-type NotificationType = "follow" | "follow_request" | "follow_request_accepted";
+type NotificationType =
+  | "follow"
+  | "follow_request"
+  | "follow_request_accepted"
+  | "comment"
+  | "like";
 
 type Notification = {
   _id: string;
   type: NotificationType;
   isRead: boolean;
   createdAt: string;
+  postId?: string | null;
   sender: { _id: string; name?: string; username: string; avatar?: string };
 };
 
@@ -22,21 +29,28 @@ const ICONS: Record<NotificationType, typeof Heart> = {
   follow: UserPlus,
   follow_request: UserPlus,
   follow_request_accepted: UserPlus,
+  comment: MessageCircle,
+  like: Heart,
 };
 
 const ICON_COLORS: Record<NotificationType, string> = {
   follow: "var(--notif-icon-follow)",
   follow_request: "var(--notif-icon-follow)",
   follow_request_accepted: "var(--notif-icon-follow)",
+  comment: "var(--notif-icon-comment)",
+  like: "var(--notif-icon-like)",
 };
 
 const MESSAGES: Record<NotificationType, string> = {
   follow: "started following you",
   follow_request: "requested to follow you",
   follow_request_accepted: "accepted your follow request",
+  comment: "commented on your post",
+  like: "liked your post",
 };
 
 const NotificationPage = () => {
+  const navigate = useNavigate();
   const {
     notifications,
     unreadCount,
@@ -47,6 +61,20 @@ const NotificationPage = () => {
     handleAccept,
     handleReject,
   } = useNotifications();
+
+  const handleNotificationClick = (n: Notification) => {
+    if (!n.isRead) handleMarkAsRead(n._id);
+
+    if ((n.type === "like" || n.type === "comment") && n.postId) {
+      navigate(`/post/${n.postId}`);
+    } else if (
+      n.type === "follow" ||
+      n.type === "follow_request" ||
+      n.type === "follow_request_accepted"
+    ) {
+      navigate(`/profile/${n.sender._id}`);
+    }
+  };
 
   return (
     <div
@@ -106,7 +134,7 @@ const NotificationPage = () => {
               return (
                 <div
                   key={n._id}
-                  onClick={() => !n.isRead && handleMarkAsRead(n._id)}
+                  onClick={() => handleNotificationClick(n)}
                   className={`flex items-start gap-3 px-4 py-3.5 transition cursor-pointer hover:bg-(--surface-hover) ${
                     i !== notifications.length - 1
                       ? "border-b border-(--post-card-border)"
