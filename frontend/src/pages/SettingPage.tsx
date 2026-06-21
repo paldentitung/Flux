@@ -46,6 +46,8 @@ const SettingPage = () => {
     handleChangeAvatar,
   } = useProfile();
 
+  const { handleNotificationPreferences } = useProfile();
+
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -61,6 +63,15 @@ const SettingPage = () => {
   const [profileData, setProfileData] = useState({
     name: user?.name || "",
     bio: user?.bio || "",
+  });
+
+  const [notifs, setNotifs] = useState({
+    follow: user?.notificationPreferences?.follow ?? true,
+    follow_request: user?.notificationPreferences?.follow_request ?? true,
+    follow_request_accepted:
+      user?.notificationPreferences?.follow_request_accepted ?? true,
+    comment: user?.notificationPreferences?.comment ?? true,
+    like: user?.notificationPreferences?.like ?? true,
   });
 
   const toggleShowPassword = (key: keyof typeof showPassword) =>
@@ -420,26 +431,62 @@ const SettingPage = () => {
                   <ToggleRow
                     label="Likes"
                     description="When someone likes your post"
-                    checked={toggles.likes}
-                    onChange={() => toggle("likes")}
+                    checked={notifs.like}
+                    onChange={() => {
+                      const updated = {
+                        ...notifs,
+                        like: !notifs.like,
+                      };
+
+                      setNotifs(updated);
+                      handleNotificationPreferences(updated);
+                    }}
                   />
+
                   <ToggleRow
                     label="New followers"
                     description="When someone starts following you"
-                    checked={toggles.follows}
-                    onChange={() => toggle("follows")}
+                    checked={notifs.follow}
+                    onChange={() => {
+                      const updated = {
+                        ...notifs,
+                        follow: !notifs.follow,
+                      };
+
+                      setNotifs(updated);
+                      handleNotificationPreferences(updated);
+                    }}
                   />
+
                   <ToggleRow
                     label="Comments"
                     description="When someone comments on your post"
-                    checked={toggles.comments}
-                    onChange={() => toggle("comments")}
+                    checked={notifs.comment}
+                    onChange={() => {
+                      const updated = {
+                        ...notifs,
+                        comment: !notifs.comment,
+                      };
+
+                      setNotifs(updated);
+                      handleNotificationPreferences(updated);
+                    }}
                   />
+
                   <ToggleRow
-                    label="Mentions"
-                    description="When someone mentions you in a comment"
-                    checked={toggles.mentions}
-                    onChange={() => toggle("mentions")}
+                    label="Follow Requests"
+                    description="When someone send follow request"
+                    checked={notifs.follow_request_accepted}
+                    onChange={() => {
+                      const updated = {
+                        ...notifs,
+                        follow_request_accepted:
+                          !notifs.follow_request_accepted,
+                      };
+
+                      setNotifs(updated);
+                      handleNotificationPreferences(updated);
+                    }}
                   />
                 </div>
               )}

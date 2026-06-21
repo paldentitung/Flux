@@ -37,6 +37,14 @@ const UserSchema = new mongoose.Schema(
       default: "",
       maxLength: 160,
     },
+    notificationPreferences: {
+      follow: { type: Boolean, default: true },
+      followRequest: { type: Boolean, default: true },
+      followRequestAccepted: { type: Boolean, default: true },
+      comment: { type: Boolean, default: true },
+      like: { type: Boolean, default: true },
+    },
+
     followRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,

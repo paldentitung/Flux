@@ -1,4 +1,7 @@
-import type { UpdateProfileData } from "../types/user.types";
+import type {
+  UpdateProfileData,
+  NotificationPreferences,
+} from "../types/user.types";
 import request from "./api";
 
 export const followUser = async (targetUserId: string) => {
@@ -115,6 +118,22 @@ export const getBlockedUsers = async () => {
     "/user/me/blocked",
     {
       method: "GET",
+    },
+    true,
+  );
+};
+
+export const toggleNotficationPreferences = async (
+  updated: NotificationPreferences,
+) => {
+  return request(
+    "/user/me/notification-preferences",
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updated),
     },
     true,
   );

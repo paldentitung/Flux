@@ -1,5 +1,14 @@
 import Notification from "./notifications.model.js";
+const TYPE_TO_PREF_KEY = {
+  follow: "follow",
+  follow_request: "followRequest",
+  follow_request_accepted: "followRequestAccepted",
+  comment: "comment",
+  like: "like",
+};
+import User from "../users/user.model.js";
 
+export default TYPE_TO_PREF_KEY;
 /**
  * Create a notification.
  * Called internally from user.service.js when a follow action occurs.
@@ -12,6 +21,16 @@ export const createNotification = async ({
 }) => {
   if (recipient.toString() === sender.toString()) return null;
 
+  const recipientUser = await User.findById(recipient).select(
+    "notificationPreferences",
+  );
+  const prefKey = TYPE_TO_PREF_KEY[type];
+  if (
+    recipientUser &&
+    recipientUser.notificationPreferences?.[prefKey] === false
+  ) {
+    return null;
+  }
   // Avoid duplicate unread notifications of the same type between the same users
   const existing = await Notification.findOne({
     recipient,

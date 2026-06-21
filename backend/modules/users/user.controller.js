@@ -16,6 +16,7 @@ import {
   cancelFollowRequestService,
   getBlocksUsersService,
   getSuggestedUsersService,
+  updateNotificationPreferencesService,
 } from "./user.service.js";
 
 export const getMyProfileController = async (req, res) => {
@@ -202,4 +203,11 @@ export const getSuggestedUsers = async (req, res, next) => {
   const result = await getSuggestedUsersService(req.user.id, skip);
 
   res.status(200).json({ success: true, data: result });
+};
+export const updateNotificationPreferences = async (req, res) => {
+  const result = await updateNotificationPreferencesService(
+    req.user.id,
+    req.body,
+  );
+  res.json({ success: true, data: result });
 };

@@ -444,3 +444,13 @@ export const getSuggestedUsersService = async (userId, skip = 0) => {
 
   return suggestions;
 };
+
+export const updateNotificationPreferencesService = async (userId, updates) => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { notificationPreferences: updates },
+    { new: true, runValidators: true },
+  );
+
+  return user.notificationPreferences;
+};

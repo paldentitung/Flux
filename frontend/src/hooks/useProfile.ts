@@ -10,10 +10,12 @@ import {
   unblockUser,
   toggleUserPrivary,
   getBlockedUsers,
+  toggleNotficationPreferences,
 } from "../services/userService";
 import { useAuth } from "./useAuth";
 import type { UpdateProfileData, UserSummary } from "../types/user.types";
 import { toast } from "react-hot-toast";
+import type { NotificationPreferences } from "../types/user.types";
 export const useProfile = () => {
   const { user, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -202,6 +204,20 @@ export const useProfile = () => {
     }
   };
 
+  const handleNotificationPreferences = async (
+    updated: NotificationPreferences,
+  ) => {
+    try {
+      const res = await toggleNotficationPreferences(updated);
+      console.log("RAW RESPONSE:", res);
+      if (res.success) {
+        setBlockedUsers(res.data);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return {
     handleFollowUser,
     handleUnFollowUser,
@@ -215,5 +231,6 @@ export const useProfile = () => {
     handleToggleUserPrivary,
     fetchBlockedUsers,
     blockedUsers,
+    handleNotificationPreferences,
   };
 };

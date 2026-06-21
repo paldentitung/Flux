@@ -14,6 +14,7 @@ export type User = {
   blockedUsers: string[];
   createdAt: Date;
   updatedAt: Date;
+  notificationPreferences?: NotificationPreferences;
 };
 export type UserSummary = {
   _id: string;
@@ -25,3 +26,10 @@ export interface UpdateProfileData {
   name?: string;
   bio?: string;
 }
+export type NotificationPreferences = {
+  follow: boolean;
+  follow_request: boolean;
+  follow_request_accepted: boolean;
+  comment: boolean;
+  like: boolean;
+};
