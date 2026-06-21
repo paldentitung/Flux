@@ -13,6 +13,10 @@ const postSchema = mongoose.Schema(
     },
     images: [{ type: String }],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    commentsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

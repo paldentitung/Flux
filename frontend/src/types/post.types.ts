@@ -6,6 +6,7 @@ export type Post = {
   content: string;
   images: string[];
   likes: string[];
+  commentsCount: number;
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -13,6 +14,7 @@ export type Post = {
 
 export interface PostsContextValue {
   posts: Post[];
+  setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
   loading: {
     create: boolean;
     delete: boolean;

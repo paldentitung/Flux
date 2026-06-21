@@ -121,6 +121,7 @@ export const PostProvider = ({ children }: PostProviderProps) => {
         handleDeletePost,
         handleUpdatePost,
         handleLikePost,
+        setPosts,
         fetchedPostById,
       }}
     >

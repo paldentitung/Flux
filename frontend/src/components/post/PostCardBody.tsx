@@ -199,7 +199,7 @@ const PostCardBody = ({
             }`}
           >
             <MessageCircle size={16} />
-            <span className="text-xs">{comments?.length ?? 0}</span>
+            <span className="text-xs">{post?.commentsCount ?? 0}</span>
           </button>
         </div>
         <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-(--primary) transition text-sm">

@@ -1,6 +1,5 @@
 import Comment from "./comment.model.js";
 import Post from "../posts/post.model.js";
-//create or use postid from params
 
 export const addComment = async (req, res) => {
   const { text } = req.body;
@@ -8,6 +7,10 @@ export const addComment = async (req, res) => {
   const userId = req.user.id;
 
   const comment = await Comment.create({ postId, userId, text });
+
+  await Post.findByIdAndUpdate(postId, {
+    $inc: { commentsCount: 1 },
+  });
 
   const populated = await comment.populate(
     "userId",

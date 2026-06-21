@@ -5,6 +5,7 @@ import {
   addReplyComment,
   addComment,
 } from "../services/commentService";
+import { usePosts } from "./usePosts";
 
 export const useComments = () => {
   const [comments, setComments] = useState<any[]>([]);
@@ -12,6 +13,7 @@ export const useComments = () => {
   const [loadingReplies, setLoadingReplies] = useState<Record<string, boolean>>(
     {},
   );
+  const { setPosts } = usePosts();
 
   const fetchComments = useCallback(async (postId: string) => {
     try {
@@ -30,6 +32,16 @@ export const useComments = () => {
       setLoading(true);
       await addComment(postId, text);
       await fetchComments(postId);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                commentsCount: post.commentsCount + 1,
+              }
+            : post,
+        ),
+      );
     } catch (error) {
       console.error("Failed to add comment", error);
     } finally {
