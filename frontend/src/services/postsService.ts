@@ -28,7 +28,7 @@ export const updatePost = (postId: string, formData: FormData) => {
 };
 
 export const likePost = async (postId: string) => {
-  return request(`/comment/${postId}/like`, {
+  return request(`/posts/${postId}/like`, {
     method: "POST",
   });
 };

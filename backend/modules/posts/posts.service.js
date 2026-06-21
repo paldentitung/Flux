@@ -64,3 +64,26 @@ export const deletePostService = async (userId, postId) => {
 
   return deletedPost;
 };
+
+export const likePostService = async (userId, postId) => {
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    throw new AppError("Post not found", 404);
+  }
+
+  const alreadyLiked = post.likes.some((id) => id.equals(userId));
+
+  if (alreadyLiked) {
+    post.likes.pull(userId);
+  } else {
+    post.likes.push(userId);
+  }
+
+  await post.save();
+
+  return {
+    post,
+    alreadyLiked,
+  };
+};

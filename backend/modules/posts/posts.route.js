@@ -5,6 +5,7 @@ import {
   getPostByIdController,
   getPostsController,
   updatePostController,
+  likePostController,
 } from "./posts.controller.js";
 import { protect } from "../../middleware/auth.middleware.js";
 import { upload } from "../../middleware/upload.middleware.js";
@@ -26,4 +27,7 @@ router.patch(
   asyncHandler(updatePostController),
 );
 router.delete("/:postId", protect, asyncHandler(deletePostController));
+
+router.post("/:postId/like", protect, asyncHandler(likePostController));
+
 export default router;

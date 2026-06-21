@@ -10,7 +10,6 @@ import {
 const router = express.Router();
 import { protect } from "../../middleware/auth.middleware.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
-import { likePostController } from "../posts/posts.controller.js";
 
 router.get("/:postId", protect, asyncHandler(getCommentsByPost));
 router.post("/:postId", protect, asyncHandler(addComment));
@@ -18,5 +17,4 @@ router.get("/reply/:commentId", protect, asyncHandler(getRepliesByComment));
 router.post("/reply/:commentId", protect, asyncHandler(addReplyToComment));
 router.delete("/:commentId", protect, asyncHandler(deleteComment));
 
-router.post("/:postId/like", protect, asyncHandler(likePostController));
 export default router;

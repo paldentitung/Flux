@@ -4,6 +4,7 @@ import {
   deletePostService,
   getPostByIdService,
   getPostService,
+  likePostService,
   updatePostService,
 } from "./posts.service.js";
 import AppError from "../../utils/AppError.js";
@@ -91,27 +92,7 @@ export const likePostController = async (req, res) => {
   const userId = req.user.id;
   const { postId } = req.params;
 
-  const post = await Post.findById(postId);
-  if (!post) {
-    throw new AppError("Post not found", 404);
-  }
-
-  const alreadyLiked = post.likes.some((id) => id.equals(userId));
-
-  if (alreadyLiked) {
-    post.likes.pull(userId);
-    await post.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Post Unliked",
-      likes: post.likes,
-      likesCount: post.likes.length,
-    });
-  }
-
-  post.likes.push(userId);
-  await post.save();
+  const { post, alreadyLiked } = await likePostService(userId, postId);
 
   res.status(200).json({
     success: true,
