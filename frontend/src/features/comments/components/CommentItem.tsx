@@ -1,6 +1,6 @@
 import { Send } from "lucide-react";
 import { useState } from "react";
-import type { Comment } from "../../comments/types/comment.types";
+import type { Comment } from "../types/comment.types";
 import { formatDate } from "../../../shared/utils/formatDate";
 import Avatar from "../../../shared/components/ui/Avatar";
 type Props = {

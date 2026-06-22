@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Post } from "../types/post.types.ts";
 import { useAuth } from "../../auth/hooks/useAuth.ts";
 import { useComments } from "../../comments/hooks/useComments.ts";
-import CommentItem from "./CommentItem.tsx";
+import CommentItem from "../../comments/components/CommentItem.tsx";
 import { usePosts } from "../hooks/usePosts.ts";
 import Avatar from "../../../shared/components/ui/Avatar.tsx";
 import { Link } from "react-router-dom";
