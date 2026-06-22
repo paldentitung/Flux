@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { usePosts } from "../hooks/usePosts";
-import PostCard from "../components/post/PostCard";
+import PostCard from "../components/PostCard";
 import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 const PostDetailPage = () => {

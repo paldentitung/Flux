@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { usePosts } from "../hooks/usePosts";
+import { usePosts } from "../features/posts/hooks/usePosts";
 import { useSearch } from "../hooks/useSearch";
 import type { Post } from "../types/post.types";
 import type { User } from "../types/user.types";

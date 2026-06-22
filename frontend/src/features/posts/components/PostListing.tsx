@@ -1,6 +1,6 @@
 import PostCard from "./PostCard";
 import { motion } from "framer-motion";
-import type { Post } from "../../types/post.types";
+import type { Post } from "../types/post.types";
 
 const PostListing = ({ posts }: { posts: Post[] }) => {
   return (

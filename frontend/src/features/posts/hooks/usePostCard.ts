@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
-import { usePosts } from "../hooks/usePosts.ts";
+import { usePosts } from "./usePosts.ts";
 import type { Post } from "../types/post.types";
 export const usePostCard = (post: Post) => {
   const { handleDeletePost, handleUpdatePost, loading } = usePosts();

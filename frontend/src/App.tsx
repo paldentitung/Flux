@@ -12,7 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ExplorePage from "./pages/ExplorePage";
 import NotificationPage from "./pages/NotificationPage";
 import SettingPage from "./pages/SettingPage";
-import PostDetailPage from "./pages/PostDetailPage";
+import PostDetailPage from "./features/posts/pages/PostDetailPage";
 const App = () => {
   return (
     <>

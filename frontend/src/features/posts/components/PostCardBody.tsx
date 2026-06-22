@@ -1,13 +1,13 @@
 import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { Post } from "../../types/post.types";
-import { useAuth } from "../../features/auth/hooks/useAuth.ts";
-import { useComments } from "../../hooks/useComments";
-import CommentItem from "./CommentItem";
-import { usePosts } from "../../features/posts/hooks/usePosts.ts";
-import Avatar from "../ui/Avatar";
+import type { Post } from "../types/post.types.ts";
+import { useAuth } from "../../auth/hooks/useAuth.ts";
+import { useComments } from "../../../hooks/useComments.ts";
+import CommentItem from "./CommentItem.tsx";
+import { usePosts } from "../hooks/usePosts.ts";
+import Avatar from "../../../components/ui/Avatar.tsx";
 import { Link } from "react-router-dom";
-import ImageLightbox from "../ImageLightbox.tsx";
+import ImageLightbox from "../../../components/ImageLightbox.tsx";
 type Props = {
   post: Post;
   onEditClick: () => void;
