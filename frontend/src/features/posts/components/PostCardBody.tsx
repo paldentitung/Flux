@@ -2,7 +2,7 @@ import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Post } from "../types/post.types.ts";
 import { useAuth } from "../../auth/hooks/useAuth.ts";
-import { useComments } from "../../../hooks/useComments.ts";
+import { useComments } from "../../comments/hooks/useComments.ts";
 import CommentItem from "./CommentItem.tsx";
 import { usePosts } from "../hooks/usePosts.ts";
 import Avatar from "../../../components/ui/Avatar.tsx";

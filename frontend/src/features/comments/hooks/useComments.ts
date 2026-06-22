@@ -6,7 +6,7 @@ import {
   addComment,
   likeComment,
 } from "../services/commentService";
-import { usePosts } from "../features/posts/hooks/usePosts";
+import { usePosts } from "../../posts/hooks/usePosts";
 import toast from "react-hot-toast";
 
 export const useComments = () => {
