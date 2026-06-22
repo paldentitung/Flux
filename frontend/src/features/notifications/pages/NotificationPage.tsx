@@ -6,7 +6,7 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Avatar from "../components/ui/Avatar";
+import Avatar from "../../../components/ui/Avatar";
 import { useNotifications } from "../hooks/useNotifications";
 
 type NotificationType =
