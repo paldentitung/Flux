@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { Comment } from "../types/comment.types";
 import { formatDate } from "../../../shared/utils/formatDate";
 import Avatar from "../../../shared/components/ui/Avatar";
+import { Link } from "react-router-dom";
 type Props = {
   comment: Comment;
   isReply?: boolean;
@@ -60,23 +61,27 @@ const CommentItem = ({
 
   return (
     <div className={`flex gap-2 ${isReply ? "pl-10 pt-1" : "py-2"}`}>
-      <Avatar
-        src={comment.userId.avatar}
-        name={comment.userId.name || comment.userId.username}
-        size={isReply ? 28 : 32}
-        className="mt-0.5"
-      />
-
+      <Link to={`/profile/${comment.userId._id}`}>
+        <Avatar
+          src={comment.userId.avatar}
+          name={comment.userId.name || comment.userId.username}
+          size={isReply ? 28 : 32}
+          className="mt-0.5"
+        />
+      </Link>
       <div className="flex flex-col flex-1 min-w-0 gap-1">
         {/* Bubble */}
-        <div className="bg-(--surface-hover) rounded-2xl px-3 py-2 w-fit max-w-full">
+        <Link
+          to={`/profile/${comment.userId._id}`}
+          className="bg-(--surface-hover) rounded-2xl px-3 py-2 w-fit max-w-full"
+        >
           <p className="text-xs font-semibold text-(--foreground)">
             {comment.userId.name}
           </p>
           <p className="text-sm text-(--foreground) leading-relaxed">
             {comment.text}
           </p>
-        </div>
+        </Link>
 
         {/* Actions row */}
         <div className="flex items-center gap-3 pl-1">
