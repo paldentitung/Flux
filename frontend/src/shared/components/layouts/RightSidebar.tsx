@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import type { User } from "../../../features/profile/types/user.types";
 import { useProfile } from "../../../features/profile/hooks/useProfile";
-import { useAuth } from "../../../features/auth/hooks/useAuth"; // adjust to wherever `user` comes from
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import request from "../../services/api";
-
+import Avatar from "../ui/Avatar";
+import { Link } from "react-router-dom";
 const RightSidebar = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,16 +45,8 @@ const RightSidebar = () => {
     }
   };
 
-  const initials = (name?: string) =>
-    (name || "?")
-      .split(" ")
-      .map((p) => p[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-
   const isFollowing = (id: string) =>
-    user?.following?.some((f) => f._id === id) ?? false;
+    user?.following?.some((f: any) => f._id === id) ?? false;
 
   const isRequested = (id: string) => requestedIds.has(id);
 
@@ -117,23 +110,17 @@ const RightSidebar = () => {
                   key={u._id}
                   className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                 >
-                  {u.avatar ? (
-                    <img
-                      src={u.avatar}
-                      alt=""
-                      className="w-8 h-8 rounded-full object-cover shrink-0"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-[hsl(var(--primary)/0.2)] text-[hsl(var(--primary))] flex items-center justify-center text-[11px] font-medium shrink-0">
-                      {initials(u.name)}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
+                  <Link to={`/profile/${u._id}`}>
+                    <Avatar src={u.avatar} name={u.name} />
+                  </Link>
+
+                  <Link to={`/profile/${u._id}`} className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{u.name}</p>
                     <p className="text-xs text-[hsl(var(--muted-foreground))] truncate">
                       @{u.username}
                     </p>
-                  </div>
+                  </Link>
+
                   <button
                     onClick={() => handleFollow(u)}
                     disabled={disabled}
