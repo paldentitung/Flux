@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.ts";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import LoadingButton from "../../../components/ui/LoadingButton.tsx";
+import LoadingButton from "../../../shared/components/ui/LoadingButton.tsx";
 import toast from "react-hot-toast";
 type VerifyOtpLocationState = {
   email: string;

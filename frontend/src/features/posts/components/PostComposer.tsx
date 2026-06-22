@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import Modal from "../../../components/ui/Modal";
+import Modal from "../../../shared/components/ui/Modal";
 
 import ComposerForm from "./ComposerForm";
 import toast from "react-hot-toast";

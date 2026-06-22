@@ -1,5 +1,5 @@
 import { getMe } from "../services/authService";
-import type { User } from "../../../types/user.types";
+import type { User } from "../../profile/types/user.types";
 import { useEffect, useState, type ReactNode } from "react";
 import { AuthContext } from "../../../shared/context/createContext";
 type AuthProviderProps = {

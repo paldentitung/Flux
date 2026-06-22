@@ -12,7 +12,7 @@ import {
   getBlockedUsers,
   toggleNotficationPreferences,
 } from "../services/userService";
-import { useAuth } from "../features/auth/hooks/useAuth";
+import { useAuth } from "../../auth/hooks/useAuth";
 import type { UpdateProfileData, UserSummary } from "../types/user.types";
 import { toast } from "react-hot-toast";
 import type { NotificationPreferences } from "../types/user.types";

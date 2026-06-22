@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { usePosts } from "../features/posts/hooks/usePosts";
-import { useSearch } from "../hooks/useSearch";
+import { useSearch } from "../features/search/hooks/useSearch";
 import type { Post } from "../types/post.types";
-import type { User } from "../types/user.types";
+import type { User } from "../features/profile/types/user.types";
 import { MessageCircle } from "lucide-react";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "../features/search/hooks/useDebounce";
 import { Link } from "react-router-dom";
 const HeartIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">

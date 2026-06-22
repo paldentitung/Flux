@@ -1,7 +1,7 @@
-import type { Post } from "../types/post.types";
-import Modal from "../../../shared/components/ui/Modal";
-import LoadingButton from "../../../shared/components/ui/LoadingButton";
-import { usePostCard } from "../hooks/usePostCard";
+import type { Post } from "../../types/post.types";
+import Modal from "../../shared/components/ui/Modal";
+import LoadingButton from "../../shared/components/ui/LoadingButton";
+import { usePostCard } from "../../features/posts/hooks/usePostCard";
 import PostCardBody from "./PostCardBody";
 import { useNavigate, useLocation } from "react-router-dom";
 const PostCard = ({ post }: { post: Post }) => {

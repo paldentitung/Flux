@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { X, Search } from "lucide-react";
-import Modal from "./ui/Modal";
-import Avatar from "./ui/Avatar";
-import type { User } from "../types/user.types";
-import { useProfile } from "../hooks/useProfile";
+import Modal from "../../../shared/components/ui/Modal.tsx";
+import Avatar from "../../../shared/components/ui/Avatar.tsx";
+import type { User } from "../types/user.types.ts";
+import { useProfile } from "../hooks/useProfile.ts";
 import { Link } from "react-router-dom";
-import { useAuth } from "../features/auth/hooks/useAuth.ts";
+import { useAuth } from "../../auth/hooks/useAuth.ts";
 
 type Tab = "followers" | "following";
 

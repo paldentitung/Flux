@@ -2,7 +2,7 @@ import type {
   UpdateProfileData,
   NotificationPreferences,
 } from "../types/user.types";
-import request from "../shared/services/api";
+import request from "../../../shared/services/api";
 
 export const followUser = async (targetUserId: string) => {
   return request(

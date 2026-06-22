@@ -2,7 +2,7 @@ import { Send } from "lucide-react";
 import { useState } from "react";
 import type { Comment } from "../../../types/comment.types";
 import { formatDate } from "../../../utils/formatDate";
-import Avatar from "../../../components/ui/Avatar";
+import Avatar from "../../../shared/components/ui/Avatar";
 type Props = {
   comment: Comment;
   isReply?: boolean;

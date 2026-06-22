@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
 import toast from "react-hot-toast";
-import LoadingButton from "../../../components/ui/LoadingButton";
+import LoadingButton from "../../../shared/components/ui/LoadingButton.tsx";
 const ResetPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);

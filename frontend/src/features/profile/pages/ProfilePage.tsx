@@ -10,12 +10,12 @@ import {
   Lock,
 } from "lucide-react";
 import { getUserProfile } from "../services/userService";
-import LoadingButton from "../components/ui/LoadingButton";
-import Avatar from "../components/ui/Avatar";
-import { useAuth } from "../features/auth/hooks/useAuth";
-import { usePosts } from "../features/posts/hooks/usePosts";
+import LoadingButton from "../../../shared/components/ui/LoadingButton";
+import Avatar from "../../../shared/components/ui/Avatar";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { usePosts } from "../../posts/hooks/usePosts";
 import { useProfile } from "../hooks/useProfile";
-import PostCard from "../features/posts/components/PostCard";
+import PostCard from "../../posts/components/PostCard";
 import EditProfileModal from "../components/EditProfileModal";
 import FollowModal from "../components/FollowModal";
 import { useParams, useNavigate } from "react-router-dom";

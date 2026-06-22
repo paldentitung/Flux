@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import Modal from "./ui/Modal";
+import Modal from "../../../shared/components/ui/Modal";
 import { X, Camera, Trash2 } from "lucide-react";
-import Avatar from "./ui/Avatar";
-import type { User } from "../types/user.types";
-import LoadingButton from "./ui/LoadingButton";
+import Avatar from "../../../shared/components/ui/Avatar";
+import type { User } from "../../profile/types/user.types";
+import LoadingButton from "../../../shared/components/ui/LoadingButton";
 import { useProfile } from "../hooks/useProfile";
 
 const EditProfileModal = ({

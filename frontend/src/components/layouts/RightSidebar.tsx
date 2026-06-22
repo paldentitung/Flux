@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { User } from "../../types/user.types";
-import { useProfile } from "../../hooks/useProfile";
+import type { User } from "../../features/profile/types/user.types";
+import { useProfile } from "../../features/profile/hooks/useProfile";
 import { useAuth } from "../../features/auth/hooks/useAuth"; // adjust to wherever `user` comes from
 import request from "../../shared/services/api";
 

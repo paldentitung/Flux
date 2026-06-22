@@ -8,7 +8,7 @@ import ForgotPasswordPage from "./features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./features/auth/pages/ResetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePage from "./features/profile/pages/ProfilePage";
 import ExplorePage from "./pages/ExplorePage";
 import NotificationPage from "./features/notifications/pages/NotificationPage";
 import SettingPage from "./pages/SettingPage";
