@@ -1,10 +1,10 @@
 import { Home, Compass, User, Bell, Plus } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import { useHideOnScroll } from "../../hooks/useHideOnScroll";
-import Modal from "../../shared/components/ui/Modal.tsx";
-import ComposerForm from "../../features/posts/components/ComposerForm.tsx";
+import { useHideOnScroll } from "../../hooks/useHideOnScroll.ts";
+import Modal from "../ui/Modal.tsx";
+import ComposerForm from "../../../features/posts/components/ComposerForm.tsx";
 import { useState, useRef } from "react";
-import { usePosts } from "../../features/posts/hooks/usePosts.ts";
+import { usePosts } from "../../../features/posts/hooks/usePosts.ts";
 import toast from "react-hot-toast";
 
 const navItems = [

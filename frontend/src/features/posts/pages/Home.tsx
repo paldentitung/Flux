@@ -1,6 +1,6 @@
-import PostComposer from "../features/posts/components/PostComposer.tsx";
-import PostListing from "../features/posts/components/PostListing.tsx";
-import { usePosts } from "../features/posts/hooks/usePosts.ts";
+import PostComposer from "../components/PostComposer.tsx";
+import PostListing from "../components/PostListing.tsx";
+import { usePosts } from "../hooks/usePosts.ts";
 
 const Home = () => {
   const { posts, handleCreatePost, loading } = usePosts();

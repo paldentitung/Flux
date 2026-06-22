@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Home, Compass, Bell, User, Settings, LogOut } from "lucide-react";
-import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useState } from "react";
-import Modal from "../../shared/components/ui/Modal";
-import LoadingButton from "../../shared/components/ui/LoadingButton";
-import Avatar from "../../shared/components/ui/Avatar";
+import Modal from "../ui/Modal";
+import LoadingButton from "../ui/LoadingButton";
+import Avatar from "../ui/Avatar";
 const LeftSidebar = () => {
   const links = [
     { name: "Home", path: "/", Icon: Home },

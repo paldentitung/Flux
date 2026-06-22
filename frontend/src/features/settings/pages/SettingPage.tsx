@@ -11,10 +11,10 @@ import {
   Camera,
   ChevronRight,
 } from "lucide-react";
-import Avatar from "../shared/components/ui/Avatar";
-import LoadingButton from "../shared/components/ui/LoadingButton";
-import { useAuth } from "../features/auth/hooks/useAuth";
-import { useProfile } from "../features/profile/hooks/useProfile";
+import Avatar from "../../../shared/components/ui/Avatar";
+import LoadingButton from "../../../shared/components/ui/LoadingButton";
+import { useAuth } from "../../auth/hooks/useAuth";
+import { useProfile } from "../../profile/hooks/useProfile";
 
 type Section = "profile" | "account" | "privacy" | "notifications";
 

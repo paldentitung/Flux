@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
-import Home from "./pages/Home";
+import MainLayout from "./shared/components/layouts/MainLayout";
+import Home from "./features/posts/pages/Home";
 import LoginPage from "./features/auth/pages/LoginPage";
 import RegisterPage from "./features/auth/pages/RegisterPage";
 import VerifyOtpPage from "./features/auth/pages/VerifyOtpPage";
@@ -9,9 +9,9 @@ import ResetPasswordPage from "./features/auth/pages/ResetPasswordPage";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 import ProfilePage from "./features/profile/pages/ProfilePage";
-import ExplorePage from "./pages/ExplorePage";
+import ExplorePage from "./features/search/pages/ExplorePage";
 import NotificationPage from "./features/notifications/pages/NotificationPage";
-import SettingPage from "./pages/SettingPage";
+import SettingPage from "./features/settings/pages/SettingPage";
 import PostDetailPage from "./features/posts/pages/PostDetailPage";
 const App = () => {
   return (

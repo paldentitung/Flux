@@ -7,7 +7,7 @@ import CommentItem from "./CommentItem.tsx";
 import { usePosts } from "../hooks/usePosts.ts";
 import Avatar from "../../../shared/components/ui/Avatar.tsx";
 import { Link } from "react-router-dom";
-import ImageLightbox from "../../../components/ImageLightbox.tsx";
+import ImageLightbox from "../../profile/components/ImageLightbox.tsx";
 type Props = {
   post: Post;
   onEditClick: () => void;

@@ -1,7 +1,7 @@
-import BottomNav from "../components/layouts/BottomNav";
-import LeftSidebar from "../components/layouts/LeftSidebar";
-import RightSidebar from "../components/layouts/RightSidebar";
-import Header from "../components/layouts/Header";
+import BottomNav from "./BottomNav";
+import LeftSidebar from "./LeftSidebar";
+import RightSidebar from "./RightSidebar";
+import Header from "./Header";
 
 type MainLayoutProps = React.PropsWithChildren<{
   /** Wider reading column — used for masonry / Explore. */
