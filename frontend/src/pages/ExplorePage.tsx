@@ -52,7 +52,8 @@ const PostCard = ({
   const username = post?.userId?.username || "unknown";
 
   return (
-    <div
+    <Link
+      to={`/post/${post._id}`}
       className={`group relative overflow-hidden rounded-lg cursor-pointer ${className}`}
       style={{ background: "var(--post-card-bg)" }}
     >
@@ -95,7 +96,7 @@ const PostCard = ({
           {username}
         </span>
       </div>
-    </div>
+    </Link>
   );
 };
 
