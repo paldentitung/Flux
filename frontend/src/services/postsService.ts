@@ -1,4 +1,4 @@
-import request from "./api";
+import request from "../shared/services/api";
 
 export const getPosts = () => {
   return request("/posts");

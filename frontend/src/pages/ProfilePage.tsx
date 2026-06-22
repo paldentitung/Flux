@@ -12,7 +12,7 @@ import {
 import { getUserProfile } from "../services/userService";
 import LoadingButton from "../components/ui/LoadingButton";
 import Avatar from "../components/ui/Avatar";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../features/auth/hooks/useAuth";
 import { usePosts } from "../hooks/usePosts";
 import { useProfile } from "../hooks/useProfile";
 import PostCard from "../components/post/PostCard";

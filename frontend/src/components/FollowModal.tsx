@@ -5,7 +5,7 @@ import Avatar from "./ui/Avatar";
 import type { User } from "../types/user.types";
 import { useProfile } from "../hooks/useProfile";
 import { Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../features/auth/hooks/useAuth.ts";
 
 type Tab = "followers" | "following";
 

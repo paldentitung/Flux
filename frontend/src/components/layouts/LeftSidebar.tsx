@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Home, Compass, Bell, User, Settings, LogOut } from "lucide-react";
-import { useAuth } from "../../hooks/useAuth.ts";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useState } from "react";
 import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";

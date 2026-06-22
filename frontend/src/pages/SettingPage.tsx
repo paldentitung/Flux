@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Avatar from "../components/ui/Avatar";
 import LoadingButton from "../components/ui/LoadingButton";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../features/auth/hooks/useAuth";
 import { useProfile } from "../hooks/useProfile";
 
 type Section = "profile" | "account" | "privacy" | "notifications";

@@ -1,8 +1,8 @@
 import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth.ts";
+import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
-import LoadingButton from "../components/ui/LoadingButton";
+import LoadingButton from "../../../components/ui/LoadingButton";
 import { Link } from "react-router-dom";
 const LoginPage = () => {
   const { handleLogin, loading } = useAuth();

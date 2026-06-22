@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { PostsContext } from "./createContext";
+import { PostsContext } from "../shared/context/createContext";
 import {
   getPosts,
   createPost,
@@ -10,7 +10,7 @@ import {
 } from "../services/postsService";
 import type { Post } from "../types/post.types";
 import toast from "react-hot-toast";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../features/auth/hooks/useAuth";
 
 type PostProviderProps = { children: ReactNode };
 

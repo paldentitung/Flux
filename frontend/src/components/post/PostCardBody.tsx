@@ -1,7 +1,7 @@
 import { Heart, MessageCircle, Share2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Post } from "../../types/post.types";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../features/auth/hooks/useAuth.ts";
 import { useComments } from "../../hooks/useComments";
 import CommentItem from "./CommentItem";
 import { usePosts } from "../../hooks/usePosts";

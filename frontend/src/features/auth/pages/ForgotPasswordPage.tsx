@@ -1,7 +1,7 @@
 import { Sparkles } from "lucide-react";
 import { useAuth } from "../hooks/useAuth.ts";
 import { useState } from "react";
-import LoadingButton from "../components/ui/LoadingButton";
+import LoadingButton from "../../../components/ui/LoadingButton";
 
 const ForgotPasswordPage = () => {
   const { handleForgotPassword, loading } = useAuth();

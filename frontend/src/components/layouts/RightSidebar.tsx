@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { User } from "../../types/user.types";
 import { useProfile } from "../../hooks/useProfile";
-import { useAuth } from "../../hooks/useAuth"; // adjust to wherever `user` comes from
-import request from "../../services/api";
+import { useAuth } from "../../features/auth/hooks/useAuth"; // adjust to wherever `user` comes from
+import request from "../../shared/services/api";
 
 const RightSidebar = () => {
   const [users, setUsers] = useState<User[]>([]);

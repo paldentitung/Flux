@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { PostsContext } from "../context/createContext";
+import { PostsContext } from "../shared/context/createContext";
 
 export const usePosts = () => {
   const ctx = useContext(PostsContext);

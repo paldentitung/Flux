@@ -9,7 +9,7 @@ import {
   verifyOtp,
 } from "../services/authService";
 import toast from "react-hot-toast";
-import { AuthContext } from "../context/createContext";
+import { AuthContext } from "../../../shared/context/createContext";
 import { useNavigate } from "react-router-dom";
 
 type RegisterFormData = {
