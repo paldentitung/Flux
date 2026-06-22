@@ -21,6 +21,12 @@ import {
   updateNotificationPreferences,
 } from "./user.controller.js";
 import { upload } from "../../middleware/upload.middleware.js";
+import {
+  changeAvatarLimiter,
+  changePasswordLimiter,
+  followLimiter,
+  updateProfileLimiter,
+} from "../../utils/rateLimiter.js";
 
 const router = express.Router();
 
@@ -32,6 +38,7 @@ router.delete("/:id/unfollow", protect, asyncHandler(unfollowUserController));
 
 router.patch(
   "/me/avatar",
+  changeAvatarLimiter,
   protect,
   upload.single("avatar"),
   asyncHandler(changeAvatarConroller),
@@ -39,9 +46,19 @@ router.patch(
 
 router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));
 
-router.post("/me/profile", protect, asyncHandler(updateProfileController));
+router.post(
+  "/me/profile",
+  updateProfileLimiter,
+  protect,
+  asyncHandler(updateProfileController),
+);
 
-router.patch("/me/password", protect, asyncHandler(changePasswordController));
+router.patch(
+  "/me/password",
+  changePasswordLimiter,
+  protect,
+  asyncHandler(changePasswordController),
+);
 
 router.post("/:id/block", protect, asyncHandler(blockUserController));
 router.post("/:id/unblock", protect, asyncHandler(unblockUserController));

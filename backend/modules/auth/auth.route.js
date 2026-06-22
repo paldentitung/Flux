@@ -20,11 +20,17 @@ import {
 } from "./auth.validator.js";
 import { validate } from "../../middleware/validate.middleware.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
+import {
+  loginLimiter,
+  registerLimiter,
+  resetPasswordLimiter,
+} from "../../utils/rateLimiter.js";
 
 const router = express.Router();
 
 router.post(
   "/register",
+  registerLimiter,
   registerValidator,
   validate,
   asyncHandler(registerController),
@@ -37,7 +43,13 @@ router.post(
   asyncHandler(verifyOtpController),
 );
 
-router.post("/login", loginValidator, validate, asyncHandler(loginController));
+router.post(
+  "/login",
+  loginLimiter,
+  loginValidator,
+  validate,
+  asyncHandler(loginController),
+);
 
 router.get("/get-me", protect, asyncHandler(getMe));
 
@@ -50,6 +62,7 @@ router.post(
 
 router.post(
   "/reset-password",
+  resetPasswordLimiter,
   resetPasswordValidator,
   validate,
   asyncHandler(resetPasswordController),
