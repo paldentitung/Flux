@@ -1,4 +1,5 @@
 import Notification from "./notifications.model.js";
+import { getIO, getSocketId } from "../../config/socket.js";
 const TYPE_TO_PREF_KEY = {
   follow: "follow",
   follow_request: "followRequest",
@@ -46,6 +47,12 @@ export const createNotification = async ({
     type,
     postId,
   });
+  const populated = await notification.populate("sender", "username avatar");
+
+  const socketId = getSocketId(recipient.toString());
+  if (socketId) {
+    getIO().to(socketId).emit("newNotification", populated);
+  }
   return notification;
 };
 
@@ -56,7 +63,7 @@ export const createNotification = async ({
 export const getMyNotifications = async (userId) => {
   const notifications = await Notification.find({ recipient: userId })
     .sort({ createdAt: -1 })
-    .populate("sender", "username profilePicture")
+    .populate("sender", "username avatar")
     .lean();
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
