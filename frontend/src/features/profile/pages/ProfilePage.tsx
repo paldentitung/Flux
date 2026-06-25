@@ -54,6 +54,7 @@ const ProfilePage = () => {
   const [showProfilePicture, setShowProfilePicture] = useState(false);
   const [hasRequested, setHasRequested] = useState(false);
   useEffect(() => {
+    setIsFollowOpen(false);
     if (isOwnProfile) {
       setVisitedProfile(null);
       setIsBlockedByUser(false);
