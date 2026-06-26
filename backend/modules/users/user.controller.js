@@ -80,10 +80,10 @@ export const changeAvatarController = async (req, res) => {
     "groupflow/avatars",
   );
 
-  const result = await changeAvatarService(
-    req.user._id,
-    cloudinaryResult.secure_url,
-  );
+  const result = await changeAvatarService(req.user._id, {
+    url: cloudinaryResult.secure_url,
+    publicId: cloudinaryResult.public_id,
+  });
 
   res.status(200).json({
     success: true,

@@ -60,7 +60,7 @@ const LeftSidebar = () => {
             {/* Avatar */}
             <div className="relative shrink-0">
               <Avatar
-                src={user?.avatar}
+                src={user?.avatar?.url}
                 name={user?.name || user?.username}
                 size={34}
               />

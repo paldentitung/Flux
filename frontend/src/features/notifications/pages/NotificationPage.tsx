@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../../shared/components/ui/Avatar";
 import { useNotifications } from "../hooks/useNotifications";
+import type { avatarType } from "../../profile/types/user.types";
 
 type NotificationType =
   | "follow"
@@ -22,7 +23,7 @@ type Notification = {
   isRead: boolean;
   createdAt: string;
   postId?: string | null;
-  sender: { _id: string; name?: string; username: string; avatar?: string };
+  sender: { _id: string; name?: string; username: string; avatar?: avatarType };
 };
 
 const ICONS: Record<NotificationType, typeof Heart> = {
@@ -152,7 +153,7 @@ const NotificationPage = () => {
                   {/* Avatar + type icon */}
                   <div className="relative shrink-0">
                     <Avatar
-                      src={n.sender.avatar}
+                      src={n.sender.avatar?.url}
                       name={n.sender.name || n.sender.username}
                       size={42}
                     />

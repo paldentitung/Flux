@@ -111,7 +111,7 @@ const RightSidebar = () => {
                   className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                 >
                   <Link to={`/profile/${u._id}`}>
-                    <Avatar src={u.avatar} name={u.name} />
+                    <Avatar src={u.avatar?.url} name={u.name} />
                   </Link>
 
                   <Link to={`/profile/${u._id}`} className="flex-1 min-w-0">

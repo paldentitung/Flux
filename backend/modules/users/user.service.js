@@ -7,6 +7,8 @@ import { userMapper } from "./user.mapper.js";
 import { createNotification } from "../notifications/notifications.service.js";
 import mongoose from "mongoose";
 import Notification from "../notifications/notifications.model.js";
+import cloudinary from "../../config/cloudinary.js";
+
 export const getMyProfileService = async (userId) => {
   const user = await User.findById(userId).select("-password");
   if (!user) {
@@ -137,7 +139,7 @@ export const unfollowUserService = async (currentUserId, targetUserId) => {
   ]);
   return { success: true };
 };
-export const changeAvatarService = async (userId, avatarURL) => {
+export const changeAvatarService = async (userId, avatar) => {
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -146,11 +148,13 @@ export const changeAvatarService = async (userId, avatarURL) => {
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,
-    { avatar: avatarURL },
     {
-      new: true,
-      runValidators: true,
+      avatar: {
+        url: avatar.url,
+        publicId: avatar.publicId,
+      },
     },
+    { new: true },
   );
 
   return updatedUser;
@@ -167,13 +171,9 @@ export const removeAvatarService = async (userId) => {
     return user;
   }
 
-  const filePath = path.join(process.cwd(), user.avatar);
-
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.log("Failed to delete avatar file:", err.message);
-    }
-  });
+  if (user.avatar.publicId) {
+    await cloudinary.uploader.destroy(user.avatar.publicId);
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,

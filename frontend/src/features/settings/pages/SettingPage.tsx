@@ -195,7 +195,7 @@ const SettingPage = () => {
 
                   <div className="flex items-center gap-4">
                     <Avatar
-                      src={user?.avatar}
+                      src={user?.avatar?.url}
                       name={user?.name || user?.username}
                       size={64}
                     />
@@ -388,7 +388,11 @@ const SettingPage = () => {
                             key={b._id}
                             className="flex items-center gap-3 py-2.5"
                           >
-                            <Avatar src={b.avatar} name={b.name} size={36} />
+                            <Avatar
+                              src={b.avatar?.url}
+                              name={b.name}
+                              size={36}
+                            />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium text-zinc-100 truncate">
                                 {b.name}

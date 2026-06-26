@@ -3,7 +3,7 @@ export type User = {
   name?: string;
   username: string;
   email: string;
-  avatar: string | null;
+  avatar: avatarType | null;
   bio: string;
   followers: UserSummary[];
   following: UserSummary[];
@@ -16,11 +16,16 @@ export type User = {
   updatedAt: Date;
   notificationPreferences?: NotificationPreferences;
 };
+
+export type avatarType = {
+  url: string;
+  publicId: string;
+};
 export type UserSummary = {
   _id: string;
   username: string;
   name?: string;
-  avatar: string | null;
+  avatar: avatarType | null;
 };
 export interface UpdateProfileData {
   name?: string;

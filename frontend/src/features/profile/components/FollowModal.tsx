@@ -117,7 +117,7 @@ const FollowModal = ({
                   className="flex items-center gap-3 px-5 py-3 border-b border-(--post-card-border) last:border-b-0"
                 >
                   <Avatar
-                    src={u.avatar}
+                    src={u.avatar?.url}
                     name={u.name || u.username}
                     size={40}
                   />

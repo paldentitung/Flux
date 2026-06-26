@@ -72,7 +72,7 @@ const PostCardBody = ({
           className="flex items-center gap-2 flex-1"
         >
           <Avatar
-            src={post.userId.avatar}
+            src={post.userId.avatar?.url}
             name={post.userId.name || post.userId.username}
             size={40}
           />
@@ -236,7 +236,7 @@ const PostCardBody = ({
           {/* New comment input */}
           <div className="flex items-center gap-2 pt-2 border-t border-(--post-card-border) mt-1">
             <Avatar
-              src={user?.avatar}
+              src={user?.avatar?.url}
               name={user?.name || user?.username}
               size={32}
             />

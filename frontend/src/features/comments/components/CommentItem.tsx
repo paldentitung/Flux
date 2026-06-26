@@ -63,7 +63,7 @@ const CommentItem = ({
     <div className={`flex gap-2 ${isReply ? "pl-10 pt-1" : "py-2"}`}>
       <Link to={`/profile/${comment.userId._id}`}>
         <Avatar
-          src={comment.userId.avatar}
+          src={comment.userId.avatar?.url}
           name={comment.userId.name || comment.userId.username}
           size={isReply ? 28 : 32}
           className="mt-0.5"

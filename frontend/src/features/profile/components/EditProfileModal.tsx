@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import Modal from "../../../shared/components/ui/Modal";
 import { X, Camera, Trash2 } from "lucide-react";
 import Avatar from "../../../shared/components/ui/Avatar";
-import type { User } from "../../profile/types/user.types";
+import type { avatarType, User } from "../../profile/types/user.types";
 import LoadingButton from "../../../shared/components/ui/LoadingButton";
 import { useProfile } from "../hooks/useProfile";
 
@@ -21,7 +21,9 @@ const EditProfileModal = ({
     handleRemoveAvatar,
     loading,
   } = useProfile();
-  const [preview, setPreview] = useState<string | null>(user.avatar);
+  const [preview, setPreview] = useState<string | null>(
+    user.avatar?.url ?? null,
+  );
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -83,7 +85,7 @@ const EditProfileModal = ({
               />
             ) : (
               <Avatar
-                src={user.avatar}
+                src={user.avatar?.url}
                 name={user.name || user.username}
                 size={72}
                 className="border-2 border-(--post-card-border) rounded-full"

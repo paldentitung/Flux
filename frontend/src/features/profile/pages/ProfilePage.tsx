@@ -94,7 +94,7 @@ const ProfilePage = () => {
       _id: targetId,
       username: profileUser?.username ?? "",
       name: profileUser?.name ?? "",
-      avatar: profileUser?.avatar ?? "",
+      avatar: profileUser?.avatar ?? null,
     });
 
     if (!isOwnProfile && profileUser) {
@@ -271,7 +271,7 @@ const ProfilePage = () => {
             {/* Avatar */}
             <button onClick={() => setShowProfilePicture(true)}>
               <Avatar
-                src={profileUser.avatar}
+                src={profileUser.avatar?.url}
                 name={profileUser.name || profileUser.username}
                 size={112}
                 className="border-4 border-(--background) rounded-full"
@@ -424,7 +424,7 @@ const ProfilePage = () => {
                 >
                   {post.images?.[0] ? (
                     <img
-                      src={post.images[0]}
+                      src={post.images[0].url}
                       className="w-full h-full object-cover transition group-hover:scale-105"
                     />
                   ) : (
@@ -483,7 +483,7 @@ const ProfilePage = () => {
 
       <ProfileImageModal
         isOpen={showProfilePicture}
-        imageUrl={profileUser.avatar}
+        imageUrl={profileUser.avatar?.url}
         name={profileUser.name || profileUser.username}
         onClose={() => setShowProfilePicture(false)}
       />
