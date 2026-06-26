@@ -2,7 +2,7 @@ import express from "express";
 import { protect } from "../../middleware/auth.middleware.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import {
-  changeAvatarConroller,
+  changeAvatarController,
   followUserController,
   unfollowUserController,
   removeAvatarConroller,
@@ -41,7 +41,7 @@ router.patch(
   changeAvatarLimiter,
   protect,
   upload.single("avatar"),
-  asyncHandler(changeAvatarConroller),
+  asyncHandler(changeAvatarController),
 );
 
 router.delete("/me/avatar", protect, asyncHandler(removeAvatarConroller));

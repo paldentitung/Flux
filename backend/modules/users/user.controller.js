@@ -19,6 +19,7 @@ import {
   updateNotificationPreferencesService,
 } from "./user.service.js";
 
+import { uploadToCloudinary } from "../../utils/uploadToCloudinary.js";
 export const getMyProfileController = async (req, res) => {
   const result = await getMyProfileService(req.user._id);
 
@@ -66,7 +67,7 @@ export const unfollowUserController = async (req, res) => {
   });
 };
 
-export const changeAvatarConroller = async (req, res) => {
+export const changeAvatarController = async (req, res) => {
   if (!req.file) {
     return res.status(400).json({
       success: false,
@@ -74,9 +75,15 @@ export const changeAvatarConroller = async (req, res) => {
     });
   }
 
-  const avatarUrl = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
+  const cloudinaryResult = await uploadToCloudinary(
+    req.file.buffer,
+    "groupflow/avatars",
+  );
 
-  const result = await changeAvatarService(req.user._id, avatarUrl);
+  const result = await changeAvatarService(
+    req.user._id,
+    cloudinaryResult.secure_url,
+  );
 
   res.status(200).json({
     success: true,
