@@ -67,7 +67,7 @@ export const useProfile = () => {
     const previousAvatar = user.avatar;
     const optimisticUrl = URL.createObjectURL(avatar);
 
-    setUser({ ...user, avatar: optimisticUrl });
+    setUser({ ...user, avatar: { url: optimisticUrl, publicId: "" } });
 
     try {
       const formData = new FormData();
@@ -76,7 +76,7 @@ export const useProfile = () => {
 
       if (res.success) {
         setUser({ ...user, avatar: res.data.avatar });
-        toast.success("avatar changed");
+        toast.success("Avatar changed");
       }
     } catch (error: any) {
       setUser({ ...user, avatar: previousAvatar });

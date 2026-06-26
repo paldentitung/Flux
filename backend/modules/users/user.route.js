@@ -38,7 +38,6 @@ router.delete("/:id/unfollow", protect, asyncHandler(unfollowUserController));
 
 router.patch(
   "/me/avatar",
-  changeAvatarLimiter,
   protect,
   upload.single("avatar"),
   asyncHandler(changeAvatarController),

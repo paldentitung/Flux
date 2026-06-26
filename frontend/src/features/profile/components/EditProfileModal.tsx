@@ -24,6 +24,7 @@ const EditProfileModal = ({
   const [preview, setPreview] = useState<string | null>(
     user.avatar?.url ?? null,
   );
+  const [uploading, setUploading] = useState(false);
   const [bioLength, setBioLength] = useState(user.bio?.length ?? 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
@@ -31,14 +32,21 @@ const EditProfileModal = ({
     bio: user.bio ?? "",
   });
   if (!isOpen) return null;
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setPreview(URL.createObjectURL(file));
-    await handleChangeAvatar(file);
-  };
 
+    setUploading(true);
+    try {
+      await handleChangeAvatar(file);
+      setPreview(URL.createObjectURL(file));
+    } catch (error) {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } finally {
+      setUploading(false);
+    }
+    onClose();
+  };
   const handleSubmit = async () => {
     await handleUpdateProfile(formData);
     onClose();
@@ -92,20 +100,49 @@ const EditProfileModal = ({
               />
             )}
 
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition cursor-pointer flex items-center justify-center"
-            >
-              <Camera size={18} color="white" />
-            </div>
+            {uploading && (
+              <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                <svg
+                  className="animate-spin w-5 h-5 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                  />
+                </svg>
+              </div>
+            )}
 
-            {/* Badge */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#533483] border-2 border-(--background) flex items-center justify-center"
-            >
-              <Camera size={10} color="white" />
-            </button>
+            {/* Hover overlay — hidden while uploading */}
+            {!uploading && (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition cursor-pointer flex items-center justify-center"
+              >
+                <Camera size={18} color="white" />
+              </div>
+            )}
+
+            {/* Badge — hidden while uploading */}
+            {!uploading && (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#533483] border-2 border-(--background) flex items-center justify-center"
+              >
+                <Camera size={10} color="white" />
+              </button>
+            )}
           </div>
 
           <div>
