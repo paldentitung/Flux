@@ -59,7 +59,7 @@ const PostCard = ({
     >
       {hasImage ? (
         <img
-          src={image}
+          src={image.url}
           alt={`Post by ${username}`}
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
@@ -109,7 +109,7 @@ const UserResult = ({ user }: { user: User }) => (
   >
     {user.avatar ? (
       <img
-        src={user.avatar}
+        src={user.avatar.url}
         alt={user.username}
         className="w-8 h-8 rounded-full object-cover shrink-0"
       />
@@ -156,7 +156,7 @@ const PostResult = ({ post }: { post: Post }) => {
       >
         {hasImage ? (
           <img
-            src={post.images[0]}
+            src={post.images[0].url}
             alt="Post thumbnail"
             className="w-full h-full object-cover"
           />
