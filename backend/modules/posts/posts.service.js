@@ -2,7 +2,7 @@ import Post from "./post.model.js";
 import User from "../users/user.model.js";
 import AppError from "../../utils/AppError.js";
 import { createNotification } from "../notifications/notifications.service.js";
-
+import cloudinary from "../../config/cloudinary.js";
 export const getPostService = async (page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
 
@@ -54,16 +54,22 @@ export const updatePostService = async (postId, userId, updates) => {
 };
 
 export const deletePostService = async (userId, postId) => {
-  const deletedPost = await Post.findOneAndDelete({
+  const post = await Post.findOne({
     _id: postId,
     userId,
   });
 
-  if (!deletedPost) {
+  if (!post) {
     throw new AppError("Post not found or unauthorized", 404);
   }
 
-  return deletedPost;
+  for (const image of post.images) {
+    await cloudinary.uploader.destroy(image.publicId);
+  }
+
+  await post.deleteOne();
+
+  return post;
 };
 
 export const likePostService = async (userId, postId) => {

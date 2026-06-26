@@ -1,10 +1,15 @@
 import type { User } from "../../profile/types/user.types";
 
+export type PostImage = {
+  url: string;
+  publicId: string;
+};
+
 export type Post = {
   _id: string;
   userId: User;
   content: string;
-  images: string[];
+  images: PostImage[];
   likes: string[];
   commentsCount: number;
   createdAt: string;

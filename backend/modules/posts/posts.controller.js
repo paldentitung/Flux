@@ -8,7 +8,7 @@ import {
   updatePostService,
 } from "./posts.service.js";
 import AppError from "../../utils/AppError.js";
-
+import { uploadToCloudinary } from "../../utils/uploadToCloudinary.js";
 export const getPostsController = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -30,17 +30,25 @@ export const createPostController = async (req, res) => {
   const userId = req.user._id;
   const { content } = req.body;
 
-  const images =
-    req.files?.map(
-      (file) => `http://localhost:3000/uploads/${file.filename}`,
-    ) || [];
+  const images = [];
 
-  const result = await createPostService(userId, content, images);
+  if (req.files?.length) {
+    for (const file of req.files) {
+      const result = await uploadToCloudinary(file.buffer, "flux/posts");
+
+      images.push({
+        url: result.secure_url,
+        publicId: result.public_id,
+      });
+    }
+  }
+
+  const post = await createPostService(userId, content, images);
 
   res.status(201).json({
     success: true,
     message: "Post created",
-    data: result,
+    data: post,
   });
 };
 

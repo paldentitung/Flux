@@ -104,7 +104,7 @@ const PostCard = ({ post }: { post: Post }) => {
                     key={`old-${i}`}
                     className="relative aspect-square rounded-lg overflow-hidden border border-(--post-card-border)"
                   >
-                    <img src={img} className="w-full h-full object-cover" />
+                    <img src={img.url} className="w-full h-full object-cover" />
                     <button
                       onClick={() => p.removeExisting(i)}
                       className="absolute top-1 right-1 bg-black/55 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center"

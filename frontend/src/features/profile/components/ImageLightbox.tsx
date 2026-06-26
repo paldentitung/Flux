@@ -2,8 +2,13 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+type Image = {
+  url: string;
+  publicId: string;
+};
+
 type Props = {
-  images: string[];
+  images: Image[];
   startIndex: number;
   onClose: () => void;
 };
@@ -50,7 +55,7 @@ const ImageLightbox = ({ images, startIndex, onClose }: Props) => {
         )}
 
         <img
-          src={images[current]}
+          src={images[current].url}
           className="max-h-[80vh] max-w-full rounded-lg object-contain"
         />
 

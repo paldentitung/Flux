@@ -142,7 +142,7 @@ const PostCardBody = ({
       {/* ── Images ── */}
       {post.images?.length === 1 && (
         <img
-          src={post.images[0]}
+          src={post.images[0].url}
           className="w-full rounded-lg object-cover max-h-96"
         />
       )}
@@ -157,7 +157,10 @@ const PostCardBody = ({
               }}
               className="relative"
             >
-              <img src={img} className="w-full h-48 object-cover rounded-lg" />
+              <img
+                src={img.url}
+                className="w-full h-48 object-cover rounded-lg"
+              />
               {i === 3 && post.images.length > 4 && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <span className="text-white text-lg font-semibold">

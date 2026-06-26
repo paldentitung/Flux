@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
 import { usePosts } from "./usePosts.ts";
-import type { Post } from "../types/post.types";
+import type { Post, PostImage } from "../types/post.types";
 export const usePostCard = (post: Post) => {
   const { handleDeletePost, handleUpdatePost, loading } = usePosts();
 
@@ -12,7 +12,7 @@ export const usePostCard = (post: Post) => {
   const [content, setContent] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<PostImage[]>([]);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const formatDate = (date: string) => {
