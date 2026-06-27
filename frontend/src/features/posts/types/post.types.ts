@@ -30,4 +30,7 @@ export interface PostsContextValue {
   handleUpdatePost: (postId: string, formData: FormData) => Promise<void>;
   handleLikePost: (postId: string) => Promise<void>;
   fetchedPostById: (postId: string) => Promise<Post>;
+  loadMorePosts: () => Promise<void>;
+  hasMore: boolean;
+  loadingMore: boolean;
 }

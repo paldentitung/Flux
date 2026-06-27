@@ -21,21 +21,39 @@ export const PostProvider = ({ children }: PostProviderProps) => {
     delete: false,
     update: false,
   });
-
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const setL = (key: keyof typeof loading, val: boolean) =>
     setLoading((prev) => ({ ...prev, [key]: val }));
 
   const { user } = useAuth();
   useEffect(() => {
     if (!user) return;
-    getPosts()
-      .then((res) => setPosts(res.data))
+    getPosts(1, 10)
+      .then((res) => {
+        setPosts(res.data);
+        setHasMore(res.data.length === 10);
+      })
       .catch(() => toast.error("Failed to load posts"));
   }, [user]);
-  useEffect(() => {
-    console.log("posts updated", posts);
-  }, [posts]);
-
+  const loadMorePosts = async () => {
+    if (!hasMore || loadingMore) return;
+    setLoadingMore(true);
+    const nextPage = page + 1;
+    console.log("loading page", nextPage);
+    try {
+      const res = await getPosts(nextPage, 10);
+      console.log("got posts", res.data.length);
+      setPosts((prev) => [...prev, ...res.data]);
+      setHasMore(res.data.length === 10);
+      setPage(nextPage);
+    } catch {
+      toast.error("Failed to load more posts");
+    } finally {
+      setLoadingMore(false);
+    }
+  };
   const handleCreatePost = async (formData: FormData) => {
     try {
       setL("create", true);
@@ -123,6 +141,9 @@ export const PostProvider = ({ children }: PostProviderProps) => {
         handleLikePost,
         setPosts,
         fetchedPostById,
+        loadingMore,
+        hasMore,
+        loadMorePosts,
       }}
     >
       {children}

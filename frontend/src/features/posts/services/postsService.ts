@@ -1,7 +1,7 @@
 import request from "../../../shared/services/api";
 
-export const getPosts = () => {
-  return request("/posts");
+export const getPosts = (page = 1, limit = 10) => {
+  return request(`/posts?page=${page}&limit=${limit}`);
 };
 
 export const getPostById = async (postId: string) => {
