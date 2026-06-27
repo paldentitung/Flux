@@ -18,6 +18,7 @@ type Props = {
 };
 
 import { ShareButton } from "./ShareButton.tsx";
+import { useProfile } from "../../profile/hooks/useProfile.ts";
 
 const PostCardBody = ({
   post,
@@ -28,6 +29,7 @@ const PostCardBody = ({
   formatDate,
 }: Props) => {
   const { useCleanUsername, user } = useAuth();
+  const { handleBlockUser } = useProfile();
   const {
     comments,
     loading,
@@ -63,6 +65,10 @@ const PostCardBody = ({
   const toggleLike = () => {
     setIsliked((prev) => !prev);
     handleLikePost(post._id);
+  };
+
+  const submitBlockUser = async (id: string) => {
+    await handleBlockUser(id);
   };
 
   return (
@@ -122,10 +128,10 @@ const PostCardBody = ({
                 </>
               ) : (
                 <button
-                  onClick={() => {}}
-                  className="w-full text-left px-4 py-2 text-sm text-(--foreground) hover:bg-[hsl(var(--surface-hover))] transition"
+                  onClick={() => submitBlockUser(post?.userId._id)}
+                  className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
                 >
-                  Report
+                  Block User
                 </button>
               )}
             </div>
