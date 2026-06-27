@@ -12,6 +12,7 @@ type Props = {
     commentId: string,
   ) => Promise<{ liked: boolean; likesCount: number }>;
 };
+import { Heart } from "lucide-react";
 
 const CommentItem = ({
   comment,
@@ -88,13 +89,18 @@ const CommentItem = ({
           <button
             onClick={handleLike}
             disabled={isLiking}
-            className={`text-xs font-semibold transition ${
+            className={`flex items-center gap-1 transition ${
               liked
-                ? "text-blue-500"
-                : "text-(--muted-foreground) hover:text-(--foreground)"
+                ? "text-red-500"
+                : "text-(--muted-foreground) hover:text-red-400"
             } ${isLiking ? "opacity-60 cursor-not-allowed" : ""}`}
           >
-            Like{likes > 0 && ` · ${likes}`}
+            <Heart
+              size={16}
+              className="transition-transform active:scale-125"
+              fill={liked ? "currentColor" : "none"}
+            />
+            {likes > 0 && <span className="text-xs font-medium">{likes}</span>}
           </button>
 
           {!isReply && (
