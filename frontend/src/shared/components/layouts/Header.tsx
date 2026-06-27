@@ -2,6 +2,7 @@ import { Settings } from "lucide-react";
 import { useHideOnScroll } from "../../hooks/useHideOnScroll";
 
 import { Link } from "react-router-dom";
+import FluxLogo from "../ui/Logo";
 const Header = () => {
   const showNav = useHideOnScroll();
 
@@ -13,12 +14,7 @@ const Header = () => {
         }`}
       >
         <div className="flex items-center gap-3 text-sm">
-          <div className="w-8 h-8 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center">
-            <span className="text-white font-bold text-sm">F</span>
-          </div>
-          <h1 className="text-[hsl(var(--sidebar-foreground))] font-bold text-xl tracking-tight">
-            Flux
-          </h1>
+          <FluxLogo />
         </div>
 
         <div className="flex items-center gap-3 text-[hsl(var(--sidebar-icon))]">

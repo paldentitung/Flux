@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import LoadingButton from "../../../shared/components/ui/LoadingButton";
+import FluxLogo from "../../../shared/components/ui/Logo";
 const RegisterPage = () => {
   const { handleRegister, loading } = useAuth();
 
@@ -171,15 +172,7 @@ const RegisterPage = () => {
 
         <div className="relative">
           <div className="flex items-center gap-2.5">
-            <span
-              className="grid place-items-center h-9 w-9 rounded-xl shadow-(--shadow-glow)"
-              style={{ background: "var(--gradient-primary)" }}
-            >
-              <Sparkles className="h-4 w-4 text-[hsl(var(--primary-foreground))]" />
-            </span>
-            <span className="text-xl font-semibold text-[hsl(var(--foreground))]">
-              Flux
-            </span>
+            <FluxLogo />
           </div>
         </div>
 

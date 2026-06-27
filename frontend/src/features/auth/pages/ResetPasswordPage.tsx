@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.ts";
 import toast from "react-hot-toast";
 import LoadingButton from "../../../shared/components/ui/LoadingButton.tsx";
+import FluxLogo from "../../../shared/components/ui/Logo.tsx";
 const ResetPasswordPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -57,15 +58,7 @@ const ResetPasswordPage = () => {
 
         <div className="relative">
           <div className="flex items-center gap-2.5">
-            <span
-              className="grid place-items-center h-9 w-9 rounded-xl shadow-(--shadow-glow)"
-              style={{ background: "var(--gradient-primary)" }}
-            >
-              <Sparkles className="h-4 w-4 text-[hsl(var(--primary-foreground))]" />
-            </span>
-            <span className="text-xl font-semibold text-[hsl(var(--foreground))]">
-              Flux
-            </span>
+            <FluxLogo />
           </div>
         </div>
 

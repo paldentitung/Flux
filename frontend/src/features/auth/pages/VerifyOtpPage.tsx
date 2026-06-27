@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingButton from "../../../shared/components/ui/LoadingButton.tsx";
 import toast from "react-hot-toast";
+import FluxLogo from "../../../shared/components/ui/Logo.tsx";
 type VerifyOtpLocationState = {
   email: string;
   isReset?: boolean;
@@ -61,15 +62,7 @@ const VerifyOtpPage = () => {
         />
         <div className="relative">
           <div className="flex items-center gap-2.5">
-            <span
-              className="grid place-items-center h-9 w-9 rounded-xl shadow-(--shadow-glow)"
-              style={{ background: "var(--gradient-primary)" }}
-            >
-              <Sparkles className="h-4 w-4 text-[hsl(var(--primary-foreground))]" />
-            </span>
-            <span className="text-xl font-semibold text-[hsl(var(--foreground))]">
-              Flux
-            </span>
+            <FluxLogo />
           </div>
         </div>
         <div className="relative space-y-6">

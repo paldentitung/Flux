@@ -5,6 +5,7 @@ import { useState } from "react";
 import Modal from "../ui/Modal";
 import LoadingButton from "../ui/LoadingButton";
 import Avatar from "../ui/Avatar";
+import FluxLogo from "../ui/Logo";
 const LeftSidebar = () => {
   const links = [
     { name: "Home", path: "/", Icon: Home },
@@ -23,12 +24,7 @@ const LeftSidebar = () => {
     <>
       <div className="w-64 min-h-screen  flex-col bg-[hsl(--sidebar-primary)] border-r border-white/6 hidden lg:flex fixed ">
         <div className="p-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center">
-            <span className="text-white font-bold text-sm">F</span>
-          </div>
-          <h1 className="text-[hsl(--sidebar-foreground)] font-bold text-xl tracking-tight">
-            Flux
-          </h1>
+          <FluxLogo />
         </div>
 
         <nav className="flex-1 px-3 flex flex-col gap-1">
