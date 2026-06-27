@@ -1,5 +1,6 @@
 import { Share2, Check } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const ShareButton = ({ postId }: { postId: string }) => {
   const [copied, setCopied] = useState(false);
@@ -7,6 +8,7 @@ export const ShareButton = ({ postId }: { postId: string }) => {
   const handleShare = async () => {
     const url = `${window.location.origin}/post/${postId}`;
     await navigator.clipboard.writeText(url);
+    toast.success("Link copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
