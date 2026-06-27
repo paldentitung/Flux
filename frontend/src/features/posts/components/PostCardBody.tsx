@@ -1,4 +1,4 @@
-import { Heart, MessageCircle, Share2, Send } from "lucide-react";
+import { Heart, MessageCircle, Share2, Send, Share } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Post } from "../types/post.types.ts";
 import { useAuth } from "../../auth/hooks/useAuth.ts";
@@ -16,6 +16,8 @@ type Props = {
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   formatDate: (date: string) => string;
 };
+
+import { ShareButton } from "./ShareButton.tsx";
 
 const PostCardBody = ({
   post,
@@ -206,9 +208,7 @@ const PostCardBody = ({
             <span className="text-xs">{post?.commentsCount ?? 0}</span>
           </button>
         </div>
-        <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-[hsl(var(--surface-hover))] hover:text-(--primary) transition text-sm">
-          <Share2 size={16} />
-        </button>
+        <ShareButton postId={post._id} />
       </div>
 
       {/* ── Comments section ── */}
