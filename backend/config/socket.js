@@ -19,10 +19,13 @@ export const initSocket = (httpServer) => {
 
     if (userId) {
       onlineUsers.set(userId, socket.id);
+      socket.emit("onlineUsers", getOnlineUsers());
+      io.emit("userOnline", userId);
     }
 
     socket.on("disconnect", () => {
       onlineUsers.delete(userId);
+      io.emit("userOffline", userId);
     });
   });
 };
@@ -33,3 +36,5 @@ export const getIO = () => {
 };
 
 export const getSocketId = (userId) => onlineUsers.get(userId);
+export const getOnlineUsers = () => Array.from(onlineUsers.keys());
+export const isUserOnline = (userId) => onlineUsers.has(userId);

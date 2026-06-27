@@ -8,4 +8,5 @@ export type NotificationsContextType = {
   handleDelete: (id: string) => Promise<void>;
   handleAccept: (requesterId: string, notificationId: string) => Promise<void>;
   handleReject: (requesterId: string, notificationId: string) => Promise<void>;
+  onlineUsers: string[];
 };

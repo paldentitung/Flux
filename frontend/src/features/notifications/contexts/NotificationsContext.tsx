@@ -22,6 +22,7 @@ export const NotificationsProvider = ({
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const { user } = useAuth();
 
   const fetchNotifications = async () => {
@@ -115,9 +116,23 @@ export const NotificationsProvider = ({
         `${notification.sender?.username} ${getNotificationMessage(notification.type)}`,
       );
     });
+    socket.on("onlineUsers", (users: string[]) => {
+      setOnlineUsers(users);
+    });
+
+    socket.on("userOnline", (userId: string) => {
+      setOnlineUsers((prev) => [...new Set([...prev, userId])]);
+    });
+
+    socket.on("userOffline", (userId: string) => {
+      setOnlineUsers((prev) => prev.filter((id) => id !== userId));
+    });
 
     return () => {
       socket.off("newNotification");
+      socket.off("onlineUsers");
+      socket.off("userOnline");
+      socket.off("userOffline");
       socket.disconnect();
     };
   }, [user?._id]);
@@ -134,6 +149,7 @@ export const NotificationsProvider = ({
         handleDelete,
         handleAccept,
         handleReject,
+        onlineUsers,
       }}
     >
       {children}

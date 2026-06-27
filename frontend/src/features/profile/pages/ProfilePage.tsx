@@ -199,6 +199,8 @@ const ProfilePage = () => {
               src={undefined}
               name={userId!}
               size={112}
+              userId={profileUser?._id}
+              showOnlineStatus
               className="border-4 border-(--background) rounded-full"
             />
 
@@ -274,6 +276,8 @@ const ProfilePage = () => {
                 src={profileUser.avatar?.url}
                 name={profileUser.name || profileUser.username}
                 size={112}
+                userId={profileUser._id}
+                showOnlineStatus={!isOwnProfile}
                 className="border-4 border-(--background) rounded-full"
               />
             </button>
