@@ -84,9 +84,7 @@ const PostCard = ({
         </div>
         <div className="flex items-center gap-1.5 text-white">
           <MessageCircle size={13} fill="white" />
-          <span className="text-sm font-medium">
-            {/* {post.comments.length} */}
-          </span>
+          <span className="text-sm font-medium">{post?.commentsCount}</span>
         </div>
       </div>
 
