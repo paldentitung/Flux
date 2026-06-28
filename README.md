@@ -21,7 +21,7 @@ A full-stack social media app built with the MERN stack and TypeScript. Features
 - **Comments** — Nested comment system with per-comment likes. Comment tree resolved server-side and returned in a single query.
 - **Real-time Notifications** — Socket.io rooms scoped per authenticated user. Notifications emit on follow, reaction, and comment events with client-side sound alerts and a live unread count badge.
 - **Follow System** — Follow/unfollow with optimistic UI updates and rollback on failure. Follower/following counts kept consistent via functional `setState` to avoid stale closure bugs.
-- **Profile** — Edit bio, avatar upload to Cloudinary, profile image lightbox. Avatar component handles missing images gracefully with initials fallback.
+- **Profile** — Edit bio, avatar upload to Cloudinary. Avatar component handles missing images gracefully with initials fallback.
 - **Search & Explore** — User search with debounced input. Explore feed surfaces content from non-followed users.
 - **Settings** — Change password, manage account preferences.
 
