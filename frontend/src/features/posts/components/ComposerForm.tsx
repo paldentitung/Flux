@@ -69,6 +69,7 @@ const ComposerForm = ({
           className="hidden"
           multiple
           onChange={onFile}
+          accept="image/jpeg,image/jpg,image/png,image/webp"
         />
       </div>
       <div className="flex gap-2">
