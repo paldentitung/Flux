@@ -60,15 +60,15 @@ flux/
 │   └── src/
 │       ├── features/
 │       │   ├── auth/           # Login, register, forgot/reset password
-│       │   ├── posts/          # PostCard, ReactionPicker, ShareButton
+│       │   ├── posts/          # PostCard, ShareButton
 │       │   ├── comments/       # Nested comment thread, CommentLike
 │       │   ├── notifications/  # NotificationsProvider, NotificationList
 │       │   ├── profile/        # ProfilePage, EditProfile, Avatar, Lightbox
 │       │   └── search/         # SearchPage, UserResult
 │       └── shared/
 │           ├── layouts/        # AppLayout, BottomNav, Sidebar
-│           ├── components/     # Button, Modal, FollowModal, etc.
-│           ├── hooks/          # useAuth, useSocket, useDebounce
+│           ├── components/     # Button, Modal, Avatar, etc.
+│           ├── hooks/          # useAuth, useDebounce
 │           └── services/       # Axios API client
 └── backend/
     └── modules/
