@@ -1,4 +1,4 @@
-import type { User } from "./user.types";
+import type { User } from "../../profile/types/user.types";
 export type Comment = {
   _id: string;
   postId: string;

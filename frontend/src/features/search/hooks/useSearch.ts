@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { search } from "../services/searchService";
 import { useState } from "react";
 import type { User } from "../../profile/types/user.types";
-import type { Post } from "../types/post.types";
+import type { Post } from "../../posts/types/post.types";
 export const useSearch = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<{
