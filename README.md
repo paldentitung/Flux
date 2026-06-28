@@ -6,13 +6,23 @@ A full-stack social media web application built with the MERN stack, featuring r
 
 ## 🚀 Live Demo
 
-> _Coming soon_ <!-- Replace with your live URL -->
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge)](https://flux-delta-snowy.vercel.app/)
 
 ---
 
 ## 📸 Screenshots
 
-> _Add screenshots here_ <!-- Replace with actual screenshots/GIFs -->
+### Login
+
+![Login](./frontend/src/assets/login.png)
+
+### Home Page
+
+![Home](./frontend/src/assets/home.png)
+
+### Profile
+
+![Profile](./frontend/src/assets/profile.png)
 
 ---
 
