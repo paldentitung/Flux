@@ -16,7 +16,9 @@ app.use(
     credentials: true,
   }),
 );
-
+app.get("/api/test-cookie", (req, res) => {
+  res.json({ cookies: req.cookies });
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
