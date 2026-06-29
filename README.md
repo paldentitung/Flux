@@ -8,8 +8,8 @@ A full-stack social media app built with the MERN stack and TypeScript. Features
 
 ## Screenshots
 
-| Login | Home | Profile |
-|-------|------|---------|
+| Login                                     | Home                                    | Profile                                       |
+| ----------------------------------------- | --------------------------------------- | --------------------------------------------- |
 | ![Login](./frontend/src/assets/login.png) | ![Home](./frontend/src/assets/home.png) | ![Profile](./frontend/src/assets/profile.png) |
 
 ---
@@ -20,35 +20,37 @@ A full-stack social media app built with the MERN stack and TypeScript. Features
 - **Posts** — Create posts with multiple image uploads via Cloudinary. Reaction to post.
 - **Comments** — Nested comment system with per-comment likes. Comment tree resolved server-side and returned in a single query.
 - **Real-time Notifications** — Socket.io rooms scoped per authenticated user. Notifications emit on follow, reaction, and comment events with client-side sound alerts and a live unread count badge.
+- **Real-time Like & Comment Counts** — Like and comment counts update instantly across all connected clients via Socket.io.
 - **Follow System** — Follow/unfollow with optimistic UI updates and rollback on failure. Follower/following counts kept consistent via functional `setState` to avoid stale closure bugs.
 - **Profile** — Edit bio, avatar upload to Cloudinary. Avatar component handles missing images gracefully with initials fallback.
 - **Search & Explore** — User search with debounced input. Explore feed surfaces content from non-followed users.
 - **Settings** — Change password, manage account preferences.
-
 
 ---
 
 ## Tech Stack
 
 ### Frontend
-| Tech | Usage |
-|------|-------|
-| React 19 + TypeScript | UI framework |
-| Vite | Build tool |
-| Socket.io Client | Real-time features |
-| React Router v6 | Client-side routing |
-| Context API | Global state (auth, notifications, online users) |
+
+| Tech                  | Usage                                            |
+| --------------------- | ------------------------------------------------ |
+| React 19 + TypeScript | UI framework                                     |
+| Vite                  | Build tool                                       |
+| Socket.io Client      | Real-time features                               |
+| React Router v6       | Client-side routing                              |
+| Context API           | Global state (auth, notifications, online users) |
 
 ### Backend
-| Tech | Usage |
-|------|-------|
-| Node.js + Express | REST API server |
-| MongoDB + Mongoose | Database |
-| Socket.io | Real-time notification delivery |
-| Cloudinary | Image storage (posts + avatars) |
-| JWT | Stateless auth |
-| Nodemailer | OTP email delivery |
-| bcrypt | Password hashing |
+
+| Tech               | Usage                           |
+| ------------------ | ------------------------------- |
+| Node.js + Express  | REST API server                 |
+| MongoDB + Mongoose | Database                        |
+| Socket.io          | Real-time notification delivery |
+| Cloudinary         | Image storage (posts + avatars) |
+| JWT                | Stateless auth                  |
+| Nodemailer         | OTP email delivery              |
+| bcrypt             | Password hashing                |
 
 ---
 
@@ -88,12 +90,12 @@ flux/
 - **Stale follower counts** — Optimistic follow/unfollow updates were producing incorrect counts due to stale closure state. Resolved by switching all counter updates to functional `setState` (`prev => prev + 1`).
 - **Socket.io auth race condition** — Notifications weren't delivering on first load because the socket connected before the auth context finished hydrating. Fixed by delaying socket initialization until the auth loading state resolved.
 
-
 ---
 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - MongoDB
 - Cloudinary account
@@ -111,6 +113,7 @@ cd ../frontend && npm install
 ### Environment Variables
 
 **`backend/.env.local`**
+
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_uri
@@ -124,6 +127,7 @@ CLIENT_URL=http://localhost:5173
 ```
 
 **`frontend/.env.development`**
+
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
@@ -146,6 +150,7 @@ App runs at `http://localhost:5173`
 ## Author
 
 **Palden Dorje Titung**
+
 - Portfolio: [paldendorjetitung.com.np](https://www.paldendorjetitung.com.np/)
 - GitHub: [@paldentitung](https://github.com/paldentitung)
 
