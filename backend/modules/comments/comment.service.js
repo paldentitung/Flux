@@ -6,9 +6,11 @@ import { createNotification } from "../notifications/notifications.service.js";
 export const addCommentService = async ({ postId, userId, text }) => {
   const comment = await Comment.create({ postId, userId, text });
 
-  const post = await Post.findByIdAndUpdate(postId, {
-    $inc: { commentsCount: 1 },
-  });
+  const post = await Post.findByIdAndUpdate(
+    postId,
+    { $inc: { commentsCount: 1 } },
+    { new: true },
+  );
 
   if (post) {
     await createNotification({
@@ -22,9 +24,9 @@ export const addCommentService = async ({ postId, userId, text }) => {
   const populated = await comment.populate(
     "userId",
     "_id name username avatar",
-  ); // ✅
+  );
 
-  return populated;
+  return { populated, post };
 };
 
 export const getCommentsByPostService = async (postId) => {

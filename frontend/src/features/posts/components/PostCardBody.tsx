@@ -19,6 +19,7 @@ type Props = {
 
 import { ShareButton } from "./ShareButton.tsx";
 import { useProfile } from "../../profile/hooks/useProfile.ts";
+import { useNotifications } from "../../notifications/hooks/useNotifications.ts";
 
 const PostCardBody = ({
   post,
@@ -29,6 +30,7 @@ const PostCardBody = ({
   formatDate,
 }: Props) => {
   const { useCleanUsername, user } = useAuth();
+  const { socket } = useNotifications();
   const { handleBlockUser } = useProfile();
   const {
     comments,
@@ -47,6 +49,8 @@ const PostCardBody = ({
     open: false,
     index: 0,
   });
+  const [likeCount, setLikeCount] = useState(post.likes.length);
+  const [commentCount, setCommentCount] = useState(post.commentsCount ?? 0);
   // PostCardBody.tsx
   const toggleComments = () => {
     if (!showComments && comments.length === 0) {
@@ -71,6 +75,21 @@ const PostCardBody = ({
     await handleBlockUser(id);
   };
 
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("postLikeUpdate", ({ postId, likeCount }) => {
+      if (postId === post._id) {
+        setLikeCount(likeCount); // ✅ only update THIS post
+      }
+    });
+
+    socket.on("postCommentUpdate", ({ postId, commentCount }) => {
+      if (postId === post._id) {
+        setCommentCount(commentCount);
+      }
+    });
+  }, [socket, post._id]);
   return (
     <div className="bg-(--post-card-bg) border border-(--post-card-border) p-5 rounded-xl flex flex-col gap-4 shadow-sm">
       {/* ── Header ── */}
@@ -200,7 +219,7 @@ const PostCardBody = ({
             ) : (
               <Heart size={16} />
             )}
-            <span className="text-xs">{post.likes.length}</span>
+            <span className="text-xs">{likeCount}</span>
           </button>
           <button
             onClick={toggleComments}
@@ -211,7 +230,7 @@ const PostCardBody = ({
             }`}
           >
             <MessageCircle size={16} />
-            <span className="text-xs">{post?.commentsCount ?? 0}</span>
+            <span className="text-xs">{commentCount}</span>
           </button>
         </div>
         <ShareButton postId={post._id} />

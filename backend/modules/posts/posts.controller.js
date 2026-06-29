@@ -9,6 +9,7 @@ import {
 } from "./posts.service.js";
 import AppError from "../../utils/AppError.js";
 import { uploadToCloudinary } from "../../utils/uploadToCloudinary.js";
+import { getIO } from "../../config/socket.js";
 export const getPostsController = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -101,6 +102,14 @@ export const likePostController = async (req, res) => {
   const { postId } = req.params;
 
   const { post, alreadyLiked } = await likePostService(userId, postId);
+
+  const io = getIO();
+  io.emit("postLikeUpdate", {
+    postId: post._id,
+    likeCount: post.likes.length,
+    likedBy: userId,
+    action: alreadyLiked ? "unliked" : "liked",
+  });
 
   res.status(200).json({
     success: true,

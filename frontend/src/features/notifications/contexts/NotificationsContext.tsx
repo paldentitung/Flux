@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getMyNotifications,
   markAsRead,
@@ -14,6 +14,7 @@ import { useAuth } from "../../auth/hooks/useAuth";
 import { getNotificationMessage } from "../helper/getNotificationMessage";
 import { playNotificationSound } from "../helper/PlayNotificationSound";
 import { NotificationsContext } from "../../../shared/context/createContext";
+import { Socket } from "socket.io-client";
 export const NotificationsProvider = ({
   children,
 }: {
@@ -24,7 +25,7 @@ export const NotificationsProvider = ({
   const [loading, setLoading] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const { user } = useAuth();
-
+  const socketRef = useRef<Socket | null>(null);
   const fetchNotifications = async () => {
     setLoading(true);
     try {
@@ -106,6 +107,9 @@ export const NotificationsProvider = ({
       query: { userId: user._id },
       withCredentials: true,
     });
+
+    // save to ref
+    socketRef.current = socket;
     socket.on("connect", () => console.log("✅ socket connected", socket.id));
     socket.on("connect_error", (err) => console.log("❌ socket error", err));
     socket.on("newNotification", (notification) => {
@@ -134,6 +138,7 @@ export const NotificationsProvider = ({
       socket.off("userOnline");
       socket.off("userOffline");
       socket.disconnect();
+      socketRef.current = null;
     };
   }, [user?._id]);
 
@@ -143,6 +148,7 @@ export const NotificationsProvider = ({
         notifications,
         unreadCount,
         loading,
+        socket: socketRef.current,
         fetchNotifications,
         handleMarkAsRead,
         handleMarkAllAsRead,

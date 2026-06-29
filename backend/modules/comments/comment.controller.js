@@ -1,3 +1,4 @@
+import { getIO } from "../../config/socket.js";
 import {
   addCommentService,
   getCommentsByPostService,
@@ -12,7 +13,14 @@ export const addComment = async (req, res) => {
   const { postId } = req.params;
   const userId = req.user.id;
 
-  const populated = await addCommentService({ postId, userId, text });
+  const { populated, post } = await addCommentService({ postId, userId, text });
+
+  const io = getIO();
+
+  io.emit("postCommentUpdate", {
+    postId: post._id,
+    commentCount: post.commentsCount,
+  });
 
   res.status(201).json({
     success: true,
