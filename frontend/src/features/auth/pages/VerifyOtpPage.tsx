@@ -141,7 +141,9 @@ const VerifyOtpPage = () => {
           <p className="text-sm text-[hsl(var(--muted-foreground))] text-center">
             Didn't receive it?{" "}
             <button
-              onClick={() => handleResendOTP(email)}
+              onClick={() =>
+                handleResendOTP(email, isReset ? "forgotPassword" : "register")
+              }
               disabled={resendLoading}
               className="text-[hsl(var(--foreground))] font-medium hover:text-[hsl(var(--primary))] transition-colors disabled:opacity-50 cursor-pointer"
             >

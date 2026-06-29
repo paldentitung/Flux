@@ -93,10 +93,13 @@ export const useAuth = () => {
     }
   };
 
-  const handleResendOTP = async (email: string) => {
+  const handleResendOTP = async (
+    email: string,
+    type?: "register" | "forgotPassword",
+  ) => {
     try {
       setResendLoading(true);
-      await resendOTP({ email });
+      await resendOTP({ email, type }); // ✅ pass type to service
       toast.success("OTP resent successfully");
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");

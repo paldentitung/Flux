@@ -123,20 +123,32 @@ export const resetPasswordService = async ({ email, otp, newPassword }) => {
   return { message: "Password reset successfully" };
 };
 
-export const resendOTPService = async ({ email }) => {
+export const resendOTPService = async ({ email, type }) => {
   const user = await User.findOne({ email });
 
   if (!user) throw new AppError("User not found", 404);
-  if (user.isVerified) throw new AppError("User already verified", 400);
+
+  // ✅ only check isVerified for registration OTP
+  if (type === "register" && user.isVerified) {
+    throw new AppError("User already verified", 400);
+  }
+
+  // ✅ only allow forgot password resend if reset was requested
+  if (type === "forgotPassword" && !user.resetOtp) {
+    throw new AppError("No password reset requested", 400);
+  }
 
   const otp = generateOtp();
   user.otp = otp;
   user.otpExpiry = Date.now() + 10 * 60 * 1000;
   await user.save();
 
+  const subject =
+    type === "forgotPassword" ? "Reset Your Password" : "Verify Your Account";
+
   await sendEmail({
     to: email,
-    subject: "Verify Your Account",
+    subject,
     html: `<h1>Your OTP is<br><strong>${otp}</strong></h1>`,
   });
 

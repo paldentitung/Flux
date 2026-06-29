@@ -81,8 +81,8 @@ export const resetPasswordController = async (req, res) => {
   });
 };
 export const resentOTPController = async (req, res) => {
-  const { email } = req.body;
-  await resendOTPService({ email });
+  const { email, type } = req.body;
+  await resendOTPService({ email, type });
   res.status(200).json({
     success: true,
     message: "OTP resend successful",

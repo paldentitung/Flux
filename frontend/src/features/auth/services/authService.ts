@@ -37,7 +37,10 @@ export const login = (data: { email: string; password: string }) =>
 
 export const logout = () => request("/auth/logout", { method: "POST" });
 
-export const resendOTP = (data: { email: string }) =>
+export const resendOTP = (data: {
+  email: string;
+  type?: "register" | "forgotPassword";
+}) =>
   request(
     "/auth/resend-otp",
     {
