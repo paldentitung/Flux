@@ -1,3 +1,4 @@
+import PostCardSkeleton from "../components/PostCardSkeleton.tsx";
 import PostComposer from "../components/PostComposer.tsx";
 import PostListing from "../components/PostListing.tsx";
 import { usePosts } from "../hooks/usePosts.ts";
@@ -16,7 +17,15 @@ const Home = () => {
         </span>
       </div>
       <PostComposer onSubmit={handleCreatePost} loading={loading.create} />
-      <PostListing posts={posts} />
+      {loading && posts.length === 0 ? (
+        <div className="flex flex-col space-y-6">
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+          <PostCardSkeleton />
+        </div>
+      ) : (
+        <PostListing posts={posts} />
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import type { Post } from "../types/post.types";
 import { usePosts } from "../hooks/usePosts";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import PostCardSkeleton from "./PostCardSkeleton";
 const PostListing = ({ posts }: { posts: Post[] }) => {
   const { loadMorePosts, hasMore, loadingMore } = usePosts();
   const { ref, inView } = useInView();
@@ -26,7 +27,8 @@ const PostListing = ({ posts }: { posts: Post[] }) => {
       <div ref={ref}>
         {loadingMore && (
           <p className="text-center text-sm text-(--muted-foreground) py-4">
-            Loading...
+            <PostCardSkeleton />
+            <PostCardSkeleton />
           </p>
         )}
         {!hasMore && (
