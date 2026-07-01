@@ -8,6 +8,7 @@ import commentRoute from "./modules/comments/comment.route.js";
 import userRoute from "./modules/users/user.route.js";
 import searchRoute from "./modules/search/search.route.js";
 import notificationRoutes from "./modules/notifications/notifications.route.js";
+import storyRoute from "./modules/stories/story.route.js";
 const app = express();
 
 app.use(
@@ -30,6 +31,7 @@ app.use("/api/comment", commentRoute);
 app.use("/api/user", userRoute);
 app.use("/api/search", searchRoute);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/stories", storyRoute);
 
 app.use(errorMiddleware);
 

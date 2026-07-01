@@ -108,3 +108,14 @@ export const searchLimiter = createLimiter(
   30, // 30 searches/min — covers fast typists with debounce; blocks scrapers
   "Too many search requests. Please slow down.",
 );
+export const createStoryLimiter = createLimiter(
+  60, // 1-hour window
+  20, // 20 stories/hour — generous, but stops spam
+  "You're posting too many stories. Please slow down.",
+);
+
+export const viewStoryLimiter = createLimiter(
+  1, // 1-minute window
+  60, // 60 view-marks/min — covers fast tray scrolling
+  "Too many requests. Please slow down.",
+);
