@@ -81,13 +81,18 @@ const ComposerForm = ({
         </button>
         <button
           onClick={onSubmit}
-          disabled={!text || loading}
+          disabled={(!text && images.length === 0) || loading}
           className="px-4 py-2 rounded-full bg-[hsl(var(--primary))] text-white disabled:opacity-40 hover:opacity-90 transition"
         >
           {loading ? "posting..." : "Post"}
         </button>
       </div>
     </div>
+    {!text && images.length === 0 && !loading && (
+      <p className="text-xs text-(--muted-foreground) px-1 -mt-1">
+        Write something or add a photo to post.
+      </p>
+    )}
   </div>
 );
 
