@@ -226,11 +226,15 @@ const SearchResultSection = ({
     {children}
   </div>
 );
-
+const ExploreCardSkeleton = ({ className = "" }: { className?: string }) => (
+  <div
+    className={`rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse ${className}`}
+  />
+);
 // ── Main page ────────────────────────────────────────────────────────────────
 
 const ExplorePage = () => {
-  const { posts } = usePosts();
+  const { posts, loading: postsLoading } = usePosts();
   const { handleSearching, loading, data } = useSearch();
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 400);
@@ -364,6 +368,16 @@ const ExplorePage = () => {
               )}
             </div>
           )}
+        </div>
+      ) : postsLoading && (!posts || posts.length === 0) ? (
+        /* ── Explore grid skeleton (initial load only) ── */
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[200px]">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <ExploreCardSkeleton
+              key={i}
+              className={i === 1 || i === 2 ? "md:row-span-2" : ""}
+            />
+          ))}
         </div>
       ) : (
         /* ── Default explore grid ── */
