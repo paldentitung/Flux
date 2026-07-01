@@ -271,7 +271,11 @@ const ProfilePage = () => {
         <div className="max-w-3xl mx-auto  md:px-6 mt-2">
           <div className="relative -mt-16 mb-6 flex items-end justify-between">
             {/* Avatar */}
-            <button onClick={() => setShowProfilePicture(true)}>
+            <button
+              onClick={() => {
+                if (profileUser.avatar?.url) setShowProfilePicture(true);
+              }}
+            >
               <Avatar
                 src={profileUser.avatar?.url}
                 name={profileUser.name || profileUser.username}
@@ -326,10 +330,6 @@ const ProfilePage = () => {
                           className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
                         >
                           {isUserBlocked ? "Unblock User" : "Block User"}
-                        </button>
-
-                        <button className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition">
-                          Report User
                         </button>
                       </div>
                     )}
