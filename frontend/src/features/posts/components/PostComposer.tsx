@@ -3,6 +3,8 @@ import Modal from "../../../shared/components/ui/Modal";
 
 import ComposerForm from "./ComposerForm";
 import toast from "react-hot-toast";
+import { useAuth } from "../../auth/hooks/useAuth";
+import Avatar from "../../../shared/components/ui/Avatar";
 const PostComposer = ({
   onSubmit,
   loading,
@@ -15,6 +17,7 @@ const PostComposer = ({
   const [files, setFiles] = useState<File[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const { user } = useAuth();
 
   const reset = () => {
     images.forEach(URL.revokeObjectURL);
@@ -45,7 +48,7 @@ const PostComposer = ({
         onClick={() => setOpen(true)}
         className="flex items-center gap-3 p-5 w-full rounded-lg bg-(--post-card-bg) border border-(--post-card-border) text-(--muted-foreground) hover:bg-(--surface-hover) transition"
       >
-        <img src="/favicon.svg" className="w-6 h-6" />
+        <Avatar src={user?.avatar?.url} name={user?.username} size={28} />
         <span>What's on your mind?</span>
       </button>
 
