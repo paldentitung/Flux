@@ -89,27 +89,29 @@ const StoryTray = ({
           onChange={handlePickFiles}
         />
 
-        {groups.map((group, i) => (
-          <button
-            type="button"
-            key={group.user._id}
-            onClick={() => setActiveGroupIndex(i)}
-            className="flex flex-col items-center gap-1 shrink-0 w-16"
-          >
-            <div
-              className={`w-14 h-14 rounded-full p-[2px] ${
-                isGroupUnseen(group)
-                  ? "bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-500"
-                  : "bg-(--border)"
-              }`}
+        {groups
+          .filter((group) => group.user)
+          .map((group, i) => (
+            <button
+              type="button"
+              key={group.user._id}
+              onClick={() => setActiveGroupIndex(i)}
+              className="flex flex-col items-center gap-1 shrink-0 w-16"
             >
-              <Avatar src={group.user.avatar} size={48} />
-            </div>
-            <span className="text-xs text-(--muted-foreground) truncate w-full text-center">
-              {group.user.username}
-            </span>
-          </button>
-        ))}
+              <div
+                className={`w-14 h-14 rounded-full p-[2px] ${
+                  isGroupUnseen(group)
+                    ? "bg-gradient-to-tr from-amber-400 via-pink-500 to-purple-500"
+                    : "bg-(--border)"
+                }`}
+              >
+                <Avatar src={group.user.avatar} size={48} />
+              </div>
+              <span className="text-xs text-(--muted-foreground) truncate w-full text-center">
+                {group.user.username}
+              </span>
+            </button>
+          ))}
       </div>
 
       {activeGroupIndex !== null && (

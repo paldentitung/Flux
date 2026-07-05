@@ -181,7 +181,7 @@ const StoryViewerModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupIndex, slideIndex, slides.length]);
 
-  if (!group || !slide) return null;
+  if (!group || !slide || !group.user) return null;
 
   const isOwnStory = group.user._id === currentUserId;
 
