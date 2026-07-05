@@ -51,8 +51,9 @@ export const getStoryFeedService = async (userId) => {
   if (!currentUser) throw new AppError("User not found.", 404);
 
   const followingIds = currentUser.following.map((id) => id.toString());
+  const allIds = [...followingIds, userId.toString()]; // ← add self
 
-  const stories = await Story.find({ userId: { $in: followingIds } })
+  const stories = await Story.find({ userId: { $in: allIds } })
     .sort({ createdAt: -1 })
     .populate("userId", "username avatar")
     .lean();
@@ -62,7 +63,11 @@ export const getStoryFeedService = async (userId) => {
     const ownerId = story.userId._id.toString();
     if (!acc[ownerId]) {
       acc[ownerId] = {
-        user: story.userId,
+        user: {
+          _id: story.userId._id,
+          username: story.userId.username,
+          avatar: story.userId.avatar?.url ?? null, // flatten { url, publicId } → string
+        },
         stories: [],
       };
     }
