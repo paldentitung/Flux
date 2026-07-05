@@ -13,24 +13,8 @@ import ExplorePage from "./features/search/pages/ExplorePage";
 import NotificationPage from "./features/notifications/pages/NotificationPage";
 import SettingPage from "./features/settings/pages/SettingPage";
 import PostDetailPage from "./features/posts/pages/PostDetailPage";
-import { io } from "socket.io-client";
-import { useEffect } from "react";
+
 const App = () => {
-  useEffect(() => {
-    const socket = io(import.meta.env.VITE_SOCKET_URL);
-
-    socket.on("connect", () => {
-      console.log("Connected", socket.id);
-    });
-
-    socket.on("connect_error", (err) => {
-      console.log("Message:", err.message);
-      console.log("Error:", err);
-    });
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
   return (
     <>
       <Toaster
