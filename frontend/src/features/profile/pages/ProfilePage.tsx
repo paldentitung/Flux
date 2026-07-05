@@ -238,7 +238,7 @@ const ProfilePage = () => {
   }
   if (!profileUser) return null;
 
-  const userPosts = posts.filter((p) => p.userId._id === profileUser._id);
+  const userPosts = posts.filter((p) => p.userId?._id === profileUser._id);
 
   const isFollowing =
     user.following?.some((f) => f._id === profileUser._id) ?? false;

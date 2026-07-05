@@ -94,7 +94,7 @@ const StoryTray = ({
           .map((group, i) => (
             <button
               type="button"
-              key={group.user._id}
+              key={group.user?._id}
               onClick={() => setActiveGroupIndex(i)}
               className="flex flex-col items-center gap-1 shrink-0 w-16"
             >
@@ -105,10 +105,10 @@ const StoryTray = ({
                     : "bg-(--border)"
                 }`}
               >
-                <Avatar src={group.user.avatar} size={48} />
+                <Avatar src={group.user?.avatar} size={48} />
               </div>
               <span className="text-xs text-(--muted-foreground) truncate w-full text-center">
-                {group.user.username}
+                {group.user?.username}
               </span>
             </button>
           ))}

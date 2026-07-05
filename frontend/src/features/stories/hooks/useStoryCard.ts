@@ -50,7 +50,7 @@ export const useStoryCard = (story: Story) => {
 
   const confirmDelete = async () => {
     const ownerId =
-      typeof story.userId === "string" ? story.userId : story.userId._id;
+      typeof story?.userId === "string" ? story.userId : story.userId?._id;
     await handleDeleteStory(story._id, ownerId);
     setDeleteOpen(false);
     setMenuOpen(false);

@@ -95,21 +95,21 @@ const PostCardBody = ({
       {/* ── Header ── */}
       <div className="flex items-center gap-3">
         <Link
-          to={`/profile/${post.userId._id}`}
+          to={`/profile/${post?.userId?._id}`}
           className="flex items-center gap-2 flex-1"
         >
           <Avatar
-            src={post.userId.avatar?.url}
-            name={post.userId.name || post.userId.username}
+            src={post?.userId?.avatar?.url}
+            name={post?.userId?.name || post?.userId?.username}
             size={40}
           />
           <div className="flex flex-col mr-auto">
             <h2 className="text-(--foreground) font-medium text-sm">
-              {post.userId.name}
+              {post?.userId?.name}
             </h2>
             <span className="text-xs text-(--muted-foreground)">
-              @{useCleanUsername(post.userId.username)} •{" "}
-              {formatDate(post.createdAt)}
+              @{useCleanUsername(post?.userId?.username)} •{" "}
+              {formatDate(post?.createdAt)}
             </span>
           </div>
         </Link>
@@ -124,7 +124,7 @@ const PostCardBody = ({
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-6 bg-(--post-card-bg) border border-(--post-card-border) rounded-lg shadow-lg z-10 w-36 py-1">
-              {post.userId._id === user?._id ? (
+              {post?.userId?._id === user?._id ? (
                 <>
                   <button
                     onClick={() => {
@@ -147,7 +147,7 @@ const PostCardBody = ({
                 </>
               ) : (
                 <button
-                  onClick={() => submitBlockUser(post?.userId._id)}
+                  onClick={() => submitBlockUser(post?.userId?._id)}
                   className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-[hsl(var(--surface-hover))] transition"
                 >
                   Block User
@@ -160,22 +160,22 @@ const PostCardBody = ({
 
       {/* ── Content ── */}
       <Link
-        to={`/post/${post._id}`}
+        to={`/post/${post?._id}`}
         className="text-(--foreground) text-sm leading-relaxed"
       >
-        {post.content}
+        {post?.content}
       </Link>
 
       {/* ── Images ── */}
-      {post.images?.length === 1 && (
+      {post?.images?.length === 1 && (
         <img
-          src={post.images[0].url}
+          src={post?.images[0].url}
           className="w-full rounded-lg object-cover max-h-96"
         />
       )}
-      {post.images?.length > 1 && (
+      {post?.images?.length > 1 && (
         <div className="grid grid-cols-2 gap-2">
-          {post.images.slice(0, 4).map((img, i) => (
+          {post?.images?.slice(0, 4).map((img, i) => (
             <div
               key={i}
               onClick={() => {
@@ -187,10 +187,10 @@ const PostCardBody = ({
                 src={img.url}
                 className="w-full h-48 object-cover rounded-lg"
               />
-              {i === 3 && post.images.length > 4 && (
+              {i === 3 && post?.images?.length > 4 && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <span className="text-white text-lg font-semibold">
-                    +{post.images.length - 4}
+                    +{post?.images?.length - 4}
                   </span>
                 </div>
               )}
@@ -200,7 +200,7 @@ const PostCardBody = ({
       )}
       {lightbox.open && (
         <ImageLightbox
-          images={post.images}
+          images={post?.images}
           startIndex={lightbox.index}
           onClose={() => setLightbox({ open: false, index: 0 })}
         />
@@ -232,7 +232,7 @@ const PostCardBody = ({
             <span className="text-xs">{commentCount}</span>
           </button>
         </div>
-        <ShareButton postId={post._id} />
+        <ShareButton postId={post?._id} />
       </div>
 
       {/* ── Comments section ── */}

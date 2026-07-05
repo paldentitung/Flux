@@ -140,7 +140,7 @@ const StoryViewerModal = ({
     if (!slide || !group) return;
     try {
       setDeleting(true);
-      await onDeleteStory(slide.storyId, group.user._id);
+      await onDeleteStory(slide.storyId, group.user?._id);
       setDeleteOpen(false);
       // If it was the only slide left in this group, close the viewer;
       // otherwise move on to the next slide/group.
@@ -183,7 +183,7 @@ const StoryViewerModal = ({
 
   if (!group || !slide || !group.user) return null;
 
-  const isOwnStory = group.user._id === currentUserId;
+  const isOwnStory = group.user?._id === currentUserId;
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex items-center justify-center min-h-screen">
@@ -212,11 +212,11 @@ const StoryViewerModal = ({
         <div className="absolute top-6 left-2 right-2 flex items-center justify-between z-10">
           <div className="flex items-center gap-2 pointer-events-none">
             <Avatar
-              src={group.user.avatar || "/default-avatar.png"}
+              src={group.user?.avatar || "/default-avatar.png"}
               size={32}
             />
             <span className="text-white text-sm font-medium">
-              {group.user.username}
+              {group.user?.username}
             </span>
           </div>
 
