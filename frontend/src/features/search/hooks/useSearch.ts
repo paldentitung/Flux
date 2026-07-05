@@ -23,7 +23,6 @@ export const useSearch = () => {
 
     try {
       const res = await search(query);
-      console.log("search data", res);
       setData(res.data);
       return res.data.data;
     } catch (error: any) {

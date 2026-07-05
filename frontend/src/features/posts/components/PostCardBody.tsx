@@ -179,7 +179,6 @@ const PostCardBody = ({
             <div
               key={i}
               onClick={() => {
-                console.log("clicked", i);
                 setLightbox({ open: true, index: i });
               }}
               className="relative"

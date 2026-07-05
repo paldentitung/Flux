@@ -195,7 +195,6 @@ export const useProfile = () => {
   const fetchBlockedUsers = async () => {
     try {
       const res = await getBlockedUsers();
-      console.log("RAW RESPONSE:", res);
       if (res.success) {
         setBlockedUsers(res.data);
       }
@@ -209,7 +208,6 @@ export const useProfile = () => {
   ) => {
     try {
       const res = await toggleNotficationPreferences(updated);
-      console.log("RAW RESPONSE:", res);
       if (res.success) {
         setBlockedUsers(res.data);
       }

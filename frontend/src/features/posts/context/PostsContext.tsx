@@ -41,10 +41,8 @@ export const PostProvider = ({ children }: PostProviderProps) => {
     if (!hasMore || loadingMore) return;
     setLoadingMore(true);
     const nextPage = page + 1;
-    console.log("loading page", nextPage);
     try {
       const res = await getPosts(nextPage, 10);
-      console.log("got posts", res.data.length);
       setPosts((prev) => [...prev, ...res.data]);
       setHasMore(res.data.length === 10);
       setPage(nextPage);

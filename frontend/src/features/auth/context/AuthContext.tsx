@@ -23,9 +23,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    console.log("user data", user);
-  }, [user]);
   return (
     <AuthContext.Provider value={{ user, setUser, fetchUser, isAuthLoading }}>
       {children}
