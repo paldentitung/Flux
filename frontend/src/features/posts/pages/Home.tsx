@@ -26,7 +26,8 @@ const Home = () => {
           Today
         </h1>
         <span className="text-sm text-(--muted-foreground)">
-          A slow scroll through your circle. Ava Mercer
+          A slow scroll through your circle.{" "}
+          {user?.name ? `Hello, ${user.name}!` : ""}
         </span>
       </div>
 
