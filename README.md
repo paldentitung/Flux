@@ -18,6 +18,7 @@ A full-stack social media app built with the MERN stack and TypeScript. Features
 
 - **Authentication** — Register/login with JWT. Forgot password flow uses 6-digit OTP sent via Nodemailer, verified server-side before allowing reset.
 - **Posts** — Create posts with multiple image uploads via Cloudinary. Reaction to post.
+- **Stories** — Instagram-style 24-hour ephemeral stories with per-image view tracking. Auto-expiring via MongoDB TTL index, grouped by user in a swipeable tray, with a viewers list showing who watched and when.
 - **Comments** — Nested comment system with per-comment likes. Comment tree resolved server-side and returned in a single query.
 - **Real-time Notifications** — Socket.io rooms scoped per authenticated user. Notifications emit on follow, reaction, and comment events with client-side sound alerts and a live unread count badge.
 - **Real-time Like & Comment Counts** — Like and comment counts update instantly across all connected clients via Socket.io.
