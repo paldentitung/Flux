@@ -110,8 +110,7 @@ export const NotificationsProvider = ({
 
     // save to ref
     socketRef.current = socket;
-    socket.on("connect", () => console.log("✅ socket connected", socket.id));
-    socket.on("connect_error", (err) => console.log("❌ socket error", err));
+
     socket.on("newNotification", (notification) => {
       setNotifications((prev) => [notification, ...prev]);
       setUnreadCount((prev) => prev + 1);
