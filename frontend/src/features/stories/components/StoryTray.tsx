@@ -4,7 +4,7 @@ import type { StoryFeedGroup } from "../types/stories.type";
 import StoryViewerModal from "./StoryViewerModal";
 import StoryComposerModal from "./StoryComposerModal";
 import Avatar from "../../../shared/components/ui/Avatar";
-
+import type { StoryViewerDetail } from "../types/stories.type";
 interface StoryTrayProps {
   groups: StoryFeedGroup[];
   currentUserId: string;
@@ -13,6 +13,7 @@ interface StoryTrayProps {
   onCreateStory: (formData: FormData) => Promise<unknown>;
   onDeleteStory: (storyId: string, ownerId: string) => Promise<unknown>;
   createLoading: boolean;
+  onGetViewers: (storyId: string) => Promise<StoryViewerDetail[]>;
 }
 
 const StoryTray = ({
@@ -23,6 +24,7 @@ const StoryTray = ({
   onCreateStory,
   onDeleteStory,
   createLoading,
+  onGetViewers,
 }: StoryTrayProps) => {
   const [activeGroupIndex, setActiveGroupIndex] = useState<number | null>(null);
   const [composerFiles, setComposerFiles] = useState<File[] | null>(null);
@@ -122,6 +124,7 @@ const StoryTray = ({
           onClose={() => setActiveGroupIndex(null)}
           onMarkViewed={onMarkViewed}
           onDeleteStory={onDeleteStory}
+          onGetViewers={onGetViewers}
         />
       )}
 

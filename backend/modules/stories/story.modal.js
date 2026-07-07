@@ -27,8 +27,16 @@ const storySchema = new mongoose.Schema(
     ],
     viewers: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        viewedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        _id: false,
       },
     ],
   },

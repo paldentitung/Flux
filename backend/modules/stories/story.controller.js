@@ -8,8 +8,6 @@ import {
 } from "./story.service.js";
 
 export const createStoryController = async (req, res) => {
-  console.log(req.files);
-  console.log(req.body);
   const story = await createStoryService(
     req.user.id,
     req.body.content,

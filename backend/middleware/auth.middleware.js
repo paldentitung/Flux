@@ -3,9 +3,6 @@ import AppError from "../utils/AppError.js";
 import jwt from "jsonwebtoken";
 export const protect = async (req, res, next) => {
   const token = req.cookies.token;
-  console.log("Origin:", req.headers.origin);
-  console.log("Cookie header:", req.headers.cookie);
-  console.log("Parsed cookies:", req.cookies);
 
   if (!token) return next(new AppError("Not authorized", 401));
 

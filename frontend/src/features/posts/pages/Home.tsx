@@ -15,6 +15,7 @@ const Home = () => {
     handleMarkViewed,
     handleCreateStory,
     handleDeleteStory,
+    handleGetViewers,
   } = useStories();
   const { user } = useAuth();
 
@@ -40,6 +41,7 @@ const Home = () => {
           onCreateStory={handleCreateStory}
           createLoading={storyLoading.create}
           onDeleteStory={handleDeleteStory}
+          onGetViewers={handleGetViewers}
         />
       )}
 

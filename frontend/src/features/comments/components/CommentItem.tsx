@@ -62,10 +62,10 @@ const CommentItem = ({
 
   return (
     <div className={`flex gap-2 ${isReply ? "pl-10 pt-1" : "py-2"}`}>
-      <Link to={`/profile/${comment.userId._id}`}>
+      <Link to={`/profile/${comment.userId?._id}`}>
         <Avatar
-          src={comment.userId.avatar?.url}
-          name={comment.userId.name || comment.userId.username}
+          src={comment.userId?.avatar?.url}
+          name={comment.userId?.name || comment.userId?.username}
           size={isReply ? 28 : 32}
           className="mt-0.5"
         />
@@ -73,11 +73,11 @@ const CommentItem = ({
       <div className="flex flex-col flex-1 min-w-0 gap-1">
         {/* Bubble */}
         <Link
-          to={`/profile/${comment.userId._id}`}
+          to={`/profile/${comment.userId?._id}`}
           className="bg-(--surface-hover) rounded-2xl px-3 py-2 w-fit max-w-full"
         >
           <p className="text-xs font-semibold text-(--foreground)">
-            {comment.userId.name}
+            {comment.userId?.name}
           </p>
           <p className="text-sm text-(--foreground) leading-relaxed">
             {comment.text}

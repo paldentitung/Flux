@@ -70,7 +70,7 @@ export const useStories = () => {
       setGroups((prev) =>
         prev
           .map((g) =>
-            g.user._id === ownerId
+            g.user?._id === ownerId
               ? { ...g, stories: g.stories.filter((s) => s._id !== storyId) }
               : g,
           )

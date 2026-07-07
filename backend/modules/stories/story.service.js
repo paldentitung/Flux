@@ -96,7 +96,7 @@ export const getUserStoriesService = async (viewerId, targetUserId) => {
 // ─── Mark as viewed ──────────────────────────────────────────────────────────
 
 export const markStoryViewedService = async (storyId, viewerId) => {
-  const story = await Story.findById(storyId);
+  const story = await Story.findById(storyId).select("userId");
   if (!story) throw new AppError("Story not found.", 404);
 
   const allowed = await canViewStory(viewerId, story.userId);
@@ -104,7 +104,10 @@ export const markStoryViewedService = async (storyId, viewerId) => {
     throw new AppError("You do not have permission to view this story.", 403);
   }
 
-  await Story.updateOne({ _id: storyId }, { $addToSet: { viewers: viewerId } });
+  await Story.updateOne(
+    { _id: storyId, "viewers.user": { $ne: viewerId } },
+    { $push: { viewers: { user: viewerId, viewedAt: new Date() } } },
+  );
 
   return { success: true };
 };
@@ -113,7 +116,7 @@ export const markStoryViewedService = async (storyId, viewerId) => {
 
 export const getStoryViewersService = async (storyId, requesterId) => {
   const story = await Story.findById(storyId).populate(
-    "viewers",
+    "viewers.user",
     "username avatar",
   );
   if (!story) throw new AppError("Story not found.", 404);
@@ -122,7 +125,15 @@ export const getStoryViewersService = async (storyId, requesterId) => {
     throw new AppError("Only the story owner can view this list.", 403);
   }
 
-  return story.viewers;
+  return story.viewers
+    .filter((v) => v.user) // drop refs to deleted users
+    .sort((a, b) => b.viewedAt - a.viewedAt)
+    .map((v) => ({
+      _id: v.user._id,
+      username: v.user.username,
+      avatar: v.user.avatar?.url ?? null,
+      viewedAt: v.viewedAt,
+    }));
 };
 
 // ─── Delete ──────────────────────────────────────────────────────────────────

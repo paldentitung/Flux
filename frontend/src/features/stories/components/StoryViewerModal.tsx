@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { StoryFeedGroup } from "../types/stories.type";
-import { X, ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
+import type { StoryFeedGroup, StoryViewerDetail } from "../types/stories.type";
+import { X, ChevronLeft, ChevronRight, MoreVertical, Eye } from "lucide-react";
 import Avatar from "../../../shared/components/ui/Avatar";
+import StoryViewersModal from "./StoryViewersModal";
 
 interface StoryViewerModalProps {
   groups: StoryFeedGroup[];
@@ -10,6 +11,7 @@ interface StoryViewerModalProps {
   onClose: () => void;
   onMarkViewed: (storyId: string) => void;
   onDeleteStory: (storyId: string, ownerId: string) => Promise<unknown>;
+  onGetViewers: (storyId: string) => Promise<StoryViewerDetail[]>;
 }
 
 interface Slide {
@@ -27,6 +29,7 @@ const StoryViewerModal = ({
   onClose,
   onMarkViewed,
   onDeleteStory,
+  onGetViewers,
 }: StoryViewerModalProps) => {
   const [groupIndex, setGroupIndex] = useState(initialGroupIndex);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -34,6 +37,7 @@ const StoryViewerModal = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [viewersOpen, setViewersOpen] = useState(false);
 
   const intervalRef = useRef<number | null>(null);
   const markedRef = useRef<Set<string>>(new Set());
@@ -49,6 +53,12 @@ const StoryViewerModal = ({
   }, [group]);
 
   const slide = slides[slideIndex];
+
+  // full story object for the current slide — used to read its viewers count
+  const currentStory = useMemo(
+    () => group?.stories.find((s) => s._id === slide?.storyId) ?? null,
+    [group, slide],
+  );
 
   const slideIndexRef = useRef(slideIndex);
   const slidesLenRef = useRef(slides.length);
@@ -137,10 +147,10 @@ const StoryViewerModal = ({
   };
 
   const handleConfirmDelete = async () => {
-    if (!slide || !group) return;
+    if (!slide || !group?.user) return;
     try {
       setDeleting(true);
-      await onDeleteStory(slide.storyId, group.user?._id);
+      await onDeleteStory(slide.storyId, group.user._id);
       setDeleteOpen(false);
       // If it was the only slide left in this group, close the viewer;
       // otherwise move on to the next slide/group.
@@ -166,6 +176,9 @@ const StoryViewerModal = ({
     setProgress(0);
     clearTimer();
 
+    // Pause auto-advance while the viewers sheet is open
+    if (viewersOpen) return;
+
     const start = Date.now();
     intervalRef.current = window.setInterval(() => {
       const pct = Math.min(((Date.now() - start) / STORY_DURATION) * 100, 100);
@@ -179,11 +192,11 @@ const StoryViewerModal = ({
 
     return clearTimer;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupIndex, slideIndex, slides.length]);
+  }, [groupIndex, slideIndex, slides.length, viewersOpen]);
 
   if (!group || !slide || !group.user) return null;
 
-  const isOwnStory = group.user?._id === currentUserId;
+  const isOwnStory = group.user._id === currentUserId;
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex items-center justify-center min-h-screen">
@@ -212,11 +225,11 @@ const StoryViewerModal = ({
         <div className="absolute top-6 left-2 right-2 flex items-center justify-between z-10">
           <div className="flex items-center gap-2 pointer-events-none">
             <Avatar
-              src={group.user?.avatar || "/default-avatar.png"}
+              src={group.user.avatar || "/default-avatar.png"}
               size={32}
             />
             <span className="text-white text-sm font-medium">
-              {group.user?.username}
+              {group.user.username}
             </span>
           </div>
 
@@ -273,7 +286,13 @@ const StoryViewerModal = ({
           alt=""
           className="w-full h-full object-contain pointer-events-none"
         />
-
+        {currentStory?.content && (
+          <div className="absolute bottom-16 left-0 right-0 px-4 z-10 pointer-events-none">
+            <p className="text-white text-sm text-center bg-black/40 rounded-lg px-3 py-2 mx-auto max-w-fit">
+              {currentStory.content}
+            </p>
+          </div>
+        )}
         <button
           type="button"
           onClick={(e) => {
@@ -314,6 +333,22 @@ const StoryViewerModal = ({
           <ChevronRight size={28} />
         </button>
 
+        {/* Owner-only viewers pill */}
+        {isOwnStory && currentStory && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              clearTimer();
+              setViewersOpen(true);
+            }}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 bg-black/40 text-white text-xs px-3 py-1.5 rounded-full"
+          >
+            <Eye size={14} />
+            <span>{currentStory.viewers.length}</span>
+          </button>
+        )}
+
         {deleteOpen && (
           <div
             className="absolute inset-0 bg-black/70 z-40 flex items-center justify-center px-6"
@@ -352,6 +387,14 @@ const StoryViewerModal = ({
               </div>
             </div>
           </div>
+        )}
+
+        {viewersOpen && slide && (
+          <StoryViewersModal
+            storyId={slide.storyId}
+            fetchViewers={onGetViewers}
+            onClose={() => setViewersOpen(false)}
+          />
         )}
       </div>
     </div>
