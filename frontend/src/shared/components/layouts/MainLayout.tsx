@@ -15,9 +15,9 @@ const MainLayout = ({ children, contentMax = "narrow" }: MainLayoutProps) => {
       : "w-full max-w-3xl mx-auto p-4";
 
   return (
-    <div className="flex bg-(--color-bg) min-h-screen">
+    <div className="flex bg-(--color-bg) min-h-screen overflow-x-hidden">
       <LeftSidebar />
-      <main className="flex-1">
+      <main className="flex-1 min-w-0">
         <Header />
         <section className={sectionClass}>{children}</section>
       </main>
@@ -26,5 +26,4 @@ const MainLayout = ({ children, contentMax = "narrow" }: MainLayoutProps) => {
     </div>
   );
 };
-
 export default MainLayout;
