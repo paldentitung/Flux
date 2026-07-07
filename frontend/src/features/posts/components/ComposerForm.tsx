@@ -7,6 +7,7 @@ interface Props {
   loading: boolean;
   fileRef: React.RefObject<HTMLInputElement | null>;
   onText: (val: string) => void;
+  currentUserAvatar?: string;
   onFile: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
   onCancel: () => void;
@@ -21,6 +22,7 @@ const ComposerForm = ({
   onFile,
   onSubmit,
   onCancel,
+  currentUserAvatar,
 }: Props) => (
   <div className="flex flex-col gap-5">
     <div className="flex justify-between items-center">
@@ -34,7 +36,10 @@ const ComposerForm = ({
     </div>
 
     <div className="flex gap-4">
-      <img src="/favicon.svg" className="w-9 h-9 rounded-full" />
+      <img
+        src={currentUserAvatar || "/default-avatar.png"}
+        className="w-9 h-9 rounded-full object-cover"
+      />
       <input
         value={text}
         onChange={(e) => onText(e.target.value)}

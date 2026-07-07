@@ -62,6 +62,7 @@ const PostComposer = ({
           onFile={handleFileChange}
           onSubmit={handleSubmit}
           onCancel={reset}
+          currentUserAvatar={user?.avatar?.url ?? ""}
         />
       </Modal>
     </div>
