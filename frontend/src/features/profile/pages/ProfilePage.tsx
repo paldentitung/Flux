@@ -346,7 +346,7 @@ const ProfilePage = () => {
                 style={{ fontFamily: "'DM Serif Display', serif" }}
                 className="text-2xl text-(--foreground)"
               >
-                {profileUser.name ?? profileUser.username}
+                {profileUser.name || profileUser.username}
               </h1>
               {profileUser.isVerified && (
                 <BadgeCheck size={18} className="text-purple-500" />

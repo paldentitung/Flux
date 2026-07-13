@@ -105,7 +105,7 @@ const PostCardBody = ({
           />
           <div className="flex flex-col mr-auto">
             <h2 className="text-(--foreground) font-medium text-sm">
-              {post?.userId?.name}
+              {post?.userId?.name || post?.userId.username}
             </h2>
             <span className="text-xs text-(--muted-foreground)">
               @{useCleanUsername(post?.userId?.username)} •{" "}

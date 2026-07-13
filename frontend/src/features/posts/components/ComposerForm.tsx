@@ -37,7 +37,7 @@ const ComposerForm = ({
 
     <div className="flex gap-4">
       <img
-        src={currentUserAvatar || "/default-avatar.png"}
+        src={currentUserAvatar || "/user.png"}
         className="w-9 h-9 rounded-full object-cover"
       />
       <input
